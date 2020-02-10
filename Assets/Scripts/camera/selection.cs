@@ -176,20 +176,20 @@ public class selection : MonoBehaviour
 
 
 
-        float dist = Vector3.Distance(orderedPoints[0], orderedPoints[1]);
-        float dist1 = Vector3.Distance(orderedPoints[1], orderedPoints[2]);
-        float dist2 = Vector3.Distance(orderedPoints[2], orderedPoints[3]);
-        float dist3 = Vector3.Distance(orderedPoints[3], orderedPoints[0]);
+        float dist = Vector2.Distance(new Vector2(orderedPoints[0].x, orderedPoints[0].z), new Vector2(orderedPoints[1].x, orderedPoints[1].z));
+        float dist1 = Vector2.Distance(new Vector2(orderedPoints[1].x, orderedPoints[1].z), new Vector2(orderedPoints[2].x, orderedPoints[2].z));
+        float dist2 = Vector2.Distance(new Vector2(orderedPoints[2].x, orderedPoints[2].z), new Vector2(orderedPoints[3].x, orderedPoints[3].z));
+        float dist3 = Vector2.Distance(new Vector2(orderedPoints[3].x, orderedPoints[3].z), new Vector2(orderedPoints[0].x, orderedPoints[0].z));
 
-        float distt = Vector3.Distance(orderedPoints[0], testpos);
-        float distt1 = Vector3.Distance(orderedPoints[1], testpos);
-        float distt2 = Vector3.Distance(orderedPoints[2], testpos);
-        float distt3 = Vector3.Distance(orderedPoints[3], testpos);
+        float distt = Vector2.Distance(new Vector2(orderedPoints[0].x, orderedPoints[0].z), new Vector2(testpos.x, testpos.z));
+        float distt1 = Vector2.Distance(new Vector2(orderedPoints[1].x, orderedPoints[1].z), new Vector2(testpos.x, testpos.z));
+        float distt2 = Vector2.Distance(new Vector2(orderedPoints[2].x, orderedPoints[2].z), new Vector2(testpos.x, testpos.z));
+        float distt3 = Vector2.Distance(new Vector2(orderedPoints[3].x, orderedPoints[3].z), new Vector2(testpos.x, testpos.z));
 
-        float disttt = Vector3.Distance(orderedPoints[1], testpos);
-        float disttt1 = Vector3.Distance(orderedPoints[2], testpos);
-        float disttt2 = Vector3.Distance(orderedPoints[3], testpos);
-        float disttt3 = Vector3.Distance(orderedPoints[0], testpos);
+        float disttt = Vector2.Distance(new Vector2(orderedPoints[1].x, orderedPoints[1].z), new Vector2(testpos.x, testpos.z));
+        float disttt1 = Vector2.Distance(new Vector2(orderedPoints[2].x, orderedPoints[2].z), new Vector2(testpos.x, testpos.z));
+        float disttt2 = Vector2.Distance(new Vector2(orderedPoints[3].x, orderedPoints[3].z), new Vector2(testpos.x, testpos.z));
+        float disttt3 = Vector2.Distance(new Vector2(orderedPoints[0].x, orderedPoints[0].z), new Vector2(testpos.x, testpos.z));
 
         float semiperim = (dist + distt + disttt) / 2;
         float semiperim1 = (dist1 + distt1 + disttt1) / 2;
@@ -219,12 +219,7 @@ public class selection : MonoBehaviour
         float ans = Mathf.Abs(area / 2.0f);
 
 
-        float scaleans = (100.0f / ans);
-        float scalesus = scaleans * suspected;
-
-        Debug.Log("triangels:" + scalesus + " square:" + ans + " diffrence:" + (scalesus - ans));
-
-        if (suspected - ans <= 1.0f && ans != 0)
+        if (suspected - ans <= 0.1f && ans != 0)
         {
             Debug.Log("cover");
 
