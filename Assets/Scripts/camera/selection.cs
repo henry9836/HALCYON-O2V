@@ -25,24 +25,38 @@ public class selection : MonoBehaviour
         {
             endui = Input.mousePosition;
 
+            selectionUI.gameObject.GetComponent<RectTransform>().localPosition = startui;
+
+
             if (startui.x > endui.x)
             {
-                selectionUI.gameObject.GetComponent<RectTransform>().localPosition = startui;
-                selectionUI.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
-
+                if (startui.y > endui.y)
+                {
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.0f, 0.0f);
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(0.0f, 0.0f);
+                }
+                else
+                {
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.0f, 0.0f);
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(0.0f, 0.0f);
+                }
             }
             else
             {
+                if (startui.y > endui.y)
+                {
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.0f, 0.0f);
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(0.0f, 0.0f);
+                }
+                else
+                {
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0.0f, 0.0f);
+                    selectionUI.gameObject.GetComponent<RectTransform>().anchorMax = new Vector2(0.0f, 0.0f);
+                }
 
             }
 
-            if (startui.y > endui.y)
-            {
 
-            }
-            else
-            {
-            }
         }
 
 
