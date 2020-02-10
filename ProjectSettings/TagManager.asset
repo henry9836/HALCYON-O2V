@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - TC
   layers:
   - Default
   - TransparentFX
@@ -15,6 +16,10 @@ TagManager:
   - 
   - PostProcessing
   - grid
+  - Ground
+  - Unit
+  - Building
+  - 
   - 
   - 
   - 
