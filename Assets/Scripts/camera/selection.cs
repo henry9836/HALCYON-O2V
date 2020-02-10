@@ -23,6 +23,8 @@ public class selection : MonoBehaviour
             start = this.gameObject.GetComponent<mousepick>().getMousePos();
             startui = Input.mousePosition;
             pressed = true;
+
+            this.gameObject.GetComponent<arrowmove>().movable = false;
         }
 
         if (pressed == true)
@@ -96,6 +98,8 @@ public class selection : MonoBehaviour
             selectionUI.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0.0f, 0.0f);
             Debug.DrawLine(start, end, Color.red, 10.0f);
             pressed = false;
+            this.gameObject.GetComponent<arrowmove>().movable = true;
+
         }
     }
 
@@ -160,7 +164,17 @@ public class selection : MonoBehaviour
         }
         orderedPoints.Add(points[lowestsave]);
 
-        
+
+        Debug.DrawLine(orderedPoints[0], orderedPoints[1], Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[1], orderedPoints[2], Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[2], orderedPoints[3], Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[3], orderedPoints[0], Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[0], testpos, Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[1], testpos, Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[2], testpos, Color.red, 1.0f);
+        Debug.DrawLine(orderedPoints[3], testpos, Color.red, 1.0f);
+
+
 
         float dist = Vector3.Distance(orderedPoints[0], orderedPoints[1]);
         float dist1 = Vector3.Distance(orderedPoints[1], orderedPoints[2]);
@@ -188,6 +202,8 @@ public class selection : MonoBehaviour
         float aera3 = Mathf.Sqrt(semiperim3 * (semiperim3 - dist3) * (semiperim3 - distt3) * (semiperim3 - disttt3));
 
         float suspected = aera + aera1 + aera2 + aera3;
+        
+        
 
         Vector4 X = new Vector4(orderedPoints[0].x, orderedPoints[1].x, orderedPoints[2].x, orderedPoints[3].x);
         Vector4 Y = new Vector4(orderedPoints[0].z, orderedPoints[1].z, orderedPoints[2].z, orderedPoints[3].z);
@@ -197,15 +213,22 @@ public class selection : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             area += (X[j] + X[i]) * (Y[j] - Y[i]);
-            j = i;  // j is previous vertex to i 
+            j = i;  
         }
 
         float ans = Mathf.Abs(area / 2.0f);
 
-        if (ans >= suspected)
+
+        float scaleans = (100.0f / ans);
+        float scalesus = scaleans * suspected;
+
+        Debug.Log("triangels:" + scalesus + " square:" + ans + " diffrence:" + (scalesus - ans));
+
+        if (suspected - ans <= 1.0f && ans != 0)
         {
             Debug.Log("cover");
 
         }
+
     }
 }
