@@ -356,6 +356,7 @@ MonoBehaviour:
   startui: {x: 0, y: 0}
   endui: {x: 0, y: 0}
   selectionUI: {fileID: 554184382}
+  points: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &293683300
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,8 +439,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -114.702515, y: 0.21499634}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 52.9, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &554184384
 MonoBehaviour:
@@ -455,7 +456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.06983614, b: 1, a: 0.4627451}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
