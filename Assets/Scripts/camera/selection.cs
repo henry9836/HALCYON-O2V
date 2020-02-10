@@ -165,14 +165,14 @@ public class selection : MonoBehaviour
         orderedPoints.Add(points[lowestsave]);
 
 
-        Debug.DrawLine(orderedPoints[0], orderedPoints[1], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[1], orderedPoints[2], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[2], orderedPoints[3], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[3], orderedPoints[0], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[0], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[1], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[2], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[3], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[0], orderedPoints[1], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[1], orderedPoints[2], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[2], orderedPoints[3], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[3], orderedPoints[0], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[0], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[1], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[2], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[3], testpos, Color.red, 1.0f);
 
 
 
@@ -203,8 +203,6 @@ public class selection : MonoBehaviour
 
         float suspected = aera + aera1 + aera2 + aera3;
         
-        
-
         Vector4 X = new Vector4(orderedPoints[0].x, orderedPoints[1].x, orderedPoints[2].x, orderedPoints[3].x);
         Vector4 Y = new Vector4(orderedPoints[0].z, orderedPoints[1].z, orderedPoints[2].z, orderedPoints[3].z);
 
