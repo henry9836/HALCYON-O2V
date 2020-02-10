@@ -11,8 +11,10 @@ public class selection : MonoBehaviour
     public Vector2 startui;
     public Vector2 endui;
     public GameObject selectionUI;
-
+    public LayerMask gridmask;
     public List<Vector3> points;
+    public List<Vector3> orderedPoints;
+
 
     void Update()
     {
@@ -64,8 +66,26 @@ public class selection : MonoBehaviour
 
             points.Clear();
             points.Add(start);
-            //points.Add(); other 2 corners after raycasting
             points.Add(end);
+
+            Ray hitpoint = this.gameObject.GetComponent<Camera>().ScreenPointToRay(new Vector2(endui.x, startui.y));
+            RaycastHit hit;
+            if (Physics.Raycast(hitpoint.origin, hitpoint.direction, out hit, Mathf.Infinity, gridmask))
+            {
+                Debug.DrawLine(hit.point, hitpoint.origin);
+                points.Add(hit.point);
+            }
+
+            hitpoint = this.gameObject.GetComponent<Camera>().ScreenPointToRay(new Vector2(startui.x, endui.y));
+
+            if (Physics.Raycast(hitpoint.origin, hitpoint.direction, out hit, Mathf.Infinity, gridmask))
+            {
+                Debug.DrawLine(hit.point, hitpoint.origin);
+                points.Add(hit.point);
+            }
+
+
+            selectunits(new Vector3(0.0f, 0.0f, 0.0f));
 
         }
 
@@ -80,9 +100,112 @@ public class selection : MonoBehaviour
     }
 
 
-    void selectunits()
-    { 
-    
-    
+    void selectunits(Vector3 testpos)
+    {
+        orderedPoints.Clear();
+
+        //left
+        float lowest = 999999;
+        int lowestsave = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (lowest > points[i].x)
+            {
+                lowestsave = i;
+                lowest = points[i].x;
+            }
+           
+        }
+        orderedPoints.Add(points[lowestsave]);
+
+        //top
+        lowest = -999999;
+        lowestsave = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (lowest < points[i].z)
+            {
+                lowestsave = i;
+                lowest = points[i].z;
+            }
+
+        }
+        orderedPoints.Add(points[lowestsave]);
+
+        //right
+        lowest = -999999;
+        lowestsave = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (lowest < points[i].x)
+            {
+                lowestsave = i;
+                lowest = points[i].x;
+            }
+
+        }
+        orderedPoints.Add(points[lowestsave]);
+
+        //bottom
+        lowest = 999999;
+        lowestsave = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (lowest > points[i].z)
+            {
+                lowestsave = i;
+                lowest = points[i].z;
+            }
+
+        }
+        orderedPoints.Add(points[lowestsave]);
+
+        
+
+        float dist = Vector3.Distance(orderedPoints[0], orderedPoints[1]);
+        float dist1 = Vector3.Distance(orderedPoints[1], orderedPoints[2]);
+        float dist2 = Vector3.Distance(orderedPoints[2], orderedPoints[3]);
+        float dist3 = Vector3.Distance(orderedPoints[3], orderedPoints[0]);
+
+        float distt = Vector3.Distance(orderedPoints[0], testpos);
+        float distt1 = Vector3.Distance(orderedPoints[1], testpos);
+        float distt2 = Vector3.Distance(orderedPoints[2], testpos);
+        float distt3 = Vector3.Distance(orderedPoints[3], testpos);
+
+        float disttt = Vector3.Distance(orderedPoints[1], testpos);
+        float disttt1 = Vector3.Distance(orderedPoints[2], testpos);
+        float disttt2 = Vector3.Distance(orderedPoints[3], testpos);
+        float disttt3 = Vector3.Distance(orderedPoints[0], testpos);
+
+        float semiperim = (dist + distt + disttt) / 2;
+        float semiperim1 = (dist1 + distt1 + disttt1) / 2;
+        float semiperim2 = (dist2 + distt2 + disttt2) / 2;
+        float semiperim3 = (dist3 + distt3 + disttt3) / 2;
+
+        float aera = Mathf.Sqrt(semiperim * (semiperim - dist) * (semiperim - distt) * (semiperim - disttt));
+        float aera1 = Mathf.Sqrt(semiperim1 * (semiperim1 - dist1) * (semiperim1 - distt1) * (semiperim1 - disttt1));
+        float aera2 = Mathf.Sqrt(semiperim2 * (semiperim2 - dist2) * (semiperim2 - distt2) * (semiperim2 - disttt2));
+        float aera3 = Mathf.Sqrt(semiperim3 * (semiperim3 - dist3) * (semiperim3 - distt3) * (semiperim3 - disttt3));
+
+        float suspected = aera + aera1 + aera2 + aera3;
+
+        Vector4 X = new Vector4(orderedPoints[0].x, orderedPoints[1].x, orderedPoints[2].x, orderedPoints[3].x);
+        Vector4 Y = new Vector4(orderedPoints[0].z, orderedPoints[1].z, orderedPoints[2].z, orderedPoints[3].z);
+
+        float area = 0.0f;
+        int j = 3;
+        for (int i = 0; i < 4; i++)
+        {
+            area += (X[j] + X[i]) * (Y[j] - Y[i]);
+            j = i;  // j is previous vertex to i 
+        }
+
+        float ans = Mathf.Abs(area / 2.0f);
+
+        if (ans >= suspected)
+        {
+            Debug.Log("cover");
+
+        }
     }
 }

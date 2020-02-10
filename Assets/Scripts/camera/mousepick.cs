@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class mousepick : MonoBehaviour
 {
-    public LayerMask mask;
+    public LayerMask gridmask;
 
     public Vector3 getMousePos()
     {
         Ray hitpoint = this.gameObject.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(hitpoint.origin, hitpoint.direction, out hit, Mathf.Infinity, mask))
+        if (Physics.Raycast(hitpoint.origin, hitpoint.direction, out hit, Mathf.Infinity, gridmask))
         {
             Debug.DrawLine(hit.point, hitpoint.origin);
             return (hit.point);
