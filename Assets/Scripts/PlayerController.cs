@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private ActionState currentActionState = ActionState.NONE;
     private GameObject lastSelectedBuildingToBuild = null;
     private List<GameObject> selectedUnits = new List<GameObject>();
+    private GameObject camera;
     
 
     public void assignNewUnits(List<GameObject> newUnits)
@@ -30,6 +31,11 @@ public class PlayerController : MonoBehaviour
     public void updateBuildingToBuild(GameObject newBuild)
     {
         lastSelectedBuildingToBuild = newBuild;
+    }
+
+    private void Start()
+    {
+        camera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
     private void FixedUpdate()
@@ -67,7 +73,7 @@ public class PlayerController : MonoBehaviour
                 GameObject targetObj = null;
 
                 //USe Vaughan;s Branch here
-                Vector3 mouseInWorldPos = Vector3.zero;
+                Vector3 mouseInWorldPos = camera.GetComponent<mousepick>().getMousePos();
 
                 //Find nearby objs to mouse
                 Collider[] cols = Physics.OverlapSphere(mouseInWorldPos, checkRadius, unitInteractLayers);
