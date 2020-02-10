@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class arrowmove : MonoBehaviour
 {
-    public Vector3 newPos;
+    private Vector3 newPos;
     void Update()
     {
         newPos = Vector3.zero;
