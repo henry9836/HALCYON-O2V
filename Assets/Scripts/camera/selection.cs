@@ -15,7 +15,6 @@ public class selection : MonoBehaviour
     public List<Vector3> points;
     public List<Vector3> orderedPoints;
 
-
     void Update()
     {
         if (Input.GetMouseButtonDown(0) == true)
@@ -86,8 +85,23 @@ public class selection : MonoBehaviour
                 points.Add(hit.point);
             }
 
+            GetComponent<PlayerController>().selectedUnits.Clear();
 
-            selectunits(new Vector3(0.0f, 0.0f, 0.0f));
+            GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
+
+
+            for (int i = 0; i < units.Length; i++)
+            {
+                if (units[i].GetComponent<ObjectID>().ownerPlayerID == ObjectID.PlayerID.PLAYER)
+                {
+                    if (selectunits(units[i].transform.position) == true)
+                    {
+                        GetComponent<PlayerController>().selectedUnits.Add(units[i]);
+                        
+                    }
+                }
+
+            }
 
         }
 
@@ -103,8 +117,7 @@ public class selection : MonoBehaviour
         }
     }
 
-
-    void selectunits(Vector3 testpos)
+    bool selectunits(Vector3 testpos)
     {
         orderedPoints.Clear();
 
@@ -165,14 +178,14 @@ public class selection : MonoBehaviour
         orderedPoints.Add(points[lowestsave]);
 
 
-        Debug.DrawLine(orderedPoints[0], orderedPoints[1], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[1], orderedPoints[2], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[2], orderedPoints[3], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[3], orderedPoints[0], Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[0], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[1], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[2], testpos, Color.red, 1.0f);
-        Debug.DrawLine(orderedPoints[3], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[0], orderedPoints[1], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[1], orderedPoints[2], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[2], orderedPoints[3], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[3], orderedPoints[0], Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[0], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[1], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[2], testpos, Color.red, 1.0f);
+        //Debug.DrawLine(orderedPoints[3], testpos, Color.red, 1.0f);
 
 
 
@@ -203,8 +216,6 @@ public class selection : MonoBehaviour
 
         float suspected = aera + aera1 + aera2 + aera3;
         
-        
-
         Vector4 X = new Vector4(orderedPoints[0].x, orderedPoints[1].x, orderedPoints[2].x, orderedPoints[3].x);
         Vector4 Y = new Vector4(orderedPoints[0].z, orderedPoints[1].z, orderedPoints[2].z, orderedPoints[3].z);
 
@@ -221,9 +232,10 @@ public class selection : MonoBehaviour
 
         if (suspected - ans <= 0.1f && ans != 0)
         {
-            Debug.Log("cover");
-
+            return (true);
         }
+
+        return (false);
 
     }
 }

@@ -14,10 +14,10 @@ GameObject:
   - component: {fileID: 1567168062404951338}
   - component: {fileID: 7629189258855688696}
   - component: {fileID: 2559433677861808048}
-  - component: {fileID: 6459392357579911795}
+  - component: {fileID: -1874577547024691747}
   m_Layer: 11
   m_Name: TestAI
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   ownerPlayerID: 0
   objID: 1
   health: 100
---- !u!195 &6459392357579911795
+--- !u!195 &-1874577547024691747
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
