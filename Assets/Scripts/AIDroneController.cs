@@ -59,6 +59,12 @@ public class AIDroneController : MonoBehaviour
 
     void DealDamage()
     {
+        if (targetGameObject == null)
+        {
+            Debug.LogWarning("Called deal damage with no target gameobject [" + gameObject.name + "]");
+            return;
+        }
+
         Debug.Log("Dealing Damage To: " + gameObject.name);
         if (targetGameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
         {

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1407690025781185846}
   - component: {fileID: 4429687311793948950}
   - component: {fileID: 5019157667760513427}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: TemporyTC
   m_TagString: TC
   m_Icon: {fileID: 0}
@@ -125,3 +125,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownerPlayerID: 0
   objID: 2
+  health: 100
