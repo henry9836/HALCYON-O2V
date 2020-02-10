@@ -11,5 +11,16 @@ public class ObjectID : MonoBehaviour
         AI
     }
 
+    public enum OBJECTID
+    {
+        UNASSIGNED,
+        UNIT,
+        BUILDING
+    }
+
     public PlayerID ownerPlayerID = PlayerID.UNASSIGNED;
+    public OBJECTID objID = OBJECTID.UNASSIGNED;
+
+    public float health = 100.0f;
+
 }

@@ -14,13 +14,12 @@ public class PlayerController : MonoBehaviour
 
     //Public
     public LayerMask unitInteractLayers;
-    public float checkRadius = 10.0f;
+    public float checkRadius = 2.0f;
 
     //Private
-    private ActionState currentActionState = ActionState.NONE;
+    public ActionState currentActionState = ActionState.NONE;
     private GameObject lastSelectedBuildingToBuild = null;
-    private List<GameObject> selectedUnits = new List<GameObject>();
-    private GameObject camera;
+    public List<GameObject> selectedUnits = new List<GameObject>();
     
 
     public void assignNewUnits(List<GameObject> newUnits)
@@ -33,12 +32,7 @@ public class PlayerController : MonoBehaviour
         lastSelectedBuildingToBuild = newBuild;
     }
 
-    private void Start()
-    {
-        camera = GameObject.FindGameObjectWithTag("MainCamera");
-    }
-
-    private void FixedUpdate()
+    private void Update()
     {
         //Escape from mode and job
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -72,8 +66,8 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject targetObj = null;
 
-                //USe Vaughan;s Branch here
-                Vector3 mouseInWorldPos = camera.GetComponent<mousepick>().getMousePos();
+                //Get The mouse position in world
+                Vector3 mouseInWorldPos = GetComponent<mousepick>().getMousePos();
 
                 //Find nearby objs to mouse
                 Collider[] cols = Physics.OverlapSphere(mouseInWorldPos, checkRadius, unitInteractLayers);
@@ -83,11 +77,16 @@ public class PlayerController : MonoBehaviour
                     {
                         if (cols[i].gameObject.GetComponent<ObjectID>()!= null)
                         {
+                            //Do not target our own buildings
                             if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != ObjectID.PlayerID.PLAYER)
                             {
                                 targetObj = cols[i].gameObject;
                                 break;
                             }
+                        }
+                        else
+                        {
+                            Debug.LogWarning(cols[i].name + " is missing an Object ID component");
                         }
                     }
                 }
