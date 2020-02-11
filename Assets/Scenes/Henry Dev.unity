@@ -734,7 +734,7 @@ MonoBehaviour:
   selectionUI: {fileID: 0}
   gridmask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   points: []
   orderedPoints: []
 --- !u!114 &744019815
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridmask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
 --- !u!114 &744019816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -835,7 +835,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 6580ebc306b1c964783cf3e70363e727, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -909,6 +909,7 @@ MonoBehaviour:
   ownerPlayerID: 0
   objID: 2
   health: 100
+  maxHealth: 100
 --- !u!1001 &922779787
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -57,15 +57,14 @@ public class AIDroneController : MonoBehaviour
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
     public float attackCooldown = 0.5f;
+    public AttackState attackState;
 
     //Privates
     private bool idle;
     private NavMeshAgent agent;
     private ObjectID objID;
     private TargetObject target = null;
-    private AttackState attackState;
     private LayerMask interactLayer;
-    private NavMeshPath path = new NavMeshPath();
     private bool stuck = false;
     private float attackTimer = 0.0f;
 
@@ -74,28 +73,18 @@ public class AIDroneController : MonoBehaviour
         return agent.isStopped;
     }
 
-
-
-    /// NEEDS TO BE UPDATED
-    /// NEEDS TO BE UPDATED
-    /// NEEDS TO BE UPDATED
-    /// NEEDS TO BE UPDATED
-    /// NEEDS TO BE UPDATED
     public void UpdateTargetPos(Vector3 targetPos, GameObject obj)
     {
-        NavMeshPath path = new NavMeshPath();
-
-        //Go To Gameobject
         if (obj != null)
         {
-            targetPos = obj.transform.position;
             target = new TargetObject(obj);
 
-            //Find apporitate pos near obj
+            //Find a position
+            target.tarObjectAdjustPos = target.tarObject.transform.position;
         }
-        //Go To Point
-        agent.CalculatePath(targetPos, path);
-        agent.SetPath(path);
+        else {
+            target = new TargetObject(targetPos);
+        }
     }
 
     void Stop()
@@ -109,6 +98,7 @@ public class AIDroneController : MonoBehaviour
         objID = GetComponent<ObjectID>();
         objID.objID = ObjectID.OBJECTID.UNIT;
         interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
+        target = new TargetObject(Vector3.zero);
     }
     
     void DealDamage()
@@ -116,6 +106,7 @@ public class AIDroneController : MonoBehaviour
         if (attackTimer > attackCooldown)
         {
             target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+            attackTimer = 0.0f;
         }
     }
 
@@ -144,9 +135,13 @@ public class AIDroneController : MonoBehaviour
 
     void AttackGameObject()
     {
+        Debug.Log("{" + gameObject.name + "} I WANT TO ATTACK [" + target.tarObject.name + "]");
+        NavMeshPath path = new NavMeshPath();
+
         //Get to the enemy
         if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) > attackRange)
         {
+            Debug.Log("{" + gameObject.name + "} MOVING");
             path = new NavMeshPath();
             //Go To Point
             agent.CalculatePath(target.tarObjectAdjustPos, path);
@@ -158,6 +153,7 @@ public class AIDroneController : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
+                Debug.Log("{" + gameObject.name + "} ATTACKING");
                 Stop();
                 DealDamage();
             }
@@ -173,6 +169,8 @@ public class AIDroneController : MonoBehaviour
 
     void GoToTargetPos()
     {
+        NavMeshPath path = new NavMeshPath();
+
         //If we are not within range of our target pos
         if (Vector3.Distance(transform.position, target.tarPos) > attackRange)
         {
@@ -204,7 +202,7 @@ public class AIDroneController : MonoBehaviour
 
     bool FindTarget()
     {
-
+        Debug.Log("Finding Target...");
         Collider[] cols;
 
         if (attackState == AttackState.ATTACK)
@@ -219,14 +217,19 @@ public class AIDroneController : MonoBehaviour
         for (int i = 0; i < cols.Length; i++)
         {
             //Ignore our own objects
-            if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
+            if (cols[i].gameObject.GetComponent<ObjectID>() != null)
             {
-                //Make a new Target
-                target = new TargetObject(cols[i].gameObject);
+                if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
+                {
+                    //Make a new Target
+                    target = new TargetObject(cols[i].gameObject);
+                    target.tarObjectAdjustPos = target.tarObject.transform.position;
+                    Debug.Log(cols[i].gameObject.name + " is target");
 
-                //Get a good position near to the target in a arc realitve to our position
+                    //Get a good position near to the target in a arc realitve to our position
 
-                return true;
+                    return true;
+                }
             }
         }
 
@@ -235,6 +238,8 @@ public class AIDroneController : MonoBehaviour
 
     void IdleAttackLogic()
     {
+        Debug.Log("IDLE ATTACK CALLED");
+
         if (attackState == AttackState.ATTACK)
         {
             if (!target.hasTarget())
@@ -282,5 +287,6 @@ public class AIDroneController : MonoBehaviour
 
 
     }
+
 
 }
