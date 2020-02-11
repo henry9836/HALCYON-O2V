@@ -85,6 +85,12 @@ public class selection : MonoBehaviour
                 points.Add(hit.point);
             }
 
+            for (int i = 0; i < GetComponent<PlayerController>().selectedUnits.Count; i++)
+            {
+                GetComponent<PlayerController>().selectedUnits[i].gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                GetComponent<PlayerController>().selectedUnits[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+
+            }
             GetComponent<PlayerController>().selectedUnits.Clear();
 
             GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
@@ -97,12 +103,16 @@ public class selection : MonoBehaviour
                     if (selectunits(units[i].transform.position) == true)
                     {
                         GetComponent<PlayerController>().selectedUnits.Add(units[i]);
-                        
                     }
                 }
-
             }
 
+            for (int i = 0; i < GetComponent<PlayerController>().selectedUnits.Count; i++)
+            {
+                GetComponent<PlayerController>().selectedUnits[i].gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                GetComponent<PlayerController>().selectedUnits[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                GetComponent<PlayerController>().selectedUnits[i].gameObject.transform.GetChild(0).gameObject.GetComponent<Lookat>().looktowards();
+            }
         }
 
         if (Input.GetMouseButtonUp(0) == true)
