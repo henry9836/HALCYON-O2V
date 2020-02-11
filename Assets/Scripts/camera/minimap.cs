@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class minimap : MonoBehaviour
+public class minimap : MonoBehaviour, IPointerClickHandler
 {
-    void myMouseDown(PointerEventData dat)
+
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        CallOnPointerClickEvent(eventData);
+    }
+    
+
+    void CallOnPointerClickEvent(PointerEventData dat)
     {
         Vector2 localCursor;
         var rect1 = GetComponent<RectTransform>();
