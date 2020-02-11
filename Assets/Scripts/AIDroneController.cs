@@ -74,6 +74,30 @@ public class AIDroneController : MonoBehaviour
         return agent.isStopped;
     }
 
+
+
+    /// NEEDS TO BE UPDATED
+    /// NEEDS TO BE UPDATED
+    /// NEEDS TO BE UPDATED
+    /// NEEDS TO BE UPDATED
+    /// NEEDS TO BE UPDATED
+    public void UpdateTargetPos(Vector3 targetPos, GameObject obj)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        //Go To Gameobject
+        if (obj != null)
+        {
+            targetPos = obj.transform.position;
+            target = new TargetObject(obj);
+
+            //Find apporitate pos near obj
+        }
+        //Go To Point
+        agent.CalculatePath(targetPos, path);
+        agent.SetPath(path);
+    }
+
     void Stop()
     {
         agent.isStopped = true;

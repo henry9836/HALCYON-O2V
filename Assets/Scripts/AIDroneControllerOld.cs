@@ -77,7 +77,7 @@ public class AIDroneControllerOld : MonoBehaviour
         //Is Unit
         if (!targetIsBuilding)
         {
-            targetGameObject.GetComponent<AIDroneController>().TakeDamage(attackDamage);
+            //targetGameObject.GetComponent<AIDroneController>().TakeDamage(attackDamage);
         }
         //Is Building
         else
