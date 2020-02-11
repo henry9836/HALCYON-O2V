@@ -7,6 +7,8 @@ public class arrowmove : MonoBehaviour
     private Vector3 newPos;
     private float zoom = 5.0f;
     public bool movable = true;
+
+    public float speed = 1.0f;
     void Update()
     {
 
@@ -15,7 +17,7 @@ public class arrowmove : MonoBehaviour
             newPos = Vector3.zero;
             newPos += Input.GetAxisRaw("Vertical") * Vector3.up;
             newPos += Input.GetAxisRaw("Horizontal") * new Vector3(1.0f, 0.0f, -1.0f);
-            this.gameObject.transform.position += newPos;
+            this.gameObject.transform.position += newPos * speed;
 
             float wheel = Input.GetAxis("Mouse ScrollWheel");
             if (wheel > 0f)
