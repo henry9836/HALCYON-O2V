@@ -9,18 +9,27 @@ public class ObjectID : MonoBehaviour
     {
         UNASSIGNED,
         PLAYER,
-        AI
+        AI_1,
+        AI_2,
+        AI_3,
+        AI_4,
+        AI_5,
+        AI_6,
+        AI_7,
+        AI_8,
     }
 
     public enum OBJECTID
     {
         UNASSIGNED,
         UNIT,
-        BUILDING
+        BUILDING,
+        RESOURCE
     }
 
     public PlayerID ownerPlayerID = PlayerID.UNASSIGNED;
     public OBJECTID objID = OBJECTID.UNASSIGNED;
+    //public int 
 
     public float health = 100.0f;
     public float maxHealth = 100.0f;

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - TC
   - Unit
+  - GameManager
+  - AIPlayer
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - Ground
   - Unit
   - Building
-  - 
-  - 
+  - Resource
+  - camwall
   - 
   - 
   - 

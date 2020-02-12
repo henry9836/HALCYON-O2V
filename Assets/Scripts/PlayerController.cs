@@ -15,12 +15,14 @@ public class PlayerController : MonoBehaviour
     //Public
     public LayerMask unitInteractLayers;
     public float checkRadius = 2.0f;
+    public int playerID = -1;
 
     //Private
     public ActionState currentActionState = ActionState.NONE;
     private GameObject lastSelectedBuildingToBuild = null;
     public List<GameObject> selectedUnits = new List<GameObject>();
-    
+
+
 
     public void assignNewUnits(List<GameObject> newUnits)
     {
@@ -30,6 +32,11 @@ public class PlayerController : MonoBehaviour
     public void updateBuildingToBuild(GameObject newBuild)
     {
         lastSelectedBuildingToBuild = newBuild;
+    }
+
+    void Start()
+    {
+        playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.PLAYER);
     }
 
     private void Update()
