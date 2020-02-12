@@ -186,10 +186,8 @@ public class AIDroneController : MonoBehaviour
             if (currentInv > 0)
             {
                 //Find gamemanager and update resources
-
-                
-
-                
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().UpdateResourceCount((int)objID.ownerPlayerID, currentInv);
+                currentInv = 0;
             }
             TCRetOverride = false;
         }
@@ -198,9 +196,12 @@ public class AIDroneController : MonoBehaviour
 
     void Mine()
     {
-        if (mineTime > mineTimer)
+        Debug.Log("Mine() called");
+        Debug.Log(mineTime + "/" + mineTimer);
+        if (mineTime >= mineTimer)
         {
-            if (currentInv > mineMaxInv)
+            Debug.Log("We in");
+            if (currentInv >= mineMaxInv)
             {
                 //Go deposit inv at TC
                 TCRetOverride = true;
@@ -252,11 +253,16 @@ public class AIDroneController : MonoBehaviour
                 Stop();
                 if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
                 {
+                    Debug.LogWarning("FUCK");
                     DealDamage();
                 }
                 else if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE && canMine)
                 {
                     Mine();
+                }
+                else
+                {
+                    Debug.LogWarning("Unspecified action for target {" + target.tarObject.GetComponent<ObjectID>().objID + "}");
                 }
             }
             else
@@ -283,10 +289,8 @@ public class AIDroneController : MonoBehaviour
                 target.tarObjectAdjustPos = target.tarObject.transform.position;
                 Resume();
             }
-
             agent.CalculatePath(target.tarObjectAdjustPos, path);
             agent.SetPath(path);
-
         }
 
         //Stuck
@@ -352,22 +356,61 @@ public class AIDroneController : MonoBehaviour
             cols = Physics.OverlapSphere(transform.position, attackRange, interactLayer);
         }
 
+        List<GameObject> foundResources = new List<GameObject>();
+
         for (int i = 0; i < cols.Length; i++)
         {
+
+            
             //Ignore our own objects
             if (cols[i].gameObject.GetComponent<ObjectID>() != null)
             {
                 if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
                 {
-                    //Make a new Target
-                    target = new TargetObject(cols[i].gameObject);
-                    target.tarObjectAdjustPos = target.tarObject.transform.position;
+                    //If is resource and cannot mine
+                    if (!canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
+                        //nothing
+                    }
+                    //Add to foundResources
+                    else if (canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+                    {
+                        foundResources.Add(cols[i].gameObject);
+                    }
+                    //Not a resource is a unit
+                    else
+                    {
+                        //Make a new Target
+                        target = new TargetObject(cols[i].gameObject);
+                        target.tarObjectAdjustPos = target.tarObject.transform.position;
 
-                    //Get a good position near to the target in a arc realitve to our position
+                        //Get a good position near to the target in a arc realitve to our position
 
-                    return true;
+                        return true;
+                    }
                 }
             }
+        }
+
+        //Fallback onto resources
+        if (foundResources.Count > 0)
+        {
+            float shortestDis = Mathf.Infinity;
+            GameObject shortestDirObj = null;
+
+            for (int i = 0; i < foundResources.Count; i++)
+            {
+                float distance = Vector3.Distance(transform.position, foundResources[i].transform.position);
+                if (distance < shortestDis)
+                {
+                    shortestDis = distance;
+                    shortestDirObj = foundResources[i];
+                }
+            }
+
+            target = new TargetObject(shortestDirObj);
+            target.tarObjectAdjustPos = target.tarObject.transform.position;
+
+            return true;
         }
 
         return false;
@@ -410,7 +453,10 @@ public class AIDroneController : MonoBehaviour
         //Stuck logic (path pending + no movement)
         stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
 
-        Debug.LogError(stuck + "//" + agent.pathStatus + "||" + idle);
+        if (DebugMode)
+        {
+            Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
+        }
 
         target.Sanity();
 
