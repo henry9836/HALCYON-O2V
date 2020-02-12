@@ -83,6 +83,7 @@ public class AIDroneController : MonoBehaviour
     public bool canMine = false;
     public float miningRate = 3.0f;
     public float mineTime = 5.0f;
+    public float mineMaxInv = 3.0f;
     public AttackState attackState;
 
     //Privates
@@ -93,6 +94,10 @@ public class AIDroneController : MonoBehaviour
     private LayerMask interactLayer;
     private bool stuck = false;
     private float attackTimer = 0.0f;
+    private float mineTimer = 0.0f;
+    private float currentInv = 0.0f;
+    private bool TCRetOverride = false;
+    private GameObject TC;
 
     public aiDebug returnDebug()
     {
@@ -131,6 +136,18 @@ public class AIDroneController : MonoBehaviour
         agent.isStopped = false;
     }
 
+    void FindTC()
+    {
+        GameObject[] tcs = GameObject.FindGameObjectsWithTag("TC");
+        for (int i = 0; i < tcs.Length; i++)
+        {
+            if (tcs[i].GetComponent<ObjectID>().ownerPlayerID == GetComponent<ObjectID>().ownerPlayerID)
+            {
+                TC = tcs[i];
+            }
+        }
+    }
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -138,6 +155,7 @@ public class AIDroneController : MonoBehaviour
         objID.objID = ObjectID.OBJECTID.UNIT;
         interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
         target = new TargetObject(Vector3.zero);
+        FindTC();
     }
     
     void DealDamage()
@@ -148,6 +166,53 @@ public class AIDroneController : MonoBehaviour
 
             target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
             attackTimer = 0.0f;
+        }
+    }
+
+    void TCRetOverrideBehaviour()
+    {
+        //Go To TC If not close enough
+        if (Vector3.Distance(transform.position, TC.transform.position) > attackRange)
+        {
+            NavMeshPath path = new NavMeshPath();
+            agent.CalculatePath(target.tarObjectAdjustPos, path);
+            agent.SetPath(path);
+            Resume();
+        }
+
+        //Deposit and toggle off override
+        else
+        {
+            if (currentInv > 0)
+            {
+                //Find gamemanager and update resources
+
+                
+
+                
+            }
+            TCRetOverride = false;
+        }
+
+    }
+
+    void Mine()
+    {
+        if (mineTime > mineTimer)
+        {
+            if (currentInv > mineMaxInv)
+            {
+                //Go deposit inv at TC
+                TCRetOverride = true;
+
+            }
+            else
+            {
+                //Mine some more
+                target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+                currentInv += miningRate;
+                attackTimer = 0.0f;
+            }
         }
     }
 
@@ -185,7 +250,14 @@ public class AIDroneController : MonoBehaviour
             {
                 Debug.LogWarning("Arrived" + gameObject.name);
                 Stop();
-                DealDamage();
+                if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
+                {
+                    DealDamage();
+                }
+                else if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE && canMine)
+                {
+                    Mine();
+                }
             }
             else
             {
@@ -324,6 +396,11 @@ public class AIDroneController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (TC == null)
+        {
+            FindTC();
+        }
+
         attackTimer += Time.unscaledDeltaTime;
 
         //Check Idle Condition
@@ -337,16 +414,22 @@ public class AIDroneController : MonoBehaviour
 
         target.Sanity();
 
-        if (idle && !target.hasTarget())
+        if (TCRetOverride)
         {
-            IdleAttackLogic();
+            TCRetOverrideBehaviour();
         }
+        else
+        {
+            if (idle && !target.hasTarget())
+            {
+                IdleAttackLogic();
+            }
 
-        if (target.hasTarget())
-        {
-            AttackLogic();
+            if (target.hasTarget())
+            {
+                AttackLogic();
+            }
         }
-        
         //Death
         if (objID.health <= 0)
         {
