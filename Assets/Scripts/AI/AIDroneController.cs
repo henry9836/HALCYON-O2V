@@ -80,6 +80,9 @@ public class AIDroneController : MonoBehaviour
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
     public float attackCooldown = 0.5f;
+    public bool canMine = false;
+    public float miningRate = 3.0f;
+    public float mineTime = 5.0f;
     public AttackState attackState;
 
     //Privates
