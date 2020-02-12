@@ -38,10 +38,33 @@ public class AIDroneController : MonoBehaviour
             tarObject = null;
             tarObjectAdjustPos = Vector3.zero;
         }
+        public void Sanity()
+        {
+            if (tarObject == null)
+            {
+                tarObjectAdjustPos = Vector3.zero;
+            }
+        }
 
         public GameObject tarObject = null;
         public Vector3 tarObjectAdjustPos = Vector3.zero;
         public Vector3 tarPos = Vector3.zero;
+    };
+
+    public class aiDebug
+    {
+        public aiDebug(TargetObject _t, bool _s, bool _i, AttackState _a)
+        {
+            target = _t;
+            stuck = _s;
+            idle = _i;
+            attackState = _a;
+        }
+
+        public TargetObject target;
+        public bool stuck = false;
+        public bool idle = false;
+        public AttackState attackState;
     };
 
     public enum AttackState
@@ -68,6 +91,12 @@ public class AIDroneController : MonoBehaviour
     private bool stuck = false;
     private float attackTimer = 0.0f;
 
+    public aiDebug returnDebug()
+    {
+        return new aiDebug(target, stuck, idle, attackState);
+    }
+
+
     public bool isAIStopped()
     {
         return agent.isStopped;
@@ -92,6 +121,11 @@ public class AIDroneController : MonoBehaviour
         agent.isStopped = true;
     }
 
+    void Resume()
+    {
+        agent.isStopped = false;
+    }
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -105,6 +139,8 @@ public class AIDroneController : MonoBehaviour
     {
         if (attackTimer > attackCooldown)
         {
+            Debug.DrawLine(transform.position, target.tarObject.transform.position, Color.red, 1.0f);
+
             target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
             attackTimer = 0.0f;
         }
@@ -135,34 +171,50 @@ public class AIDroneController : MonoBehaviour
 
     void AttackGameObject()
     {
-        Debug.Log("{" + gameObject.name + "} I WANT TO ATTACK [" + target.tarObject.name + "]");
         NavMeshPath path = new NavMeshPath();
-
-        //Get to the enemy
-        if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) > attackRange)
+        //Arrived at target object position
+        if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
         {
-            Debug.Log("{" + gameObject.name + "} MOVING");
-            path = new NavMeshPath();
-            //Go To Point
-            agent.CalculatePath(target.tarObjectAdjustPos, path);
-            agent.SetPath(path);
-        }
-
-        //Arrived
-        else if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
-        {
-            if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
+            //If the target is within range
+            if (Vector3.Distance(transform.position, target.tarObject.transform.position) <= attackRange)
             {
-                Debug.Log("{" + gameObject.name + "} ATTACKING");
+                Debug.LogWarning("Arrived");
                 Stop();
                 DealDamage();
             }
-            //We are not close enough keep going
+            else
+            {
+                if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
+                {
+                    Debug.LogWarning("Get To Enemy my friend stopped");
+                    target.tarObjectAdjustPos = target.tarObject.transform.position;
+                    agent.CalculatePath(target.tarObjectAdjustPos, path);
+                    agent.SetPath(path);
+                    Resume();
+                }
+            }
+        }
+
+        //Get to the enemy
+        if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
+        {
+            Debug.LogWarning("Get To Enemy");
+            //Go To Point
+            //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
+            if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
+            {
+                target.tarObjectAdjustPos = target.tarObject.transform.position;
+                agent.CalculatePath(target.tarObjectAdjustPos, path);
+                agent.SetPath(path);
+                Resume();
+            }
+            
         }
 
         //Stuck
         if (stuck)
         {
+            Debug.LogWarning("Stuck");
             Stop();
         }
     }
@@ -202,7 +254,6 @@ public class AIDroneController : MonoBehaviour
 
     bool FindTarget()
     {
-        Debug.Log("Finding Target...");
         Collider[] cols;
 
         if (attackState == AttackState.ATTACK)
@@ -224,7 +275,6 @@ public class AIDroneController : MonoBehaviour
                     //Make a new Target
                     target = new TargetObject(cols[i].gameObject);
                     target.tarObjectAdjustPos = target.tarObject.transform.position;
-                    Debug.Log(cols[i].gameObject.name + " is target");
 
                     //Get a good position near to the target in a arc realitve to our position
 
@@ -238,7 +288,6 @@ public class AIDroneController : MonoBehaviour
 
     void IdleAttackLogic()
     {
-        Debug.Log("IDLE ATTACK CALLED");
 
         if (attackState == AttackState.ATTACK)
         {
@@ -268,6 +317,8 @@ public class AIDroneController : MonoBehaviour
 
         //Stuck logic (path pending + no movement)
         stuck = (idle && agent.pathPending);
+
+        target.Sanity();
 
         if (idle && !target.hasTarget())
         {
