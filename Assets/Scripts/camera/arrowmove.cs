@@ -10,7 +10,7 @@ public class arrowmove : MonoBehaviour
     public float speed = 1.0f;
     public LayerMask camwall;
 
- 
+    public List<GameObject> FBLR;
 
 
  
@@ -43,11 +43,42 @@ public class arrowmove : MonoBehaviour
             }
 
 
-            RaycastHit hitsphere;
-            if (Physics.SphereCast(this.gameObject.transform.position, 0.5f, Vector3.forward, out hitsphere, Mathf.Infinity, camwall))
+            Collider[] hitsphere = Physics.OverlapSphere(this.gameObject.transform.position, 1.0f, camwall);
+
+            for (int i = 0; i < hitsphere.Length; i++)
             {
-                Debug.Log(hitsphere.collider.gameObject.name);
+                Debug.Log(hitsphere[i].gameObject.name);
+                if (hitsphere[i].gameObject.name == FBLR[0].name)
+                {
+                    if (newPos.x > 0 && newPos.z > 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+                }
+                if (hitsphere[i].gameObject.name == FBLR[1].name)
+                {
+                    if (newPos.x < 0 && newPos.z < 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+                }
+                if (hitsphere[i].gameObject.name == FBLR[2].name)
+                {
+                    if (newPos.x < 0 && newPos.z > 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+                }
+                if (hitsphere[i].gameObject.name == FBLR[3].name)
+                {
+                    if (newPos.x > 0 && newPos.z < 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+                }
             }
+
+            
 
             this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
 
