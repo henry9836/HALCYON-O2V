@@ -165,7 +165,17 @@ public class AIDroneController : MonoBehaviour
         {
             Debug.DrawLine(transform.position, target.tarObject.transform.position, Color.red, 1.0f);
 
-            target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+            //Crits for fun
+            int dice = Random.Range(1, 13);
+            if (dice == 12)
+            {
+                target.tarObject.GetComponent<ObjectID>().health -= attackDamage * (Random.Range(1.5f, 2.5f));
+            }
+            else
+            {
+                target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+            }
+            
             attackTimer = 0.0f;
         }
     }
@@ -175,13 +185,14 @@ public class AIDroneController : MonoBehaviour
         Debug.Log("Mined and full trying to go to tc");
 
         //Go To TC If not close enough
+        TCdropOff = GetAdjustedPos(TC);
+        Debug.Log($"Going back to TC {Vector3.Distance(transform.position, TCdropOff)}");
         if (Vector3.Distance(transform.position, TCdropOff) > attackRange)
         {
             Debug.Log("not close enough to tc");
             NavMeshPath path = new NavMeshPath();
             if (idle)
             {
-                TCdropOff = GetAdjustedPos(TC);
                 agent.CalculatePath(TCdropOff, path);
                 agent.SetPath(path);
                 Resume();
@@ -328,7 +339,7 @@ public class AIDroneController : MonoBehaviour
         if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
         {
             //If the target is within range
-            if (Vector3.Distance(transform.position, target.tarObject.transform.position) <= attackRange)
+            if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
                 Stop();
                 if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
@@ -538,7 +549,7 @@ public class AIDroneController : MonoBehaviour
 
         if (DebugMode)
         {
-            Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
+            //Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
         }
 
         target.Sanity();
