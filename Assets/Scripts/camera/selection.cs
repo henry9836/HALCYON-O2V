@@ -17,6 +17,13 @@ public class selection : MonoBehaviour
 
     void Update()
     {
+
+        RaycastHit hitttt;
+        if (Physics.Raycast(this.transform.position, this.transform.forward, out hitttt, gridmask))
+        {
+            Debug.Log(hitttt.distance);
+        }
+
         if (Input.GetMouseButtonDown(0) == true)
         {
             start = this.gameObject.GetComponent<mousepick>().getMousePos();

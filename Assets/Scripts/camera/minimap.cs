@@ -72,7 +72,11 @@ public class minimap : MonoBehaviour, IPointerClickHandler
             Debug.DrawLine(position, hit.point, Color.red, 10.0f);
         }
 
-        cam.gameObject.transform.position += hitUI.point - hit.point; 
+        Vector3 posdiff = hitUI.point - hit.point;
+
+        cam.gameObject.transform.position += posdiff;
+
+
     }
 
 }
