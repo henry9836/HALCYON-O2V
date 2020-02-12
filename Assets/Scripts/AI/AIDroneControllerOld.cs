@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class AIDroneController : MonoBehaviour
+public class AIDroneControllerOld : MonoBehaviour
 {
 
     public enum Type
@@ -77,7 +77,7 @@ public class AIDroneController : MonoBehaviour
         //Is Unit
         if (!targetIsBuilding)
         {
-            targetGameObject.GetComponent<AIDroneController>().TakeDamage(attackDamage);
+            //targetGameObject.GetComponent<AIDroneController>().TakeDamage(attackDamage);
         }
         //Is Building
         else
