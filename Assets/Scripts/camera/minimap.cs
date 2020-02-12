@@ -4,7 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class minimap : MonoBehaviour, IPointerClickHandler
 {
+    public LayerMask grid;
+    private Vector3 campos;
 
+    void Start()
+    {
+        campos = GameObject.Find("minimapcam").gameObject.transform.position;
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -15,33 +21,58 @@ public class minimap : MonoBehaviour, IPointerClickHandler
     void CallOnPointerClickEvent(PointerEventData dat)
     {
         Vector2 localCursor;
-        var rect1 = GetComponent<RectTransform>();
-        var pos1 = dat.position;
+        RectTransform rect1 = GetComponent<RectTransform>();
+        Vector2 pos1 = dat.position;
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rect1, pos1, null, out localCursor))
         {
-            int xpos = (int)localCursor.x;
-            int ypos = (int)localCursor.y;
+            float xpos = localCursor.x;
+            float ypos = localCursor.y;
 
             if (xpos < 0)
             {
-                xpos = xpos + (int)rect1.rect.width / 2;
+                xpos = xpos + rect1.rect.width / 2;
             }
             else
             {
-                xpos += (int)rect1.rect.width / 2;
+                xpos += rect1.rect.width / 2;
             }
 
             if (ypos > 0)
             {
-                ypos = ypos + (int)rect1.rect.height / 2;
+                ypos = ypos + rect1.rect.height / 2;
             }
             else
             {
-                ypos += (int)rect1.rect.height / 2;
+                ypos += rect1.rect.height / 2;
             } 
 
             Debug.Log("Correct Cursor Pos: " + xpos + " " + ypos);
+
+            movemaincam(new Vector2(xpos, ypos) * 0.2f);
         }
     }
+
+    public void movemaincam(Vector2 pos)
+    {
+        Vector3 position = (Quaternion.AngleAxis(45.0f, Vector3.up) * (new Vector3(campos.x + pos.x, campos.y, campos.z + pos.y) - campos)) + campos;
+
+        RaycastHit hitUI;
+        if (Physics.Raycast(position, -Vector3.up, out hitUI, grid))
+        {
+            
+            Debug.DrawLine(position, hitUI.point, Color.red, 10.0f);
+        }
+
+        GameObject cam = GameObject.Find("Main Camera");
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, grid))
+        {
+
+            Debug.DrawLine(position, hit.point, Color.red, 10.0f);
+        }
+
+        cam.gameObject.transform.position += hitUI.point - hit.point; 
+    }
+
 }

@@ -240,7 +240,7 @@ public class selection : MonoBehaviour
         float ans = Mathf.Abs(area / 2.0f);
 
 
-        if (suspected - ans <= 0.1f && ans != 0)
+        if (suspected - ans <= 0.1f && ans >= 0.01f)
         {
             return (true);
         }

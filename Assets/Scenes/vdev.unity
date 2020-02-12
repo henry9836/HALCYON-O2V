@@ -387,6 +387,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2142621482, guid: 3cdfa915b67e9cf469112ae340b61f5c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142621486, guid: 3cdfa915b67e9cf469112ae340b61f5c, type: 3}
       propertyPath: m_Camera
       value: 
@@ -748,6 +752,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1761981351 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4684451384637742254, guid: 9f7af3e61954402418a3abdabb5c0f40,
+    type: 3}
+  m_PrefabInstance: {fileID: 4684451386115084078}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1761981355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761981351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b095886776289e4198a0b5c9867b523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1001 &1900529405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1114,6 +1139,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: minimapcam
       objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046022, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046076, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046076, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: clearColorMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: backgroundColorHDR.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: backgroundColorHDR.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: backgroundColorHDR.b
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2934776490894046079, guid: 79f46892e8f8de147af385774121346a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1288,7 +1348,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4684451384637742252, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684451384637742252, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684451384637742252, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684451384637742252, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684451384637742255, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684451384637742255, guid: 9f7af3e61954402418a3abdabb5c0f40,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4684451384637742250, guid: 9f7af3e61954402418a3abdabb5c0f40, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9f7af3e61954402418a3abdabb5c0f40, type: 3}
 --- !u!1001 &6622558173846460449
 PrefabInstance:
