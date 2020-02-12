@@ -74,7 +74,7 @@ public class minimap : MonoBehaviour, IPointerClickHandler
 
         Vector3 posdiff = hitUI.point - hit.point;
 
-        cam.gameObject.transform.position += posdiff;
+        cam.gameObject.transform.position += new Vector3(posdiff.x + (posdiff.y * Mathf.Sqrt(2.0f)), 0.0f, posdiff.z + (posdiff.y * Mathf.Sqrt(2.0f)));
 
 
     }

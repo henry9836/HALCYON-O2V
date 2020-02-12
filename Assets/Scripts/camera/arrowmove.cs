@@ -8,25 +8,15 @@ public class arrowmove : MonoBehaviour
     private float zoom = 5.0f;
     public bool movable = true;
     public float speed = 1.0f;
-    public LayerMask grid;
-    
+    public LayerMask camwall;
 
-    //horozontal x = x value when most left, y = z value when most right
-    //vertical x = y value when most down, y = y when most up
-    public Vector2 horozontalbounds;
-    public Vector2 verticalbounds;
+ 
 
+
+ 
 
     void Update()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, grid))
-        {
-            if (hit.distance < 40.0f)
-            {
-                this.transform.position += new Vector3(-5.0f, 0.0f, -5.0f);
-            }
-        }
 
         if (movable == true)
         {
@@ -53,6 +43,12 @@ public class arrowmove : MonoBehaviour
             }
 
 
+            RaycastHit hitsphere;
+            if (Physics.SphereCast(this.gameObject.transform.position, 0.5f, Vector3.forward, out hitsphere, Mathf.Infinity, camwall))
+            {
+                Debug.Log(hitsphere.collider.gameObject.name);
+            }
+
             this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
 
 
@@ -67,7 +63,10 @@ public class arrowmove : MonoBehaviour
                 Debug.LogError("Helo wolrd :D!!!!!");
                 zoom -= wheel * 2.0f;
             }
-            this.gameObject.GetComponent<Camera>().orthographicSize = Mathf.Clamp(zoom, 1.0f, 30.0f);
+
+            zoom = Mathf.Clamp(zoom, 1.0f, 30.0f);
+
+            this.gameObject.GetComponent<Camera>().orthographicSize = zoom;
 
 
 
