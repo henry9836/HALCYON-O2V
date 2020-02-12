@@ -119,6 +119,8 @@ public class AIDroneController : MonoBehaviour
     void Stop()
     {
         agent.isStopped = true;
+        agent.ResetPath();
+        Resume();
     }
 
     void Resume()
@@ -178,7 +180,7 @@ public class AIDroneController : MonoBehaviour
             //If the target is within range
             if (Vector3.Distance(transform.position, target.tarObject.transform.position) <= attackRange)
             {
-                Debug.LogWarning("Arrived");
+                Debug.LogWarning("Arrived" + gameObject.name);
                 Stop();
                 DealDamage();
             }
@@ -204,11 +206,12 @@ public class AIDroneController : MonoBehaviour
             if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
             {
                 target.tarObjectAdjustPos = target.tarObject.transform.position;
-                agent.CalculatePath(target.tarObjectAdjustPos, path);
-                agent.SetPath(path);
                 Resume();
             }
-            
+
+            agent.CalculatePath(target.tarObjectAdjustPos, path);
+            agent.SetPath(path);
+
         }
 
         //Stuck
@@ -231,6 +234,15 @@ public class AIDroneController : MonoBehaviour
             agent.CalculatePath(target.tarPos, path);
             agent.SetPath(path);
         }
+
+        //Arrived
+        if (Vector3.Distance(transform.position, target.tarPos) < 1.0f || HasNeighbourStopped())
+        {
+            Debug.LogWarning("Arrived" + gameObject.name);
+            Stop();
+            target.Reset();
+        }
+
 
         //Stuck
         if (stuck)
@@ -316,7 +328,9 @@ public class AIDroneController : MonoBehaviour
         idle = (agent.velocity.magnitude < 0.1f);
 
         //Stuck logic (path pending + no movement)
-        stuck = (idle && agent.pathPending);
+        stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
+
+        Debug.LogError(stuck + "//" + agent.pathStatus + "||" + idle);
 
         target.Sanity();
 
