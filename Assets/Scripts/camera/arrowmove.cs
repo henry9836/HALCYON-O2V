@@ -9,7 +9,7 @@ public class arrowmove : MonoBehaviour
     public bool movable = true;
     public float speed = 1.0f;
     public LayerMask grid;
-
+    
 
     //horozontal x = x value when most left, y = z value when most right
     //vertical x = y value when most down, y = y when most up
@@ -52,37 +52,9 @@ public class arrowmove : MonoBehaviour
                 newPos -= new Vector3(1.0f, 0.0f, -1.0f);
             }
 
-            if (newPos.x < 0.0f)
-            {
-                if (this.gameObject.transform.position.x >= horozontalbounds.x)
-                {
-                    this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
-                }
-            }
-            
-            if (newPos.x > 0.0f)
-            {
-                if (this.gameObject.transform.position.z >= horozontalbounds.y)
-                {
-                    this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
-                }
-            } 
-            
-            if (newPos.y < 0.0f)
-            {
-                if (this.gameObject.transform.position.y >= verticalbounds.x)
-                {
-                    this.gameObject.transform.position += new Vector3(0.0f, newPos.y, 0.0f) * speed;
-                }
-            }
-            
-            if (newPos.y > 0.0f)
-            {
-                if (this.gameObject.transform.position.y <= verticalbounds.y)
-                {
-                    this.gameObject.transform.position += new Vector3(0.0f, newPos.y, 0.0f) * speed;
-                }
-            }
+
+            this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
+
 
 
             float wheel = Input.GetAxis("Mouse ScrollWheel");
