@@ -83,7 +83,7 @@ public class arrowmove : MonoBehaviour
 
 
                 //back wall
-                if (hitsphere[i].gameObject.name == FBLR[1].name)
+                else if (hitsphere[i].gameObject.name == FBLR[1].name)
                 {
                     //holdin down
                     if (newPos.x < 0 && newPos.z < 0)
@@ -97,7 +97,7 @@ public class arrowmove : MonoBehaviour
                     {
                         newPos = Vector3.zero;
                         newPos -= new Vector3(1.0f, 0.0f, -1.0f);
-                        if (check(hitsphere, 1, 2) == true)
+                        if (check(hitsphere, 1, 3) == true)
                         {
                             newPos = Vector3.zero;
                         }
@@ -108,7 +108,7 @@ public class arrowmove : MonoBehaviour
                     {
                         newPos = Vector3.zero;
                         newPos += new Vector3(1.0f, 0.0f, -1.0f);
-                        if (check(hitsphere, 1, 3) == true)
+                        if (check(hitsphere, 1, 2) == true)
                         {
                             newPos = Vector3.zero;
                         }
@@ -116,46 +116,72 @@ public class arrowmove : MonoBehaviour
                     }
                 }
 
-                if (hitsphere[i].gameObject.name == FBLR[2].name)
+                else if (hitsphere[i].gameObject.name == FBLR[2].name)
                 {
+                    //holding left
                     if (newPos.x < 0 && newPos.z > 0)
                     {
                         newPos = Vector3.zero;
                     }
 
-                    if (newPos.x < 1)
-                    { 
-                    
+                    //left and down
+                    if (newPos.x < -1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 2, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
                     }
 
+                    //left amd up 
                     if (newPos.z > 1)
-                    { 
-                    
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 2, 1) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
                     }
                 }
 
-                if (hitsphere[i].gameObject.name == FBLR[3].name)
+                else if (hitsphere[i].gameObject.name == FBLR[3].name)
                 {
+                    //holding right
                     if (newPos.x > 0 && newPos.z < 0)
                     {
                         newPos = Vector3.zero;
                     }
 
+
+                    //right and up 
                     if (newPos.x > 1)
-                    { 
-                    
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 3, 1) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
                     }
 
-                    if (newPos.z < 1)
-                    { 
-                    
+                    //right and down
+                    if (newPos.z < -1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 3, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
                     }
                 }
             }
 
-            Debug.Log(newPos);
 
-            this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
+            this.gameObject.transform.position += Vector3.ClampMagnitude(new Vector3(newPos.x, 0, newPos.z) , 1.0f) * speed;
 
 
 
@@ -166,7 +192,6 @@ public class arrowmove : MonoBehaviour
             }
             else if (wheel < 0f)
             {
-                Debug.LogError("Helo wolrd :D!!!!!");
                 zoom -= wheel * 2.0f;
             }
 
