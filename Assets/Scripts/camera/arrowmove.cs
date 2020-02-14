@@ -10,12 +10,13 @@ public class arrowmove : MonoBehaviour
     public float speed = 1.0f;
     public LayerMask camwall;
 
- 
+    public List<GameObject> FBLR;
 
 
- 
 
-    void Update()
+
+
+    void FixedUpdate()
     {
 
         if (movable == true)
@@ -43,13 +44,144 @@ public class arrowmove : MonoBehaviour
             }
 
 
-            RaycastHit hitsphere;
-            if (Physics.SphereCast(this.gameObject.transform.position, 0.5f, Vector3.forward, out hitsphere, Mathf.Infinity, camwall))
+            Collider[] hitsphere = Physics.OverlapSphere(this.gameObject.transform.position, 1.0f, camwall);
+
+            for (int i = 0; i < hitsphere.Length; i++)
             {
-                Debug.Log(hitsphere.collider.gameObject.name);
+                Debug.Log(hitsphere[i].gameObject.name);
+                //up wall
+                if (hitsphere[i].gameObject.name == FBLR[0].name)
+                {
+                    //holding up 
+                    if ((newPos.x > 0 && newPos.z > 0)  )
+                    {
+                        newPos = Vector3.zero;
+                    }
+
+                    //holding up and left
+                    if ((newPos.x > 1))
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, -1.0f);
+                        if (check(hitsphere, 0, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+
+                    //holding up and right
+                    if ((newPos.z > 1))
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, -1.0f);
+                        if (check(hitsphere, 0, 3) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+                }
+
+
+                //back wall
+                else if (hitsphere[i].gameObject.name == FBLR[1].name)
+                {
+                    //holdin down
+                    if (newPos.x < 0 && newPos.z < 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+
+
+                    //down and right
+                    if ((newPos.x < -1))
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, -1.0f);
+                        if (check(hitsphere, 1, 3) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+
+                    //down and left
+                    if ((newPos.z < -1))
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, -1.0f);
+                        if (check(hitsphere, 1, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+
+                    }
+                }
+
+                else if (hitsphere[i].gameObject.name == FBLR[2].name)
+                {
+                    //holding left
+                    if (newPos.x < 0 && newPos.z > 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+
+                    //left and down
+                    if (newPos.x < -1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 2, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+
+                    //left amd up 
+                    if (newPos.z > 1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 2, 1) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+                }
+
+                else if (hitsphere[i].gameObject.name == FBLR[3].name)
+                {
+                    //holding right
+                    if (newPos.x > 0 && newPos.z < 0)
+                    {
+                        newPos = Vector3.zero;
+                    }
+
+
+                    //right and up 
+                    if (newPos.x > 1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos += new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 3, 1) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+
+                    //right and down
+                    if (newPos.z < -1)
+                    {
+                        newPos = Vector3.zero;
+                        newPos -= new Vector3(1.0f, 0.0f, 1.0f);
+                        if (check(hitsphere, 3, 2) == true)
+                        {
+                            newPos = Vector3.zero;
+                        }
+                    }
+                }
             }
 
-            this.gameObject.transform.position += new Vector3(newPos.x, 0, newPos.z) * speed;
+
+            this.gameObject.transform.position += Vector3.ClampMagnitude(new Vector3(newPos.x, 0, newPos.z) , 1.0f) * speed * (zoom);
 
 
 
@@ -60,7 +192,6 @@ public class arrowmove : MonoBehaviour
             }
             else if (wheel < 0f)
             {
-                Debug.LogError("Helo wolrd :D!!!!!");
                 zoom -= wheel * 2.0f;
             }
 
@@ -71,5 +202,30 @@ public class arrowmove : MonoBehaviour
 
 
         }
+    }
+
+    bool check(Collider[] hitsphere, int core, int excpetion)
+    {
+        bool thecheck = false;
+        for (int i = 0; i < hitsphere.Length; i++)
+        {
+            if ((hitsphere[i].gameObject.name == FBLR[0].name) && core != 0 && excpetion != 0)
+            {
+                thecheck = true;
+            }
+            if ((hitsphere[i].gameObject.name == FBLR[1].name) && core != 1 && excpetion != 1)
+            {
+                thecheck = true;
+            }
+            if ((hitsphere[i].gameObject.name == FBLR[2].name) && core != 2 && excpetion != 2)
+            {
+                thecheck = true;
+            }
+            if ((hitsphere[i].gameObject.name == FBLR[3].name) && core != 3 && excpetion != 3)
+            {
+                thecheck = true;
+            }
+        }
+        return (thecheck);
     }
 }
