@@ -13,6 +13,9 @@ public class arrowmove : MonoBehaviour
     public List<GameObject> FBLR;
 
 
+
+
+
     void FixedUpdate()
     {
 
@@ -39,9 +42,6 @@ public class arrowmove : MonoBehaviour
             {
                 newPos -= new Vector3(1.0f, 0.0f, -1.0f);
             }
-
-
-
 
 
             Collider[] hitsphere = Physics.OverlapSphere(this.gameObject.transform.position, 1.0f, camwall);
@@ -181,7 +181,7 @@ public class arrowmove : MonoBehaviour
             }
 
 
-            this.gameObject.transform.position += Vector3.ClampMagnitude(new Vector3(newPos.x, 0, newPos.z) , 1.0f) * speed;
+            this.gameObject.transform.position += Vector3.ClampMagnitude(new Vector3(newPos.x, 0, newPos.z) , 1.0f) * speed * (zoom);
 
 
 
