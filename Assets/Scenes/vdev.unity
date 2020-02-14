@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 431905339}
   - component: {fileID: 431905338}
   m_Layer: 14
-  m_Name: Cube (6)
+  m_Name: back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -490,6 +490,75 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &592509292
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.980201
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -15.190886
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.2423692
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617896051202980619, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: m_Name
+      value: GameManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0fda8ea04f765084d911d9bdd3c912ed, type: 3}
 --- !u!1001 &596103147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -581,7 +650,7 @@ GameObject:
   - component: {fileID: 684249833}
   - component: {fileID: 684249832}
   m_Layer: 14
-  m_Name: Cube (3)
+  m_Name: left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -872,7 +941,7 @@ GameObject:
   - component: {fileID: 810888342}
   - component: {fileID: 810888341}
   m_Layer: 14
-  m_Name: Cube (4)
+  m_Name: right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1096,7 +1165,7 @@ GameObject:
   - component: {fileID: 1230974746}
   - component: {fileID: 1230974745}
   m_Layer: 14
-  m_Name: Cube (5)
+  m_Name: forward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1827,6 +1896,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
         type: 3}
+      propertyPath: FBLR.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
       propertyPath: horozontalbounds.x
       value: -35
       objectReference: {fileID: 0}
@@ -1854,6 +1928,31 @@ PrefabInstance:
         type: 3}
       propertyPath: camwall.m_Bits
       value: 16384
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
+      propertyPath: FBLR.Array.data[0]
+      value: 
+      objectReference: {fileID: 1230974743}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
+      propertyPath: FBLR.Array.data[1]
+      value: 
+      objectReference: {fileID: 431905336}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
+      propertyPath: FBLR.Array.data[2]
+      value: 
+      objectReference: {fileID: 684249831}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
+      propertyPath: FBLR.Array.data[3]
+      value: 
+      objectReference: {fileID: 810888339}
+    - target: {fileID: 6622558173884126356, guid: 6303c39ffc3599c49954897bed4191a7,
+        type: 3}
+      propertyPath: speed
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6622558173884126357, guid: 6303c39ffc3599c49954897bed4191a7,
         type: 3}
