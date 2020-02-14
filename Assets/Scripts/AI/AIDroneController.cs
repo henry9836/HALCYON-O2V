@@ -98,6 +98,7 @@ public class AIDroneController : MonoBehaviour
     private float currentInv = 0.0f;
     private bool TCRetOverride = false;
     private GameObject TC;
+    private Vector3 TCdropOff;
 
     public aiDebug returnDebug()
     {
@@ -117,7 +118,7 @@ public class AIDroneController : MonoBehaviour
             target = new TargetObject(obj);
 
             //Find a position
-            target.tarObjectAdjustPos = target.tarObject.transform.position;
+            target.tarObjectAdjustPos = GetAdjustedPos();
         }
         else {
             target = new TargetObject(targetPos);
@@ -164,25 +165,44 @@ public class AIDroneController : MonoBehaviour
         {
             Debug.DrawLine(transform.position, target.tarObject.transform.position, Color.red, 1.0f);
 
-            target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+            //Crits for fun
+            int dice = Random.Range(1, 13);
+            if (dice == 12)
+            {
+                target.tarObject.GetComponent<ObjectID>().health -= attackDamage * (Random.Range(1.5f, 2.5f));
+            }
+            else
+            {
+                target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+            }
+            
             attackTimer = 0.0f;
         }
     }
 
     void TCRetOverrideBehaviour()
     {
+        Debug.Log("Mined and full trying to go to tc");
+
         //Go To TC If not close enough
-        if (Vector3.Distance(transform.position, TC.transform.position) > attackRange)
+        TCdropOff = GetAdjustedPos(TC);
+        Debug.Log($"Going back to TC {Vector3.Distance(transform.position, TCdropOff)}");
+        if (Vector3.Distance(transform.position, TCdropOff) > attackRange)
         {
+            Debug.Log("not close enough to tc");
             NavMeshPath path = new NavMeshPath();
-            agent.CalculatePath(target.tarObjectAdjustPos, path);
-            agent.SetPath(path);
-            Resume();
+            if (idle)
+            {
+                agent.CalculatePath(TCdropOff, path);
+                agent.SetPath(path);
+                Resume();
+            }
         }
 
         //Deposit and toggle off override
         else
         {
+            Debug.Log("dropping stuff off");
             if (currentInv > 0)
             {
                 //Find gamemanager and update resources
@@ -196,11 +216,10 @@ public class AIDroneController : MonoBehaviour
 
     void Mine()
     {
-        Debug.Log("Mine() called");
-        Debug.Log(mineTime + "/" + mineTimer);
-        if (mineTime >= mineTimer)
+        Debug.Log("Mine() Called; [" + mineTimer + " / " + mineTime + "]");
+        if (mineTimer >= mineTime)
         {
-            Debug.Log("We in");
+            Debug.Log("DIGGY DIGGY HOLE");
             if (currentInv >= mineMaxInv)
             {
                 //Go deposit inv at TC
@@ -212,7 +231,7 @@ public class AIDroneController : MonoBehaviour
                 //Mine some more
                 target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
                 currentInv += miningRate;
-                attackTimer = 0.0f;
+                mineTimer = 0.0f;
             }
         }
     }
@@ -240,6 +259,79 @@ public class AIDroneController : MonoBehaviour
         return false;
     }
 
+    Vector3 GetAdjustedPos()
+    {
+        Vector3 result = Vector3.zero;
+
+        //Direction from the target to us
+        Vector3 dir = (transform.position - target.tarObject.transform.position).normalized;
+
+        //Predict movement if moving
+        if (target.tarObject.GetComponent<ObjectID>().velo > 0.1f)
+        {
+            float time = Vector3.Distance(transform.position, target.tarObject.transform.position) / target.tarObject.GetComponent<ObjectID>().velo;
+
+            float distanceMoved = time * target.tarObject.GetComponent<ObjectID>().velo;
+
+            //Find target's position in future
+            Vector3 futurePos = target.tarObject.transform.position + (target.tarObject.transform.forward.normalized * distanceMoved);
+
+            //Direction from the target to us
+            dir = (transform.position - futurePos).normalized;
+
+            //Move the target position in regards to our attack range
+            result = futurePos + (dir * attackRange);
+
+        }
+        else
+        {
+            //Move the target position in regards to our attack range
+            result = target.tarObject.transform.position + (dir * attackRange);
+        }
+
+
+
+        return result;
+
+    }
+
+
+    Vector3 GetAdjustedPos(GameObject tar)
+    {
+        Vector3 result = Vector3.zero;
+
+        //Direction from the target to us
+        Vector3 dir = (transform.position - tar.transform.position).normalized;
+
+        //Predict movement if moving
+        if (target.tarObject.GetComponent<ObjectID>().velo > 0.1f)
+        {
+            float time = Vector3.Distance(transform.position, tar.transform.position) / tar.GetComponent<ObjectID>().velo;
+
+            float distanceMoved = time * tar.GetComponent<ObjectID>().velo;
+
+            //Find target's position in future
+            Vector3 futurePos = tar.transform.position + (tar.transform.forward.normalized * distanceMoved);
+
+            //Direction from the target to us
+            dir = (transform.position - futurePos).normalized;
+
+            //Move the target position in regards to our attack range
+            result = futurePos + (dir * attackRange);
+
+        }
+        else
+        {
+            //Move the target position in regards to our attack range
+            result = tar.transform.position + (dir * attackRange);
+        }
+
+
+
+        return result;
+
+    }
+
     void AttackGameObject()
     {
         NavMeshPath path = new NavMeshPath();
@@ -247,13 +339,11 @@ public class AIDroneController : MonoBehaviour
         if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
         {
             //If the target is within range
-            if (Vector3.Distance(transform.position, target.tarObject.transform.position) <= attackRange)
+            if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
-                Debug.LogWarning("Arrived" + gameObject.name);
                 Stop();
                 if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
                 {
-                    Debug.LogWarning("FUCK");
                     DealDamage();
                 }
                 else if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE && canMine)
@@ -270,7 +360,7 @@ public class AIDroneController : MonoBehaviour
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
                     Debug.LogWarning("Get To Enemy my friend stopped");
-                    target.tarObjectAdjustPos = target.tarObject.transform.position;
+                    target.tarObjectAdjustPos = GetAdjustedPos();
                     agent.CalculatePath(target.tarObjectAdjustPos, path);
                     agent.SetPath(path);
                     Resume();
@@ -286,7 +376,7 @@ public class AIDroneController : MonoBehaviour
             //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
             if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
             {
-                target.tarObjectAdjustPos = target.tarObject.transform.position;
+                target.tarObjectAdjustPos = GetAdjustedPos();
                 Resume();
             }
             agent.CalculatePath(target.tarObjectAdjustPos, path);
@@ -381,7 +471,7 @@ public class AIDroneController : MonoBehaviour
                     {
                         //Make a new Target
                         target = new TargetObject(cols[i].gameObject);
-                        target.tarObjectAdjustPos = target.tarObject.transform.position;
+                        target.tarObjectAdjustPos = GetAdjustedPos();
 
                         //Get a good position near to the target in a arc realitve to our position
 
@@ -408,7 +498,7 @@ public class AIDroneController : MonoBehaviour
             }
 
             target = new TargetObject(shortestDirObj);
-            target.tarObjectAdjustPos = target.tarObject.transform.position;
+            target.tarObjectAdjustPos = GetAdjustedPos();
 
             return true;
         }
@@ -444,7 +534,11 @@ public class AIDroneController : MonoBehaviour
             FindTC();
         }
 
+        objID.velo = agent.velocity.magnitude;
+
         attackTimer += Time.unscaledDeltaTime;
+
+        mineTimer += Time.unscaledDeltaTime;
 
         //Check Idle Condition
         //If we are not moving
@@ -455,7 +549,7 @@ public class AIDroneController : MonoBehaviour
 
         if (DebugMode)
         {
-            Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
+            //Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
         }
 
         target.Sanity();
