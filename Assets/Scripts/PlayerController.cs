@@ -90,6 +90,12 @@ public class PlayerController : MonoBehaviour
                                 targetObj = cols[i].gameObject;
                                 break;
                             }
+                            //Useless they are damaged
+                            else if (cols[i].gameObject.GetComponent<ObjectID>().health != cols[i].gameObject.GetComponent<ObjectID>().maxHealth)
+                            {
+                                targetObj = cols[i].gameObject;
+                                break;
+                            }
                         }
                         else
                         {
