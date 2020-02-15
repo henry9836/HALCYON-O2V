@@ -10,6 +10,7 @@ public class AIDroneController : MonoBehaviour
         public TargetObject(GameObject obj)
         {
             tarObject = obj;
+            objID = tarObject.GetComponent<ObjectID>();
         }
 
         public TargetObject(Vector3 pos)
@@ -49,6 +50,7 @@ public class AIDroneController : MonoBehaviour
         public GameObject tarObject = null;
         public Vector3 tarObjectAdjustPos = Vector3.zero;
         public Vector3 tarPos = Vector3.zero;
+        public ObjectID objID;
     };
 
     public class aiDebug
@@ -74,31 +76,42 @@ public class AIDroneController : MonoBehaviour
         NOATTACK
     };
 
+    public enum UnitJob
+    {
+        WORKER,
+        MINER,
+
+    };
+
     //Publics
-    public bool DebugMode;
+    public AttackState attackState;
+    public bool DebugMode = false;
+    public bool canMine = false;
+    public bool canRepair = false;
     public float attackRange = 2.0f;
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
     public float attackCooldown = 0.5f;
-    public bool canMine = false;
     public float miningRate = 3.0f;
     public float mineTime = 5.0f;
     public float mineMaxInv = 3.0f;
-    public AttackState attackState;
+    public float repairTime = 5.0f;
+    public float repairAmount = 1.0f;
 
     //Privates
-    private bool idle;
     private NavMeshAgent agent;
     private ObjectID objID;
     private TargetObject target = null;
     private LayerMask interactLayer;
+    private GameObject TC;
+    private Vector3 TCdropOff;
+    private bool idle;
     private bool stuck = false;
+    private bool TCRetOverride = false;
+    private float repairTimer = 0.0f;
     private float attackTimer = 0.0f;
     private float mineTimer = 0.0f;
     private float currentInv = 0.0f;
-    private bool TCRetOverride = false;
-    private GameObject TC;
-    private Vector3 TCdropOff;
 
     public aiDebug returnDebug()
     {
@@ -182,14 +195,10 @@ public class AIDroneController : MonoBehaviour
 
     void TCRetOverrideBehaviour()
     {
-        Debug.Log("Mined and full trying to go to tc");
-
         //Go To TC If not close enough
         TCdropOff = GetAdjustedPos(TC);
-        Debug.Log($"Going back to TC {Vector3.Distance(transform.position, TCdropOff)}");
         if (Vector3.Distance(transform.position, TCdropOff) > attackRange)
         {
-            Debug.Log("not close enough to tc");
             NavMeshPath path = new NavMeshPath();
             if (idle)
             {
@@ -202,7 +211,6 @@ public class AIDroneController : MonoBehaviour
         //Deposit and toggle off override
         else
         {
-            Debug.Log("dropping stuff off");
             if (currentInv > 0)
             {
                 //Find gamemanager and update resources
@@ -214,12 +222,32 @@ public class AIDroneController : MonoBehaviour
 
     }
 
+    void Repair()
+    {
+        Debug.Log("Repair Called");
+        if (repairTimer >= repairTime)
+        {
+            if ((target.tarObject.GetComponent<ObjectID>().health + repairAmount) < target.tarObject.GetComponent<ObjectID>().maxHealth)
+            {
+                target.tarObject.GetComponent<ObjectID>().health += repairAmount;
+            }
+            else
+            {
+                target.tarObject.GetComponent<ObjectID>().health = target.tarObject.GetComponent<ObjectID>().maxHealth;
+            }
+            repairTimer = 0.0f;
+        }
+        //If repaired
+        else if (target.tarObject.GetComponent<ObjectID>().health == target.tarObject.GetComponent<ObjectID>().maxHealth)
+        {
+            target.Reset();
+        }
+    }
+
     void Mine()
     {
-        Debug.Log("Mine() Called; [" + mineTimer + " / " + mineTime + "]");
         if (mineTimer >= mineTime)
         {
-            Debug.Log("DIGGY DIGGY HOLE");
             if (currentInv >= mineMaxInv)
             {
                 //Go deposit inv at TC
@@ -344,7 +372,22 @@ public class AIDroneController : MonoBehaviour
                 Stop();
                 if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
                 {
-                    DealDamage();
+                    //If it is our building and we can repair
+                    if (target.tarObject.GetComponent<ObjectID>().ownerPlayerID == objID.ownerPlayerID)
+                    {
+                        if (canRepair)
+                        {
+                            Repair();
+                        }
+                        else
+                        {
+                            target.Reset();
+                        }
+                    }
+                    //enemy building/unit
+                    else if ((target.tarObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID && target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING) || (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT)){
+                        DealDamage();
+                    }
                 }
                 else if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE && canMine)
                 {
@@ -536,9 +579,10 @@ public class AIDroneController : MonoBehaviour
 
         objID.velo = agent.velocity.magnitude;
 
+        //Timers
         attackTimer += Time.unscaledDeltaTime;
-
         mineTimer += Time.unscaledDeltaTime;
+        repairTimer += Time.unscaledDeltaTime;
 
         //Check Idle Condition
         //If we are not moving
