@@ -661,11 +661,6 @@ public class AIDroneController : MonoBehaviour
             }
         }
 
-        if (DebugMode)
-        {
-            //Debug.Log(stuck + "//" + agent.pathStatus + "||" + idle);
-        }
-
         target.Sanity();
 
         if (TCRetOverride)
