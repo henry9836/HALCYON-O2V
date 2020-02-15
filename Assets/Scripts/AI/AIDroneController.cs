@@ -115,6 +115,8 @@ public class AIDroneController : MonoBehaviour
     private float attackTimer = 0.0f;
     private float mineTimer = 0.0f;
     private float currentInv = 0.0f;
+    private float idleTimer = 0.0f;
+    private float maxstuckTime = 5.0f;
 
     public aiDebug returnDebug()
     {
@@ -635,9 +637,29 @@ public class AIDroneController : MonoBehaviour
         //Check Idle Condition
         //If we are not moving
         idle = (agent.velocity.magnitude < 0.1f);
+        if (idle)
+        {
+            idleTimer += Time.unscaledDeltaTime;
+        }
+        else
+        {
+            idleTimer = 0.0f;
+        }
+
 
         //Stuck logic (path pending + no movement)
         stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
+
+        if (stuck)
+        {
+            Debug.Log(idleTimer);
+            if (idleTimer > maxstuckTime)
+            {
+                idleTimer = 0.0f;
+                target.Reset();
+                Stop();
+            }
+        }
 
         if (DebugMode)
         {
