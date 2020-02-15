@@ -99,6 +99,7 @@ public class AIDroneController : MonoBehaviour
     public float repairAmount = 1.0f;
 
     //Privates
+    private GameManager GM;
     private NavMeshAgent agent;
     private ObjectID objID;
     private TargetObject target = null;
@@ -170,6 +171,7 @@ public class AIDroneController : MonoBehaviour
         interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
         target = new TargetObject(Vector3.zero);
         FindTC();
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
     
     void DealDamage()
@@ -182,11 +184,11 @@ public class AIDroneController : MonoBehaviour
             int dice = Random.Range(1, 13);
             if (dice == 12)
             {
-                target.tarObject.GetComponent<ObjectID>().health -= attackDamage * (Random.Range(1.5f, 2.5f));
+                target.objID.health -= attackDamage * (Random.Range(1.5f, 2.5f));
             }
             else
             {
-                target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+                target.objID.health -= attackDamage;
             }
             
             attackTimer = 0.0f;
@@ -214,7 +216,7 @@ public class AIDroneController : MonoBehaviour
             if (currentInv > 0)
             {
                 //Find gamemanager and update resources
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().UpdateResourceCount((int)objID.ownerPlayerID, currentInv);
+                GM.UpdateResourceCount((int)objID.ownerPlayerID, currentInv);
                 currentInv = 0;
             }
             TCRetOverride = false;
@@ -227,18 +229,18 @@ public class AIDroneController : MonoBehaviour
         Debug.Log("Repair Called");
         if (repairTimer >= repairTime)
         {
-            if ((target.tarObject.GetComponent<ObjectID>().health + repairAmount) < target.tarObject.GetComponent<ObjectID>().maxHealth)
+            if ((target.objID.health + repairAmount) < target.objID.maxHealth)
             {
-                target.tarObject.GetComponent<ObjectID>().health += repairAmount;
+                target.objID.health += repairAmount;
             }
             else
             {
-                target.tarObject.GetComponent<ObjectID>().health = target.tarObject.GetComponent<ObjectID>().maxHealth;
+                target.objID.health = target.objID.maxHealth;
             }
             repairTimer = 0.0f;
         }
         //If repaired
-        else if (target.tarObject.GetComponent<ObjectID>().health == target.tarObject.GetComponent<ObjectID>().maxHealth)
+        else if (target.objID.health == target.objID.maxHealth)
         {
             target.Reset();
         }
@@ -257,7 +259,7 @@ public class AIDroneController : MonoBehaviour
             else
             {
                 //Mine some more
-                target.tarObject.GetComponent<ObjectID>().health -= attackDamage;
+                target.objID.health -= attackDamage;
                 currentInv += miningRate;
                 mineTimer = 0.0f;
             }
@@ -295,11 +297,11 @@ public class AIDroneController : MonoBehaviour
         Vector3 dir = (transform.position - target.tarObject.transform.position).normalized;
 
         //Predict movement if moving
-        if (target.tarObject.GetComponent<ObjectID>().velo > 0.1f)
+        if (target.objID.velo > 0.1f)
         {
-            float time = Vector3.Distance(transform.position, target.tarObject.transform.position) / target.tarObject.GetComponent<ObjectID>().velo;
+            float time = Vector3.Distance(transform.position, target.tarObject.transform.position) / target.objID.velo;
 
-            float distanceMoved = time * target.tarObject.GetComponent<ObjectID>().velo;
+            float distanceMoved = time * target.objID.velo;
 
             //Find target's position in future
             Vector3 futurePos = target.tarObject.transform.position + (target.tarObject.transform.forward.normalized * distanceMoved);
@@ -332,7 +334,7 @@ public class AIDroneController : MonoBehaviour
         Vector3 dir = (transform.position - tar.transform.position).normalized;
 
         //Predict movement if moving
-        if (target.tarObject.GetComponent<ObjectID>().velo > 0.1f)
+        if (target.objID.velo > 0.1f)
         {
             float time = Vector3.Distance(transform.position, tar.transform.position) / tar.GetComponent<ObjectID>().velo;
 
@@ -370,10 +372,10 @@ public class AIDroneController : MonoBehaviour
             if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
                 Stop();
-                if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT || target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING)
+                if (target.objID.objID == ObjectID.OBJECTID.UNIT || target.objID.objID == ObjectID.OBJECTID.BUILDING)
                 {
                     //If it is our building and we can repair
-                    if (target.tarObject.GetComponent<ObjectID>().ownerPlayerID == objID.ownerPlayerID)
+                    if (target.objID.ownerPlayerID == objID.ownerPlayerID)
                     {
                         if (canRepair)
                         {
@@ -385,17 +387,17 @@ public class AIDroneController : MonoBehaviour
                         }
                     }
                     //enemy building/unit
-                    else if ((target.tarObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID && target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING) || (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT)){
+                    else if ((target.objID.ownerPlayerID != objID.ownerPlayerID && target.objID.objID == ObjectID.OBJECTID.BUILDING) || (target.objID.objID == ObjectID.OBJECTID.UNIT)){
                         DealDamage();
                     }
                 }
-                else if (target.tarObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE && canMine)
+                else if (target.objID.objID == ObjectID.OBJECTID.RESOURCE && canMine)
                 {
                     Mine();
                 }
                 else
                 {
-                    Debug.LogWarning("Unspecified action for target {" + target.tarObject.GetComponent<ObjectID>().objID + "}");
+                    Debug.LogWarning("Unspecified action for target {" + target.objID.objID + "}");
                 }
             }
             else
