@@ -127,12 +127,6 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 6622558173846460449}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &238771748 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4684451384437998982, guid: 9f7af3e61954402418a3abdabb5c0f40,
-    type: 3}
-  m_PrefabInstance: {fileID: 4684451386115084078}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &246050002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1360,113 +1354,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230974743}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1662177351
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1662177352}
-  - component: {fileID: 1662177354}
-  - component: {fileID: 1662177353}
-  - component: {fileID: 1662177355}
-  - component: {fileID: 1662177356}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1662177352
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662177351}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1140986, y: 0.1140986, z: 0.1140986}
-  m_Children: []
-  m_Father: {fileID: 238771748}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -61.56, y: 256}
-  m_SizeDelta: {x: 6135.46, y: 341.1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1662177353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662177351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 300
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 300
-    m_Alignment: 2
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: New Text
---- !u!222 &1662177354
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662177351}
-  m_CullTransparentMesh: 0
---- !u!114 &1662177355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662177351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1933c21a3d69b114c9f4b436371e6a7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 0}
---- !u!114 &1662177356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662177351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 3, y: 3}
-  m_UseGraphicAlpha: 1
 --- !u!1001 &1900529405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1882,6 +1769,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046076, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: m_AllowDynamicResolution
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
         type: 3}
       propertyPath: clearColorMode
@@ -1901,6 +1793,11 @@ PrefabInstance:
         type: 3}
       propertyPath: backgroundColorHDR.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: allowDynamicResolution
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2934776490894046079, guid: 79f46892e8f8de147af385774121346a,
         type: 3}
