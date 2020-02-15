@@ -76,15 +76,17 @@ public class AIDroneController : MonoBehaviour
         NOATTACK
     };
 
-    public enum UnitJob
+    public enum DroneMode
     {
+        UNASSIGNED,
         WORKER,
         MINER,
-
+        FIGHTER
     };
 
     //Publics
-    public AttackState attackState;
+    public AttackState attackState = AttackState.ATTACK;
+    public DroneMode droneMode = DroneMode.UNASSIGNED;
     public bool DebugMode = false;
     public bool canMine = false;
     public bool canRepair = false;
@@ -131,10 +133,32 @@ public class AIDroneController : MonoBehaviour
         {
             target = new TargetObject(obj);
 
+            //Assign Drone Type
+
+            //We can mine and the target is a resource
+            if (canMine && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
+            {
+                droneMode = DroneMode.MINER;
+            }
+            //We can repair and the target is a building that we own
+            else if (canRepair && target.objID.objID == ObjectID.OBJECTID.BUILDING && target.objID.ownerPlayerID == objID.ownerPlayerID)
+            {
+                droneMode = DroneMode.WORKER;
+            }
+            //Assume is enemy 
+            else
+            {
+                droneMode = DroneMode.FIGHTER;
+            }
+
             //Find a position
             target.tarObjectAdjustPos = GetAdjustedPos();
         }
         else {
+            //Switch Mode
+            //droneMode = DroneMode.FIGHTER;
+
+            //Go to pos
             target = new TargetObject(targetPos);
         }
     }
@@ -226,7 +250,6 @@ public class AIDroneController : MonoBehaviour
 
     void Repair()
     {
-        Debug.Log("Repair Called");
         if (repairTimer >= repairTime)
         {
             if ((target.objID.health + repairAmount) < target.objID.maxHealth)
@@ -404,7 +427,6 @@ public class AIDroneController : MonoBehaviour
             {
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
-                    Debug.LogWarning("Get To Enemy my friend stopped");
                     target.tarObjectAdjustPos = GetAdjustedPos();
                     agent.CalculatePath(target.tarObjectAdjustPos, path);
                     agent.SetPath(path);
@@ -416,7 +438,6 @@ public class AIDroneController : MonoBehaviour
         //Get to the enemy
         if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
         {
-            Debug.LogWarning("Get To Enemy");
             //Go To Point
             //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
             if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
@@ -495,40 +516,51 @@ public class AIDroneController : MonoBehaviour
 
         for (int i = 0; i < cols.Length; i++)
         {
-
-            
             //Ignore our own objects
             if (cols[i].gameObject.GetComponent<ObjectID>() != null)
             {
                 if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
                 {
-                    //If is resource and cannot mine
-                    if (!canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
+                    //If is resource and is not in mine mode
+                    if (droneMode != DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
                         //nothing
                     }
-                    //Add to foundResources
-                    else if (canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+                    //Add if is a resource and we in mine mode and we can mine
+                    else if (canMine && droneMode == DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                     {
+                        Debug.Log($"I am a miner and my drone mode is {droneMode}");
                         foundResources.Add(cols[i].gameObject);
                     }
-                    //Not a resource is a unit
+                    //Not a resource is a unit switch to attack mode
                     else
                     {
-                        //Make a new Target
-                        target = new TargetObject(cols[i].gameObject);
-                        target.tarObjectAdjustPos = GetAdjustedPos();
+                        //Unless we are in mine mode then keep mining
+                        if (droneMode != DroneMode.MINER)
+                        {
 
-                        //Get a good position near to the target in a arc realitve to our position
+                            Debug.Log($"Found target: {cols[i].gameObject.name}");
 
-                        return true;
+                            //Make a new Target
+                            target = new TargetObject(cols[i].gameObject);
+
+                            //Get a good position near to the target in a arc realitve to our position
+                            target.tarObjectAdjustPos = GetAdjustedPos();
+
+                            //Switch to fighter mode
+                            //droneMode = DroneMode.FIGHTER;
+
+                            return true;
+                        }
                     }
                 }
             }
         }
 
-        //Fallback onto resources
+        //Fallback onto resources if no unity were found
         if (foundResources.Count > 0)
         {
+            Debug.Log("Hit fallback");
+
             float shortestDis = Mathf.Infinity;
             GameObject shortestDirObj = null;
 
@@ -546,6 +578,20 @@ public class AIDroneController : MonoBehaviour
             target.tarObjectAdjustPos = GetAdjustedPos();
 
             return true;
+        }
+
+        //Reset our mode to a default since there is no resources nearby
+        if (droneMode == DroneMode.MINER && canRepair)
+        {
+            droneMode = DroneMode.WORKER;
+        }
+        else if (droneMode == DroneMode.MINER && !canRepair)
+        {
+            droneMode = DroneMode.FIGHTER;
+        }
+        else
+        {
+            droneMode = DroneMode.WORKER;
         }
 
         return false;
@@ -621,9 +667,5 @@ public class AIDroneController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-
     }
-
-
 }
