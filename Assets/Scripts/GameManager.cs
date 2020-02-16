@@ -19,8 +19,24 @@ public class GameManager : MonoBehaviour
     }
 
     int nextID = 0;
+    int tcCount = 0;
     public float defaultResources = 50.0f;
     public List<Bank> banks = new List<Bank>();
+    public List<GameObject> playerTCs = new List<GameObject>();
+    public List<GameObject> aiTCs = new List<GameObject>();
+
+    public void regTC(bool amAI, GameObject caller)
+    {
+        if (amAI)
+        {
+            aiTCs.Add(caller);
+        }
+        else
+        {
+            playerTCs.Add(caller);
+        }
+        tcCount++;
+    }
 
     bool DoesIDExist(int ID)
     {
@@ -82,7 +98,45 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void CheckListsForNulls()
+    {
+        for (int i = 0; i < aiTCs.Count; i++)
+        {
+            if (aiTCs[i].gameObject == null)
+            {
+                aiTCs.RemoveAt(i);
+            }
+        }
 
+        for (int i = 0; i < playerTCs.Count; i++)
+        {
+            if (playerTCs[i].gameObject == null)
+            {
+                playerTCs.RemoveAt(i);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //Once tcs are registered
+        if (tcCount >= 2)
+        {
+            //Check who is alive
+            //Player lost
+            if (playerTCs.Count <= 0)
+            {
+                Debug.Log("AI WINS");
+            }
+            //AI lost
+            else if (aiTCs.Count <= 0)
+            {
+                Debug.Log("PLAYER WINS");
+            }
+        }
+
+        CheckListsForNulls();
+    }
 
 
 }

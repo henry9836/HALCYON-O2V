@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4429687311793948950}
   - component: {fileID: 5019157667760513427}
   - component: {fileID: 5255937601362046576}
+  - component: {fileID: 2313573671899036461}
   m_Layer: 12
   m_Name: TemporyTC
   m_TagString: TC
@@ -141,6 +142,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7b01e617d3511488318953c3534e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costToBuild: 25
   built: 0
   placed: 0
   defaultMaterial: {fileID: 2100000, guid: 901d860f9680fcf4895d867bdfa02ae6, type: 2}
+--- !u!114 &2313573671899036461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407690025781185845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20ddc7f26b050c1439daddbdb8856189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
