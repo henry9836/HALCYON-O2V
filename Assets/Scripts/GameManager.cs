@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -127,11 +128,13 @@ public class GameManager : MonoBehaviour
             if (playerTCs.Count <= 0)
             {
                 Debug.Log("AI WINS");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
             //AI lost
             else if (aiTCs.Count <= 0)
             {
                 Debug.Log("PLAYER WINS");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
 
