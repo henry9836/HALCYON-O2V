@@ -123,6 +123,7 @@ public class PlayerController : MonoBehaviour
                     //Build
                     if (Input.GetMouseButtonDown(0))
                     {
+                        spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
                         GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
                         spawnedObj.GetComponent<BuildingController>().Placed();
                         lastSelectedBuildingToBuild = null;
