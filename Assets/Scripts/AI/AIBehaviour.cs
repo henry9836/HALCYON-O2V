@@ -20,7 +20,7 @@ public class AIBehaviour : MonoBehaviour
     public int playerID = -1;
 
     private List<scoutedObject> foundObjs = new List<scoutedObject>();
-    private ObjectID objID;
+    public ObjectID objID;
 
     public void AddObjToList(GameObject obj)
     {
@@ -53,15 +53,20 @@ public class AIBehaviour : MonoBehaviour
     {
         playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.AI_1);
         objID = GetComponent<ObjectID>();
-        objID.ownerPlayerID = (ObjectID.PlayerID)playerID;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckForNulls();
+        if (objID.ownerPlayerID == ObjectID.PlayerID.UNASSIGNED)
+        {
+            Debug.Log($"objID: {objID} = {objID.ownerPlayerID}");
+            objID.ownerPlayerID = (ObjectID.PlayerID)playerID;
+        }
+        else
+        {
 
-
-
+            CheckForNulls();
+        }
     }
 }

@@ -297,16 +297,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75dcf996388cb434296c79ac68bf2404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackState: 0
+  droneMode: 0
   DebugMode: 0
+  canMine: 0
+  canRepair: 0
   attackRange: 2
   attackDamage: 7
   agroRange: 7
   attackCooldown: 0.5
-  canMine: 0
   miningRate: 3
   mineTime: 1
   mineMaxInv: 3
-  attackState: 0
+  repairTime: 5
+  repairAmount: 1
 --- !u!114 &2559433677861808048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,10 +323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6045c1b77597870499c626aaf908150a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownerPlayerID: 1
+  ownerPlayerID: 0
   objID: 1
   health: 100
   maxHealth: 100
+  velo: 0
 --- !u!195 &6869892237611912349
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -840,7 +845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Version: 2
-  m_Material: {fileID: 2100000, guid: f81ef05a1912d5b4bbfdfd78d38c99f0, type: 2}
+  m_Material: {fileID: 0}
   m_DrawDistance: 1000
   m_FadeScale: 1
   m_UVScale: {x: 1, y: 1}

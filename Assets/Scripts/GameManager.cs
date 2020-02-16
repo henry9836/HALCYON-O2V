@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject tmp = Instantiate(TCTemplate, spawnLocations[i].transform.position, Quaternion.identity);
                 //Spawn a player
-                if (i <= MagicTraveller.PlayerCounter)
+                if ((i + 1) <= MagicTraveller.PlayerCounter)
                 {
                     tmp.GetComponent<ObjectID>().ownerPlayerID = ObjectID.PlayerID.PLAYER;
                 }
