@@ -16,13 +16,17 @@ public class PlayerController : MonoBehaviour
     public LayerMask unitInteractLayers;
     public float checkRadius = 2.0f;
     public int playerID = -1;
+    public Material buildAvailable;
+    public Material buildNotAvailable;
 
     //Private
     public ActionState currentActionState = ActionState.NONE;
-    private GameObject lastSelectedBuildingToBuild = null;
+    public GameObject lastSelectedBuildingToBuild = null;
+    private GameObject spawnedObj = null;
     public List<GameObject> selectedUnits = new List<GameObject>();
-
-
+    private Vector3 mouseInWorldPos = Vector3.zero;
+    private mousepick mousePick;
+    private MeshRenderer objMeshRenderer;
 
     public void assignNewUnits(List<GameObject> newUnits)
     {
@@ -34,9 +38,30 @@ public class PlayerController : MonoBehaviour
         lastSelectedBuildingToBuild = newBuild;
     }
 
+    Vector3 ConvertToSnapPosition(Vector3 rawVec)
+    {
+        Vector3 result = Vector3.zero;
+
+        //Convert Down
+        // (153 -> 1.53)
+        //rawVec *= 0.01f;
+
+
+        //Round off numbers
+        //(1.53 -> 1.0)
+        result = new Vector3(Mathf.RoundToInt(rawVec.x), Mathf.RoundToInt(rawVec.y), Mathf.RoundToInt(rawVec.z));
+
+        //Convert Up
+        //(1 -> 100)
+        //result *= 100;
+
+        return result;
+    }
+
     void Start()
     {
         playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.PLAYER);
+        mousePick = GetComponent<mousepick>();
     }
 
     private void Update()
@@ -55,12 +80,28 @@ public class PlayerController : MonoBehaviour
             currentActionState = ActionState.BUILDMODE;
 
             //Build a building
+            mouseInWorldPos = ConvertToSnapPosition(mousePick.getMousePos());
+
+            if (spawnedObj == null)
+            {
+                spawnedObj = Instantiate(lastSelectedBuildingToBuild, mouseInWorldPos, Quaternion.identity);
+                objMeshRenderer = spawnedObj.GetComponent<MeshRenderer>();
+                objMeshRenderer.material = buildNotAvailable;
+            }
+            else
+            {
+                spawnedObj.transform.position = mouseInWorldPos;
+            }
 
         }
         //If we have placed our building then revert to the none mode
         else if (currentActionState == ActionState.BUILDMODE)
         {
             currentActionState = ActionState.NONE;
+            if (spawnedObj != null)
+            {
+                Destroy(spawnedObj);
+            }
         }
 
         //Move/Attack Mode
@@ -74,7 +115,7 @@ public class PlayerController : MonoBehaviour
                 GameObject targetObj = null;
 
                 //Get The mouse position in world
-                Vector3 mouseInWorldPos = GetComponent<mousepick>().getMousePos();
+                mouseInWorldPos = mousePick.getMousePos();
 
                 //Find nearby objs to mouse
                 Collider[] cols = Physics.OverlapSphere(mouseInWorldPos, checkRadius, unitInteractLayers);
