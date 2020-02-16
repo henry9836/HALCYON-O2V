@@ -20,6 +20,7 @@ public class AIBehaviour : MonoBehaviour
     public int playerID = -1;
 
     private List<scoutedObject> foundObjs = new List<scoutedObject>();
+    private ObjectID objID;
 
     public void AddObjToList(GameObject obj)
     {
@@ -51,6 +52,8 @@ public class AIBehaviour : MonoBehaviour
     void Start()
     {
         playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.AI_1);
+        objID = GetComponent<ObjectID>();
+        objID.ownerPlayerID = (ObjectID.PlayerID)playerID;
     }
 
     // Update is called once per frame
