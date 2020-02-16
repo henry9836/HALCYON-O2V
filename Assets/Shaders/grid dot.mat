@@ -124,7 +124,7 @@ Material:
     m_Floats:
     - Vector1_C5D70084: 10
     - Vector1_E6A0C885: 0.4
-    - Vector1_F1ECF105: 11.9
+    - Vector1_F1ECF105: 50
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -201,7 +201,7 @@ Material:
     - _PPDMinSamples: 5
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
-    - _ReceivesSSR: 1
+    - _ReceivesSSR: 0
     - _RefractionModel: 0
     - _RenderQueueType: 5
     - _RequireSplitLighting: 0
@@ -213,11 +213,11 @@ Material:
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1
     - _SrcBlend: 1
-    - _StencilRef: 2
-    - _StencilRefDepth: 0
+    - _StencilRef: 0
+    - _StencilRefDepth: 32
     - _StencilRefDistortionVec: 64
     - _StencilRefGBuffer: 2
-    - _StencilRefMV: 128
+    - _StencilRefMV: 160
     - _StencilWriteMask: 3
     - _StencilWriteMaskDepth: 48
     - _StencilWriteMaskDistortionVec: 64
