@@ -8,6 +8,7 @@ TagManager:
   - Unit
   - GameManager
   - AIPlayer
+  - SpawnPosition
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - Building
   - Resource
   - camwall
-  - 
+  - NoCollide
   - 
   - 
   - 

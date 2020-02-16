@@ -6,11 +6,6 @@ public class Lookat : MonoBehaviour
 {
     void Update()
     {
-        looktowards();
-    }
-
-    public void looktowards()
-    {
-        this.transform.eulerAngles = new Vector3(GameObject.Find("Main Camera").transform.eulerAngles.x, GameObject.Find("Main Camera").transform.eulerAngles.y, GameObject.Find("Main Camera").transform.eulerAngles.z);
+        this.transform.eulerAngles = new Vector3(GameObject.Find("Main Camera").transform.eulerAngles.x, GameObject.Find("Main Camera").transform.eulerAngles.y, GameObject.Find("Main Camera").transform.eulerAngles.z); 
     }
 }
