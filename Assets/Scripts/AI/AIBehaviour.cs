@@ -4,7 +4,48 @@ using UnityEngine;
 
 public class AIBehaviour : MonoBehaviour
 {
+
+    public class scoutedObject
+    {
+        public scoutedObject(GameObject _obj)
+        {
+            obj = _obj;
+            objID = obj.GetComponent<ObjectID>();
+        }
+
+        public GameObject obj;
+        public ObjectID objID;
+    }
+
     public int playerID = -1;
+
+    private List<scoutedObject> foundObjs = new List<scoutedObject>();
+
+    public void AddObjToList(GameObject obj)
+    {
+        //Check if we already know this obj
+        for (int i = 0; i < foundObjs.Count; i++)
+        {
+            if (foundObjs[i].obj == obj)
+            {
+                return;
+            }
+        }
+
+        //If we don't then add to list
+        foundObjs.Add(new scoutedObject(obj));
+    }
+
+    void CheckForNulls()
+    {
+        for (int i = 0; i < foundObjs.Count; i++)
+        {
+            if (foundObjs[i].obj == null)
+            {
+                foundObjs.RemoveAt(i);
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +56,9 @@ public class AIBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckForNulls();
+
+
+
     }
 }
