@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     bool isBuildSpot(Vector3 buildPos)
     {
-        Collider[] cols = Physics.OverlapSphere(buildPos, 0.3f, unitInteractLayers);
+        Collider[] cols = Physics.OverlapSphere(buildPos, 0.45f, unitInteractLayers);
         for (int i = 0; i < cols.Length; i++)
         {
             //Ignore Ourselves
