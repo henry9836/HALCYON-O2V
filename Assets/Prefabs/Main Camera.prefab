@@ -30,7 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6622558173884126353}
-  m_LocalRotation: {x: 0.21336608, y: 0.3723382, z: -0.08837912, w: 0.89890397}
+  m_LocalRotation: {x: 0.21336989, y: 0.37233785, z: -0.0883807, w: 0.8989031}
   m_LocalPosition: {x: -20.74, y: 7.74, z: -20.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -154,7 +154,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 0
+  antialiasing: 3
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -205,7 +205,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movable: 1
-  speed: 0.3
+  speed: 0.05
+  camwall:
+    serializedVersion: 2
+    m_Bits: 16384
+  FBLR:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &6622558173884126359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,5 +271,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 6144
   checkRadius: 2
+  playerID: -1
+  buildAvailable: {fileID: 0}
+  buildNotAvailable: {fileID: 0}
+  VisualBuildFloor: {fileID: 0}
   currentActionState: 0
+  lastSelectedBuildingToBuild: {fileID: 0}
   selectedUnits: []
