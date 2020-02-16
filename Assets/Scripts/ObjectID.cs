@@ -41,6 +41,11 @@ public class ObjectID : MonoBehaviour
         if (objID == OBJECTID.UNIT) {
             this.gameObject.transform.GetChild(0).GetComponentInChildren<Image>().fillAmount = health / maxHealth;
         }
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
 }
