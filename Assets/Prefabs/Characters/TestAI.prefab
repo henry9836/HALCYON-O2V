@@ -299,9 +299,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackState: 0
   droneMode: 0
-  DebugMode: 0
-  canMine: 0
-  canRepair: 0
+  DebugMode: 1
+  canMine: 1
+  canRepair: 1
   attackRange: 2
   attackDamage: 7
   agroRange: 7
