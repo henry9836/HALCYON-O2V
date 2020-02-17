@@ -932,7 +932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Version: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 4265f9a242258a4418c304e97636bb28, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 1
   m_UVScale: {x: 1, y: 1}
@@ -1062,6 +1062,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: workerUnit
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 55ef5de44369bbe4cac517992245eeb4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -98103681908221718, guid: 55ef5de44369bbe4cac517992245eeb4,
         type: 3}
