@@ -127,8 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownerPlayerID: 0
   objID: 2
-  health: 100
-  maxHealth: 100
+  health: 1000
+  maxHealth: 1000
   velo: 0
 --- !u!114 &5255937601362046576
 MonoBehaviour:
@@ -159,4 +159,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   costOfUnit: 10
-  unit: {fileID: 2734880644910273183, guid: aeee03dec089bdb40a6cb8ecee3bbdac, type: 3}
+  unit: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49, type: 3}
