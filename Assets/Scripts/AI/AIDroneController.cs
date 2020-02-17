@@ -532,14 +532,7 @@ public class AIDroneController : MonoBehaviour
     {
         Collider[] cols;
 
-        if (attackState == AttackState.ATTACK)
-        {
-            cols = Physics.OverlapSphere(transform.position, agroRange, interactLayer);
-        }
-        else
-        {
-            cols = Physics.OverlapSphere(transform.position, attackRange, interactLayer);
-        }
+        cols = Physics.OverlapSphere(transform.position, agroRange, interactLayer);
 
         List<GameObject> foundResources = new List<GameObject>();
 
@@ -552,36 +545,24 @@ public class AIDroneController : MonoBehaviour
                 {
                     if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
                     {
-                        //If is resource and is not in mine mode
-                        if (droneMode != DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
-                            //nothing
-                        }
                         //Add if is a resource and we in mine mode and we can mine
-                        else if (canMine && droneMode == DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+                        if (canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                         {
                             Debug.Log($"I am a miner and my drone mode is {droneMode}");
                             foundResources.Add(cols[i].gameObject);
                         }
-                        //Not a resource is a unit switch to attack mode
-                        else
+                        //If we can attack or place a bomb and is building or unit
+                        else if ((canPlaceBomb || canFight) && (cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING || cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT))
                         {
-                            //Unless we are in mine mode then keep mining
-                            if (droneMode != DroneMode.MINER)
-                            {
+                            Debug.Log($"Found target: {cols[i].gameObject.name}");
 
-                                Debug.Log($"Found target: {cols[i].gameObject.name}");
+                            //Make a new Target
+                            target = new TargetObject(cols[i].gameObject);
 
-                                //Make a new Target
-                                target = new TargetObject(cols[i].gameObject);
+                            //Get a good position near to the target in a arc realitve to our position
+                            target.tarObjectAdjustPos = GetAdjustedPos();
 
-                                //Get a good position near to the target in a arc realitve to our position
-                                target.tarObjectAdjustPos = GetAdjustedPos();
-
-                                //Switch to fighter mode
-                                //droneMode = DroneMode.FIGHTER;
-
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }
@@ -737,7 +718,6 @@ public class AIDroneController : MonoBehaviour
         {
             idleTimer = 0.0f;
         }
-
 
         //Stuck logic (path pending + no movement)
         stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));

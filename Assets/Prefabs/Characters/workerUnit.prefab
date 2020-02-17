@@ -627,9 +627,12 @@ MonoBehaviour:
   DebugMode: 1
   canMine: 1
   canRepair: 1
+  canFight: 0
+  canPlaceBomb: 0
+  canAttachTo: 0
   attackRange: 1.6666666
   attackDamage: 7
-  agroRange: 6.6666665
+  agroRange: 10
   attackCooldown: 0.5
   miningRate: 3
   mineTime: 5
