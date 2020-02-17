@@ -283,7 +283,7 @@ Transform:
   m_GameObject: {fileID: 246050002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.019, y: -0.03, z: -4.723}
-  m_LocalScale: {x: 29.21161, y: 0.1, z: 27.393024}
+  m_LocalScale: {x: 100, y: 0.1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
@@ -485,6 +485,53 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6330957579644398782}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &435955070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 435955072}
+  - component: {fileID: 435955071}
+  m_Layer: 0
+  m_Name: launcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &435955071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435955070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580c07d2f2273a74daf90e3251f9ef0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Timer: 0
+  rate: 3
+  astroid: {fileID: 8253096406471153648, guid: 4217fa7d7733b9c429fe2f2e50b37d70, type: 3}
+  force: {x: 0, y: 0, z: 3e+10}
+--- !u!4 &435955072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435955070}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.03, y: 1.09, z: -24.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &554184382 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4684451385594470800, guid: 9f7af3e61954402418a3abdabb5c0f40,
@@ -1551,6 +1598,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AllowDynamicResolution
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046076, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: orthographic size
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
         type: 3}
