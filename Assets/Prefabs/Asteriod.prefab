@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 8253096406471153655}
   - component: {fileID: 8253096406471153654}
   - component: {fileID: 4543692159341292182}
-  - component: {fileID: 436722170}
   m_Layer: 13
   m_Name: Asteriod
   m_TagString: Untagged
@@ -159,16 +158,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &436722170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8253096406471153648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c1afb9e0ec5c5243915fe1de79c4502, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force: {x: 5e+9, y: 0, z: 0}
