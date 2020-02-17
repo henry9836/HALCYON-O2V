@@ -682,7 +682,7 @@ public class AIDroneController : MonoBehaviour
         //Death
         if (objID.health <= 0)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }
