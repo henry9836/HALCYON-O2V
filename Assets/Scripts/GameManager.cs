@@ -123,12 +123,20 @@ public class GameManager : MonoBehaviour
     {
         GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("SpawnPosition");
 
+        List<GameObject> spawnLocationsList = new List<GameObject>();
+
+        for (int i = 0; i < spawnLocations.Length; i++)
+        {
+            spawnLocationsList.Add(spawnLocations[i]);
+        }
+
         for (int i = 0; i < MagicTraveller.TCCount; i++)
         {
             //Valid spawn position
-            if (i <= spawnLocations.Length)
+            if (i <= spawnLocationsList.Count)
             {
-                GameObject tmp = Instantiate(TCTemplate, spawnLocations[i].transform.position, Quaternion.identity);
+                int element = UnityEngine.Random.Range(0, spawnLocationsList.Count);
+                GameObject tmp = Instantiate(TCTemplate, spawnLocationsList[element].transform.position, Quaternion.identity);
                 //Spawn a player
                 if ((i + 1) <= MagicTraveller.PlayerCounter)
                 {
@@ -139,6 +147,7 @@ public class GameManager : MonoBehaviour
                 {
                     tmp.AddComponent<AIBehaviour>();
                 }
+                spawnLocationsList.RemoveAt(element);
             }
             else
             {
