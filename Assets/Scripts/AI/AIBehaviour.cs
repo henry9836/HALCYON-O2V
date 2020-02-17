@@ -20,7 +20,10 @@ public class AIBehaviour : MonoBehaviour
     public int playerID = -1;
 
     private List<scoutedObject> foundObjs = new List<scoutedObject>();
+    private float timer;
+    private float spawnThreshold;
     public ObjectID objID;
+    public GameObject TC;
 
     public void AddObjToList(GameObject obj)
     {
@@ -53,6 +56,7 @@ public class AIBehaviour : MonoBehaviour
     {
         playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.AI_1);
         objID = GetComponent<ObjectID>();
+        spawnThreshold = Random.Range(5.0f, 15.0f);
     }
 
     // Update is called once per frame
@@ -65,8 +69,32 @@ public class AIBehaviour : MonoBehaviour
         }
         else
         {
+            if (TC == null)
+            {
+                GameObject[] tcs = GameObject.FindGameObjectsWithTag("TC");
 
-            CheckForNulls();
+                for (int i = 0; i < tcs.Length; i++)
+                {
+                    if (tcs[i].GetComponent<ObjectID>().ownerPlayerID == objID.ownerPlayerID)
+                    {
+                        TC = tcs[i].gameObject;
+                    }
+                }
+
+            }
+            else
+            {
+                timer += Time.unscaledDeltaTime;
+
+                if (timer >= spawnThreshold)
+                {
+                    spawnThreshold = Random.Range(5.0f, 15.0f);
+                    TC.GetComponent<TCController>().SpawnUnit();
+                    timer = 0.0f;
+                }
+
+                CheckForNulls();
+            }
         }
     }
 }
