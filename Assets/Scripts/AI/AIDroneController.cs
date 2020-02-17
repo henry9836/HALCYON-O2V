@@ -78,18 +78,22 @@ public class AIDroneController : MonoBehaviour
 
     public enum DroneMode
     {
-        UNASSIGNED,
         WORKER,
+        FIGHTER,
         MINER,
-        FIGHTER
+        BOMBER,
+        BOOSTER
     };
 
     //Publics
     public AttackState attackState = AttackState.ATTACK;
-    public DroneMode droneMode = DroneMode.UNASSIGNED;
+    public DroneMode droneMode = DroneMode.WORKER;
     public bool DebugMode = false;
     public bool canMine = false;
     public bool canRepair = false;
+    public bool canFight = false;
+    public bool canPlaceBomb = false;
+    public bool canAttachTo = false;
     public float attackRange = 2.0f;
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
@@ -118,6 +122,11 @@ public class AIDroneController : MonoBehaviour
     private float idleTimer = 0.0f;
     private float maxstuckTime = 5.0f;
 
+    public void updateWorkerType(DroneMode newType)
+    {
+        droneMode = newType;
+    }
+
     public aiDebug returnDebug()
     {
         return new aiDebug(target, stuck, idle, attackState);
@@ -135,31 +144,33 @@ public class AIDroneController : MonoBehaviour
         {
             target = new TargetObject(obj);
 
-            //Assign Drone Type
+            //Do not go somewhere we shouldn't according to our flags
 
-            //We can mine and the target is a resource
-            if (canMine && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
+            //We can mine or attach and the target is a resource
+            if ((canAttachTo || canMine) && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
             {
-                droneMode = DroneMode.MINER;
+                //Find a position
+                target.tarObjectAdjustPos = GetAdjustedPos();
             }
             //We can repair and the target is a building that we own
             else if (canRepair && target.objID.objID == ObjectID.OBJECTID.BUILDING && target.objID.ownerPlayerID == objID.ownerPlayerID)
             {
-                droneMode = DroneMode.WORKER;
+                //Find a position
+                target.tarObjectAdjustPos = GetAdjustedPos();
             }
-            //Assume is enemy 
+            //We can fight or we are a bomber and the target is a building or unit the enemy owns
+            else if ((canFight || canPlaceBomb) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
+            {
+                //Find a position
+                target.tarObjectAdjustPos = GetAdjustedPos();
+            }
             else
             {
-                droneMode = DroneMode.FIGHTER;
+                Debug.Log($"Invalid Request From UpdateTargetPos on Object [{gameObject.name}], check flags");
+                target.Reset();
             }
-
-            //Find a position
-            target.tarObjectAdjustPos = GetAdjustedPos();
         }
         else {
-            //Switch Mode
-            //droneMode = DroneMode.FIGHTER;
-
             //Go to pos
             target = new TargetObject(targetPos);
         }
@@ -188,21 +199,6 @@ public class AIDroneController : MonoBehaviour
             }
         }
     }
-
-    void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        objID = GetComponent<ObjectID>();
-        objID.objID = ObjectID.OBJECTID.UNIT;
-        Debug.Log($"OBJ:  {GameObject.FindGameObjectWithTag("MainCamera").name}");
-        Debug.Log($"PC: {GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>()}");
-        Debug.Log($"LAYER: [{GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers}]");
-        interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
-        target = new TargetObject(Vector3.zero);
-        FindTC();
-        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-    }
-    
     void DealDamage()
     {
         if (attackTimer > attackCooldown)
@@ -292,6 +288,11 @@ public class AIDroneController : MonoBehaviour
                 mineTimer = 0.0f;
             }
         }
+    }
+
+    void Attach()
+    {
+        Debug.Log("Attach() Called");
     }
 
     bool HasNeighbourStopped()
@@ -399,7 +400,10 @@ public class AIDroneController : MonoBehaviour
             //If the target is within range
             if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
+                //Stop we have reached target
                 Stop();
+
+                //What do we do with object
                 if (target.objID.objID == ObjectID.OBJECTID.UNIT || target.objID.objID == ObjectID.OBJECTID.BUILDING)
                 {
                     //If it is our building and we can repair
@@ -414,14 +418,33 @@ public class AIDroneController : MonoBehaviour
                             target.Reset();
                         }
                     }
-                    //enemy building/unit
+                    //Is this a enemy building or unit?
                     else if ((target.objID.ownerPlayerID != objID.ownerPlayerID && target.objID.objID == ObjectID.OBJECTID.BUILDING) || (target.objID.objID == ObjectID.OBJECTID.UNIT)){
-                        DealDamage();
+                        if (canFight)
+                        {
+                            DealDamage();
+                        }
+                        else
+                        {
+                            target.Reset();
+                        }
                     }
                 }
-                else if (target.objID.objID == ObjectID.OBJECTID.RESOURCE && canMine)
+                //Is this a resource?
+                else if (target.objID.objID == ObjectID.OBJECTID.RESOURCE)
                 {
-                    Mine();
+                    if (canMine)
+                    {
+                        Mine();
+                    }
+                    if (canAttachTo)
+                    {
+                        Attach();
+                    }
+                    else
+                    {
+                        target.Reset();
+                    }
                 }
                 else
                 {
@@ -430,6 +453,7 @@ public class AIDroneController : MonoBehaviour
             }
             else
             {
+                //We are not in range goto enemy
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
                     target.tarObjectAdjustPos = GetAdjustedPos();
@@ -521,40 +545,43 @@ public class AIDroneController : MonoBehaviour
 
         for (int i = 0; i < cols.Length; i++)
         {
-            //Ignore our own objects
-            if (cols[i].gameObject.GetComponent<ObjectID>() != null)
-            {
-                if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
+            //Ignore if is not within attackRange and we are standing ground
+            if ((Vector3.Distance(cols[i].transform.position, transform.position) <= attackRange && attackState == AttackState.STANDGROUND) || attackState == AttackState.ATTACK) {
+                //Ignore our own objects
+                if (cols[i].gameObject.GetComponent<ObjectID>() != null)
                 {
-                    //If is resource and is not in mine mode
-                    if (droneMode != DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
-                        //nothing
-                    }
-                    //Add if is a resource and we in mine mode and we can mine
-                    else if (canMine && droneMode == DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+                    if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
                     {
-                        Debug.Log($"I am a miner and my drone mode is {droneMode}");
-                        foundResources.Add(cols[i].gameObject);
-                    }
-                    //Not a resource is a unit switch to attack mode
-                    else
-                    {
-                        //Unless we are in mine mode then keep mining
-                        if (droneMode != DroneMode.MINER)
+                        //If is resource and is not in mine mode
+                        if (droneMode != DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
+                            //nothing
+                        }
+                        //Add if is a resource and we in mine mode and we can mine
+                        else if (canMine && droneMode == DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                         {
+                            Debug.Log($"I am a miner and my drone mode is {droneMode}");
+                            foundResources.Add(cols[i].gameObject);
+                        }
+                        //Not a resource is a unit switch to attack mode
+                        else
+                        {
+                            //Unless we are in mine mode then keep mining
+                            if (droneMode != DroneMode.MINER)
+                            {
 
-                            Debug.Log($"Found target: {cols[i].gameObject.name}");
+                                Debug.Log($"Found target: {cols[i].gameObject.name}");
 
-                            //Make a new Target
-                            target = new TargetObject(cols[i].gameObject);
+                                //Make a new Target
+                                target = new TargetObject(cols[i].gameObject);
 
-                            //Get a good position near to the target in a arc realitve to our position
-                            target.tarObjectAdjustPos = GetAdjustedPos();
+                                //Get a good position near to the target in a arc realitve to our position
+                                target.tarObjectAdjustPos = GetAdjustedPos();
 
-                            //Switch to fighter mode
-                            //droneMode = DroneMode.FIGHTER;
+                                //Switch to fighter mode
+                                //droneMode = DroneMode.FIGHTER;
 
-                            return true;
+                                return true;
+                            }
                         }
                     }
                 }
@@ -586,18 +613,18 @@ public class AIDroneController : MonoBehaviour
         }
 
         //Reset our mode to a default since there is no resources nearby
-        if (droneMode == DroneMode.MINER && canRepair)
-        {
-            droneMode = DroneMode.WORKER;
-        }
-        else if (droneMode == DroneMode.MINER && !canRepair)
-        {
-            droneMode = DroneMode.FIGHTER;
-        }
-        else
-        {
-            droneMode = DroneMode.WORKER;
-        }
+        //if (droneMode == DroneMode.MINER && canRepair)
+        //{
+        //    droneMode = DroneMode.WORKER;
+        //}
+        //else if (droneMode == DroneMode.MINER && !canRepair)
+        //{
+        //    droneMode = DroneMode.FIGHTER;
+        //}
+        //else
+        //{
+        //    droneMode = DroneMode.WORKER;
+        //}
 
         return false;
     }
@@ -623,6 +650,69 @@ public class AIDroneController : MonoBehaviour
         }
     }
 
+    void UpdateType()
+    {
+        if (droneMode == DroneMode.WORKER)
+        {
+            canRepair = true;
+            canMine = true;
+            canFight = true;
+            canPlaceBomb = false;
+            canAttachTo = false;
+        }
+        else if (droneMode == DroneMode.MINER)
+        {
+            canRepair = true;
+            canMine = true;
+            canFight = false;
+            canPlaceBomb = false;
+            canAttachTo = false;
+        }
+        else if (droneMode == DroneMode.FIGHTER)
+        {
+            canRepair = false;
+            canMine = false;
+            canFight = true;
+            canPlaceBomb = false;
+            canAttachTo = false;
+        }
+        else if (droneMode == DroneMode.BOOSTER)
+        {
+            canRepair = false;
+            canMine = false;
+            canFight = false;
+            canPlaceBomb = false;
+            canAttachTo = true;
+        }
+        else if (droneMode == DroneMode.BOMBER)
+        {
+            canRepair = true;
+            canMine = false;
+            canFight = true;
+            canPlaceBomb = true;
+            canAttachTo = false;
+        }
+        else
+        {
+            Debug.LogWarning($"Cannot assign correct values as drone mode unknown: {droneMode}");
+        }
+    }
+
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        objID = GetComponent<ObjectID>();
+        objID.objID = ObjectID.OBJECTID.UNIT;
+        Debug.Log($"OBJ:  {GameObject.FindGameObjectWithTag("MainCamera").name}");
+        Debug.Log($"PC: {GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>()}");
+        Debug.Log($"LAYER: [{GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers}]");
+        interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
+        target = new TargetObject(Vector3.zero);
+        FindTC();
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
+
+
     void FixedUpdate()
     {
         if (TC == null)
@@ -638,7 +728,6 @@ public class AIDroneController : MonoBehaviour
         repairTimer += Time.unscaledDeltaTime;
 
         //Check Idle Condition
-        //If we are not moving
         idle = (agent.velocity.magnitude < 0.1f);
         if (idle)
         {
@@ -664,7 +753,10 @@ public class AIDroneController : MonoBehaviour
             }
         }
 
+        //Check and fix things
         target.Sanity();
+        UpdateType();
+
 
         if (TCRetOverride)
         {
