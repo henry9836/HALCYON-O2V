@@ -94,6 +94,7 @@ public class AIDroneController : MonoBehaviour
     public bool canFight = false;
     public bool canPlaceBomb = false;
     public bool canAttachTo = false;
+    public bool aiLock = false;
     public float attackRange = 2.0f;
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
@@ -696,68 +697,82 @@ public class AIDroneController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (TC == null)
+
+        if (!aiLock)
         {
-            FindTC();
-        }
 
-        objID.velo = agent.velocity.magnitude;
+            if (TC == null)
+            {
+                FindTC();
+            }
 
-        //Timers
-        attackTimer += Time.unscaledDeltaTime;
-        mineTimer += Time.unscaledDeltaTime;
-        repairTimer += Time.unscaledDeltaTime;
+            objID.velo = agent.velocity.magnitude;
 
-        //Check Idle Condition
-        idle = (agent.velocity.magnitude < 0.1f);
-        if (idle)
-        {
-            idleTimer += Time.unscaledDeltaTime;
-        }
-        else
-        {
-            idleTimer = 0.0f;
-        }
+            //Timers
+            attackTimer += Time.unscaledDeltaTime;
+            mineTimer += Time.unscaledDeltaTime;
+            repairTimer += Time.unscaledDeltaTime;
 
-        //Stuck logic (path pending + no movement)
-        stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
-
-        if (stuck)
-        {
-            Debug.Log(idleTimer);
-            if (idleTimer > maxstuckTime)
+            //Check Idle Condition
+            idle = (agent.velocity.magnitude < 0.1f);
+            if (idle)
+            {
+                idleTimer += Time.unscaledDeltaTime;
+            }
+            else
             {
                 idleTimer = 0.0f;
-                target.Reset();
-                Stop();
             }
-        }
 
-        //Check and fix things
-        target.Sanity();
-        UpdateType();
+            //Stuck logic (path pending + no movement)
+            stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
 
-
-        if (TCRetOverride)
-        {
-            TCRetOverrideBehaviour();
-        }
-        else
-        {
-            if (idle && !target.hasTarget())
+            //We are stupid stuck
+            if (idle && idleTimer > maxstuckTime)
             {
-                IdleAttackLogic();
+                stuck = true;
             }
 
-            if (target.hasTarget())
+
+            if (stuck)
             {
-                AttackLogic();
+                Debug.Log(idleTimer);
+                if (idleTimer > maxstuckTime)
+                {
+                    idleTimer = 0.0f;
+                    target.Reset();
+                    Stop();
+                }
             }
-        }
-        //Death
-        if (objID.health <= 0)
-        {
-            Destroy(gameObject);
+
+
+
+            //Check and fix things
+            target.Sanity();
+            UpdateType();
+
+
+            if (TCRetOverride)
+            {
+                TCRetOverrideBehaviour();
+            }
+            else
+            {
+                if (idle && !target.hasTarget())
+                {
+                    IdleAttackLogic();
+                }
+
+                if (target.hasTarget())
+                {
+                    AttackLogic();
+                }
+            }
+            //Death
+            if (objID.health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

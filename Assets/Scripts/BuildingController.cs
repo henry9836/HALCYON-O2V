@@ -15,7 +15,10 @@ public class BuildingController : MonoBehaviour
     public void Placed()
     {
         gameObject.layer = LayerMask.NameToLayer("Building");
-        GetComponent<NavMeshObstacle>().enabled = true;
+        if (GetComponent<NavMeshObstacle>() != null)
+        {
+            GetComponent<NavMeshObstacle>().enabled = true;
+        }
         GetComponent<MeshRenderer>().material = defaultMaterial;
     }
 
