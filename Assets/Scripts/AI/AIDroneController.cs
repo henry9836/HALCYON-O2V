@@ -194,9 +194,6 @@ public class AIDroneController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         objID = GetComponent<ObjectID>();
         objID.objID = ObjectID.OBJECTID.UNIT;
-        Debug.Log($"OBJ:  {GameObject.FindGameObjectWithTag("MainCamera").name}");
-        Debug.Log($"PC: {GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>()}");
-        Debug.Log($"LAYER: [{GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers}]");
         interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
         target = new TargetObject(Vector3.zero);
         FindTC();
@@ -685,7 +682,7 @@ public class AIDroneController : MonoBehaviour
         //Death
         if (objID.health <= 0)
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }
