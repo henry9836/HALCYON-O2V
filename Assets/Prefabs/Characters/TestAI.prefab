@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.4015}
+  m_AnchoredPosition: {x: 0.00000054637593, y: 0}
   m_SizeDelta: {x: 1, y: 0.197}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1941422996
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: df3c2d91063043f41900892365546ef4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
-  m_UseSpriteMesh: 0
+  m_UseSpriteMesh: 1
   m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2142621482
 GameObject:
@@ -110,8 +110,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 4.43}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -0.081, y: 1.5263993}
+  m_SizeDelta: {x: 1.363, y: 0.6537}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2142621486
 Canvas:
@@ -297,16 +297,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75dcf996388cb434296c79ac68bf2404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugMode: 0
+  attackState: 0
+  droneMode: 0
+  DebugMode: 1
+  canMine: 1
+  canRepair: 1
   attackRange: 2
   attackDamage: 7
   agroRange: 7
   attackCooldown: 0.5
-  canMine: 0
   miningRate: 3
   mineTime: 1
   mineMaxInv: 3
-  attackState: 0
+  repairTime: 5
+  repairAmount: 1
 --- !u!114 &2559433677861808048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,10 +323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6045c1b77597870499c626aaf908150a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownerPlayerID: 1
+  ownerPlayerID: 0
   objID: 1
   health: 100
   maxHealth: 100
+  velo: 0
 --- !u!195 &6869892237611912349
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -840,7 +845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Version: 2
-  m_Material: {fileID: 2100000, guid: f81ef05a1912d5b4bbfdfd78d38c99f0, type: 2}
+  m_Material: {fileID: 2100000, guid: 500e733574922d04ea961553b1b26a63, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 1
   m_UVScale: {x: 1, y: 1}
