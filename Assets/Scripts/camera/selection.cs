@@ -87,6 +87,7 @@ public class selection : MonoBehaviour
 
             GetComponent<PlayerController>().selectedUnits.Clear();
 
+
             GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
 
 
@@ -97,7 +98,14 @@ public class selection : MonoBehaviour
                     if (selectunits(units[i].transform.position) == true)
                     {
                         GetComponent<PlayerController>().selectedUnits.Add(units[i]);
-                        
+                        units[i].gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                        units[i].gameObject.transform.GetChild(1).gameObject.SetActive(true);
+
+                    }
+                    else
+                    {
+                        units[i].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                        units[i].gameObject.transform.GetChild(1).gameObject.SetActive(false);
                     }
                 }
 

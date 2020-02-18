@@ -48,7 +48,6 @@ public class arrowmove : MonoBehaviour
 
             for (int i = 0; i < hitsphere.Length; i++)
             {
-                Debug.Log(hitsphere[i].gameObject.name);
                 //up wall
                 if (hitsphere[i].gameObject.name == FBLR[0].name)
                 {
