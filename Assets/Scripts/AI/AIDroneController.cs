@@ -86,6 +86,7 @@ public class AIDroneController : MonoBehaviour
     };
 
     //Publics
+    public List<GameObject> laserEmitterPositions = new List<GameObject>();
     public AttackState attackState = AttackState.ATTACK;
     public DroneMode droneMode = DroneMode.WORKER;
     public bool DebugMode = false;
@@ -104,24 +105,38 @@ public class AIDroneController : MonoBehaviour
     public float mineMaxInv = 3.0f;
     public float repairTime = 5.0f;
     public float repairAmount = 1.0f;
+    public float laserSustainTime = 0.3f;
 
     //Privates
     private GameManager GM;
     private NavMeshAgent agent;
     private ObjectID objID;
     private TargetObject target = null;
-    private LayerMask interactLayer;
+    private LineRenderer lr;
     private GameObject TC;
+    private LayerMask interactLayer;
     private Vector3 TCdropOff;
     private bool idle;
     private bool stuck = false;
     private bool TCRetOverride = false;
+    private int currentLaserEmitter = 0;
     private float repairTimer = 0.0f;
     private float attackTimer = 0.0f;
     private float mineTimer = 0.0f;
     private float currentInv = 0.0f;
     private float idleTimer = 0.0f;
     private float maxstuckTime = 5.0f;
+    private float orignialAttackRange = 2.0f;
+    private float orignialAttackDamage = 7.0f;
+    private float orignialAgroRange = 10.0f;
+    private float orignialAttackCooldown = 0.5f;
+    private float orignialMiningRate = 3.0f;
+    private float orignialMineTime = 5.0f;
+    private float orignialMineMaxInv = 3.0f;
+    private float orignialRepairTime = 5.0f;
+    private float orignialRepairAmount = 1.0f;
+
+
 
     public void updateWorkerType(DroneMode newType)
     {
@@ -204,7 +219,7 @@ public class AIDroneController : MonoBehaviour
     {
         if (attackTimer > attackCooldown)
         {
-            Debug.DrawLine(transform.position, target.tarObject.transform.position, Color.red, 1.0f);
+            StartCoroutine(FlashingMyLaserForThePlayerOwO());
 
             //Crits for fun
             int dice = Random.Range(1, 13);
@@ -254,6 +269,7 @@ public class AIDroneController : MonoBehaviour
     {
         if (repairTimer >= repairTime)
         {
+            StartCoroutine(FlashingMyLaserForThePlayerOwO());
             if ((target.objID.health + repairAmount) < target.objID.maxHealth)
             {
                 target.objID.health += repairAmount;
@@ -275,6 +291,7 @@ public class AIDroneController : MonoBehaviour
     {
         if (mineTimer >= mineTime)
         {
+            StartCoroutine(FlashingMyLaserForThePlayerOwO());
             if (currentInv >= mineMaxInv)
             {
                 //Go deposit inv at TC
@@ -634,6 +651,17 @@ public class AIDroneController : MonoBehaviour
 
     void UpdateType()
     {
+        //Reset All Values
+        attackRange = orignialAttackRange;
+        attackDamage = orignialAttackDamage;
+        agroRange = orignialAgroRange;
+        attackCooldown = orignialAttackCooldown;
+        miningRate = orignialMiningRate;
+        mineTime = orignialMineTime;
+        mineMaxInv = orignialMineMaxInv;
+        repairTime = orignialRepairTime;
+        repairAmount = orignialRepairAmount;
+
         if (droneMode == DroneMode.WORKER)
         {
             canRepair = true;
@@ -649,6 +677,11 @@ public class AIDroneController : MonoBehaviour
             canFight = false;
             canPlaceBomb = false;
             canAttachTo = false;
+
+            //Give a 250% boost to mining rate and inv
+            miningRate *= 2.5f;
+            mineMaxInv = Mathf.Round(2.5f * mineMaxInv);
+
         }
         else if (droneMode == DroneMode.FIGHTER)
         {
@@ -657,6 +690,11 @@ public class AIDroneController : MonoBehaviour
             canFight = true;
             canPlaceBomb = false;
             canAttachTo = false;
+
+            //Give a 250% boost to attackDamage and a 15% boost to range
+            agroRange *= 2.5f;
+            attackDamage *= 2.5f;
+
         }
         else if (droneMode == DroneMode.BOOSTER)
         {
@@ -682,16 +720,28 @@ public class AIDroneController : MonoBehaviour
 
     void Start()
     {
+
+        //Setup defaults
+        orignialAttackRange = attackRange;
+        orignialAttackDamage = attackDamage;
+        orignialAgroRange = agroRange;
+        orignialAttackCooldown = attackCooldown;
+        orignialMiningRate = miningRate;
+        orignialMineTime = mineTime;
+        orignialMineMaxInv = mineMaxInv;
+        orignialRepairTime = repairTime;
+        orignialRepairAmount = repairAmount;
+
+        //Setup Components
         agent = GetComponent<NavMeshAgent>();
         objID = GetComponent<ObjectID>();
         objID.objID = ObjectID.OBJECTID.UNIT;
-        Debug.Log($"OBJ:  {GameObject.FindGameObjectWithTag("MainCamera").name}");
-        Debug.Log($"PC: {GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>()}");
-        Debug.Log($"LAYER: [{GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers}]");
         interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
         target = new TargetObject(Vector3.zero);
         FindTC();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        lr = GetComponent<LineRenderer>();
+        lr.enabled = false;
     }
 
 
@@ -745,7 +795,14 @@ public class AIDroneController : MonoBehaviour
                 }
             }
 
-
+            //Update Laser Beam
+            if (lr != null){
+                lr.SetPosition(0, laserEmitterPositions[currentLaserEmitter].transform.position);
+                if (target.hasTargetObj())
+                {
+                    lr.SetPosition(1, target.tarObject.transform.position);
+                }
+            }
 
             //Check and fix things
             target.Sanity();
@@ -775,4 +832,21 @@ public class AIDroneController : MonoBehaviour
             }
         }
     }
+
+
+    IEnumerator FlashingMyLaserForThePlayerOwO()
+    {
+        //Turn Laser On
+        if (lr != null)
+        {
+            currentLaserEmitter = Random.Range(0, laserEmitterPositions.Count);
+            lr.enabled = true;
+        }
+
+        yield return new WaitForSeconds(laserSustainTime);
+        
+        //Turn Laser Off
+        lr.enabled = false;
+    }
+
 }

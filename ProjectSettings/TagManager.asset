@@ -10,6 +10,7 @@ TagManager:
   - AIPlayer
   - SpawnPosition
   - CarWash
+  - LaserPoint
   layers:
   - Default
   - TransparentFX
