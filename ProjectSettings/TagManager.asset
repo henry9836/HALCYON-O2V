@@ -8,7 +8,6 @@ TagManager:
   - Unit
   - GameManager
   - AIPlayer
-  - SpawnPosition
   layers:
   - Default
   - TransparentFX
