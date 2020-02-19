@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class AIDroneController : MonoBehaviour
+public class AIDroneControllerOld : MonoBehaviour
 {
     //Classes
     public class TargetObject
@@ -78,24 +78,18 @@ public class AIDroneController : MonoBehaviour
 
     public enum DroneMode
     {
+        UNASSIGNED,
         WORKER,
-        FIGHTER,
         MINER,
-        BOMBER,
-        BOOSTER
+        FIGHTER
     };
 
     //Publics
-    public List<GameObject> laserEmitterPositions = new List<GameObject>();
     public AttackState attackState = AttackState.ATTACK;
-    public DroneMode droneMode = DroneMode.WORKER;
+    public DroneMode droneMode = DroneMode.UNASSIGNED;
     public bool DebugMode = false;
     public bool canMine = false;
     public bool canRepair = false;
-    public bool canFight = false;
-    public bool canPlaceBomb = false;
-    public bool canAttachTo = false;
-    public bool aiLock = false;
     public float attackRange = 2.0f;
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
@@ -105,43 +99,24 @@ public class AIDroneController : MonoBehaviour
     public float mineMaxInv = 3.0f;
     public float repairTime = 5.0f;
     public float repairAmount = 1.0f;
-    public float laserSustainTime = 0.3f;
 
     //Privates
     private GameManager GM;
     private NavMeshAgent agent;
     private ObjectID objID;
     private TargetObject target = null;
-    private LineRenderer lr;
-    private GameObject TC;
     private LayerMask interactLayer;
+    private GameObject TC;
     private Vector3 TCdropOff;
     private bool idle;
     private bool stuck = false;
     private bool TCRetOverride = false;
-    private int currentLaserEmitter = 0;
     private float repairTimer = 0.0f;
     private float attackTimer = 0.0f;
     private float mineTimer = 0.0f;
     private float currentInv = 0.0f;
     private float idleTimer = 0.0f;
     private float maxstuckTime = 5.0f;
-    private float orignialAttackRange = 2.0f;
-    private float orignialAttackDamage = 7.0f;
-    private float orignialAgroRange = 10.0f;
-    private float orignialAttackCooldown = 0.5f;
-    private float orignialMiningRate = 3.0f;
-    private float orignialMineTime = 5.0f;
-    private float orignialMineMaxInv = 3.0f;
-    private float orignialRepairTime = 5.0f;
-    private float orignialRepairAmount = 1.0f;
-
-
-
-    public void updateWorkerType(DroneMode newType)
-    {
-        droneMode = newType;
-    }
 
     public aiDebug returnDebug()
     {
@@ -160,33 +135,31 @@ public class AIDroneController : MonoBehaviour
         {
             target = new TargetObject(obj);
 
-            //Do not go somewhere we shouldn't according to our flags
+            //Assign Drone Type
 
-            //We can mine or attach and the target is a resource
-            if ((canAttachTo || canMine) && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
+            //We can mine and the target is a resource
+            if (canMine && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
             {
-                //Find a position
-                target.tarObjectAdjustPos = GetAdjustedPos();
+                droneMode = DroneMode.MINER;
             }
             //We can repair and the target is a building that we own
             else if (canRepair && target.objID.objID == ObjectID.OBJECTID.BUILDING && target.objID.ownerPlayerID == objID.ownerPlayerID)
             {
-                //Find a position
-                target.tarObjectAdjustPos = GetAdjustedPos();
+                droneMode = DroneMode.WORKER;
             }
-            //We can fight or we are a bomber and the target is a building or unit the enemy owns
-            else if ((canFight || canPlaceBomb) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
-            {
-                //Find a position
-                target.tarObjectAdjustPos = GetAdjustedPos();
-            }
+            //Assume is enemy 
             else
             {
-                Debug.Log($"Invalid Request From UpdateTargetPos on Object [{gameObject.name}], check flags");
-                target.Reset();
+                droneMode = DroneMode.FIGHTER;
             }
+
+            //Find a position
+            target.tarObjectAdjustPos = GetAdjustedPos();
         }
         else {
+            //Switch Mode
+            //droneMode = DroneMode.FIGHTER;
+
             //Go to pos
             target = new TargetObject(targetPos);
         }
@@ -215,11 +188,26 @@ public class AIDroneController : MonoBehaviour
             }
         }
     }
+
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        objID = GetComponent<ObjectID>();
+        objID.objID = ObjectID.OBJECTID.UNIT;
+        Debug.Log($"OBJ:  {GameObject.FindGameObjectWithTag("MainCamera").name}");
+        Debug.Log($"PC: {GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>()}");
+        Debug.Log($"LAYER: [{GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers}]");
+        interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
+        target = new TargetObject(Vector3.zero);
+        FindTC();
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
+    
     void DealDamage()
     {
         if (attackTimer > attackCooldown)
         {
-            StartCoroutine(FlashingMyLaserForThePlayerOwO());
+            Debug.DrawLine(transform.position, target.tarObject.transform.position, Color.red, 1.0f);
 
             //Crits for fun
             int dice = Random.Range(1, 13);
@@ -269,7 +257,6 @@ public class AIDroneController : MonoBehaviour
     {
         if (repairTimer >= repairTime)
         {
-            StartCoroutine(FlashingMyLaserForThePlayerOwO());
             if ((target.objID.health + repairAmount) < target.objID.maxHealth)
             {
                 target.objID.health += repairAmount;
@@ -291,7 +278,6 @@ public class AIDroneController : MonoBehaviour
     {
         if (mineTimer >= mineTime)
         {
-            StartCoroutine(FlashingMyLaserForThePlayerOwO());
             if (currentInv >= mineMaxInv)
             {
                 //Go deposit inv at TC
@@ -306,11 +292,6 @@ public class AIDroneController : MonoBehaviour
                 mineTimer = 0.0f;
             }
         }
-    }
-
-    void Attach()
-    {
-        Debug.Log("Attach() Called");
     }
 
     bool HasNeighbourStopped()
@@ -418,10 +399,7 @@ public class AIDroneController : MonoBehaviour
             //If the target is within range
             if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
-                //Stop we have reached target
                 Stop();
-
-                //What do we do with object
                 if (target.objID.objID == ObjectID.OBJECTID.UNIT || target.objID.objID == ObjectID.OBJECTID.BUILDING)
                 {
                     //If it is our building and we can repair
@@ -436,33 +414,14 @@ public class AIDroneController : MonoBehaviour
                             target.Reset();
                         }
                     }
-                    //Is this a enemy building or unit?
+                    //enemy building/unit
                     else if ((target.objID.ownerPlayerID != objID.ownerPlayerID && target.objID.objID == ObjectID.OBJECTID.BUILDING) || (target.objID.objID == ObjectID.OBJECTID.UNIT)){
-                        if (canFight)
-                        {
-                            DealDamage();
-                        }
-                        else
-                        {
-                            target.Reset();
-                        }
+                        DealDamage();
                     }
                 }
-                //Is this a resource?
-                else if (target.objID.objID == ObjectID.OBJECTID.RESOURCE)
+                else if (target.objID.objID == ObjectID.OBJECTID.RESOURCE && canMine)
                 {
-                    if (canMine)
-                    {
-                        Mine();
-                    }
-                    if (canAttachTo)
-                    {
-                        Attach();
-                    }
-                    else
-                    {
-                        target.Reset();
-                    }
+                    Mine();
                 }
                 else
                 {
@@ -471,7 +430,6 @@ public class AIDroneController : MonoBehaviour
             }
             else
             {
-                //We are not in range goto enemy
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
                     target.tarObjectAdjustPos = GetAdjustedPos();
@@ -550,28 +508,41 @@ public class AIDroneController : MonoBehaviour
     {
         Collider[] cols;
 
-        cols = Physics.OverlapSphere(transform.position, agroRange, interactLayer);
+        if (attackState == AttackState.ATTACK)
+        {
+            cols = Physics.OverlapSphere(transform.position, agroRange, interactLayer);
+        }
+        else
+        {
+            cols = Physics.OverlapSphere(transform.position, attackRange, interactLayer);
+        }
 
         List<GameObject> foundResources = new List<GameObject>();
 
         for (int i = 0; i < cols.Length; i++)
         {
-            //Ignore if is not within attackRange and we are standing ground
-            if ((Vector3.Distance(cols[i].transform.position, transform.position) <= attackRange && attackState == AttackState.STANDGROUND) || attackState == AttackState.ATTACK) {
-                //Ignore our own objects
-                if (cols[i].gameObject.GetComponent<ObjectID>() != null)
+            //Ignore our own objects
+            if (cols[i].gameObject.GetComponent<ObjectID>() != null)
+            {
+                if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
                 {
-                    if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != objID.ownerPlayerID)
+                    //If is resource and is not in mine mode
+                    if (droneMode != DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE) {
+                        //nothing
+                    }
+                    //Add if is a resource and we in mine mode and we can mine
+                    else if (canMine && droneMode == DroneMode.MINER && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                     {
-                        //Add if is a resource and we in mine mode and we can mine
-                        if (canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+                        Debug.Log($"I am a miner and my drone mode is {droneMode}");
+                        foundResources.Add(cols[i].gameObject);
+                    }
+                    //Not a resource is a unit switch to attack mode
+                    else
+                    {
+                        //Unless we are in mine mode then keep mining
+                        if (droneMode != DroneMode.MINER)
                         {
-                            Debug.Log($"I am a miner and my drone mode is {droneMode}");
-                            foundResources.Add(cols[i].gameObject);
-                        }
-                        //If we can attack or place a bomb and is building or unit
-                        else if ((canPlaceBomb || canFight) && (cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING || cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT))
-                        {
+
                             Debug.Log($"Found target: {cols[i].gameObject.name}");
 
                             //Make a new Target
@@ -579,6 +550,9 @@ public class AIDroneController : MonoBehaviour
 
                             //Get a good position near to the target in a arc realitve to our position
                             target.tarObjectAdjustPos = GetAdjustedPos();
+
+                            //Switch to fighter mode
+                            //droneMode = DroneMode.FIGHTER;
 
                             return true;
                         }
@@ -612,18 +586,18 @@ public class AIDroneController : MonoBehaviour
         }
 
         //Reset our mode to a default since there is no resources nearby
-        //if (droneMode == DroneMode.MINER && canRepair)
-        //{
-        //    droneMode = DroneMode.WORKER;
-        //}
-        //else if (droneMode == DroneMode.MINER && !canRepair)
-        //{
-        //    droneMode = DroneMode.FIGHTER;
-        //}
-        //else
-        //{
-        //    droneMode = DroneMode.WORKER;
-        //}
+        if (droneMode == DroneMode.MINER && canRepair)
+        {
+            droneMode = DroneMode.WORKER;
+        }
+        else if (droneMode == DroneMode.MINER && !canRepair)
+        {
+            droneMode = DroneMode.FIGHTER;
+        }
+        else
+        {
+            droneMode = DroneMode.WORKER;
+        }
 
         return false;
     }
@@ -649,204 +623,69 @@ public class AIDroneController : MonoBehaviour
         }
     }
 
-    void UpdateType()
+    void FixedUpdate()
     {
-        //Reset All Values
-        attackRange = orignialAttackRange;
-        attackDamage = orignialAttackDamage;
-        agroRange = orignialAgroRange;
-        attackCooldown = orignialAttackCooldown;
-        miningRate = orignialMiningRate;
-        mineTime = orignialMineTime;
-        mineMaxInv = orignialMineMaxInv;
-        repairTime = orignialRepairTime;
-        repairAmount = orignialRepairAmount;
-
-        if (droneMode == DroneMode.WORKER)
+        if (TC == null)
         {
-            canRepair = true;
-            canMine = true;
-            canFight = true;
-            canPlaceBomb = false;
-            canAttachTo = false;
+            FindTC();
         }
-        else if (droneMode == DroneMode.MINER)
-        {
-            canRepair = true;
-            canMine = true;
-            canFight = false;
-            canPlaceBomb = false;
-            canAttachTo = false;
 
-            //Give a 250% boost to mining rate and inv
-            miningRate *= 2.5f;
-            mineMaxInv = Mathf.Round(2.5f * mineMaxInv);
+        objID.velo = agent.velocity.magnitude;
 
-        }
-        else if (droneMode == DroneMode.FIGHTER)
-        {
-            canRepair = false;
-            canMine = false;
-            canFight = true;
-            canPlaceBomb = false;
-            canAttachTo = false;
+        //Timers
+        attackTimer += Time.unscaledDeltaTime;
+        mineTimer += Time.unscaledDeltaTime;
+        repairTimer += Time.unscaledDeltaTime;
 
-            //Give a 250% boost to attackDamage and a 15% boost to range
-            agroRange *= 2.5f;
-            attackDamage *= 2.5f;
-
-        }
-        else if (droneMode == DroneMode.BOOSTER)
+        //Check Idle Condition
+        //If we are not moving
+        idle = (agent.velocity.magnitude < 0.1f);
+        if (idle)
         {
-            canRepair = false;
-            canMine = false;
-            canFight = false;
-            canPlaceBomb = false;
-            canAttachTo = true;
-        }
-        else if (droneMode == DroneMode.BOMBER)
-        {
-            canRepair = true;
-            canMine = false;
-            canFight = true;
-            canPlaceBomb = true;
-            canAttachTo = false;
+            idleTimer += Time.unscaledDeltaTime;
         }
         else
         {
-            Debug.LogWarning($"Cannot assign correct values as drone mode unknown: {droneMode}");
+            idleTimer = 0.0f;
         }
-    }
-
-    void Start()
-    {
-
-        //Setup defaults
-        orignialAttackRange = attackRange;
-        orignialAttackDamage = attackDamage;
-        orignialAgroRange = agroRange;
-        orignialAttackCooldown = attackCooldown;
-        orignialMiningRate = miningRate;
-        orignialMineTime = mineTime;
-        orignialMineMaxInv = mineMaxInv;
-        orignialRepairTime = repairTime;
-        orignialRepairAmount = repairAmount;
-
-        //Setup Components
-        agent = GetComponent<NavMeshAgent>();
-        objID = GetComponent<ObjectID>();
-        objID.objID = ObjectID.OBJECTID.UNIT;
-        interactLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
-        target = new TargetObject(Vector3.zero);
-        FindTC();
-        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        lr = GetComponent<LineRenderer>();
-        lr.enabled = false;
-    }
 
 
-    void FixedUpdate()
-    {
+        //Stuck logic (path pending + no movement)
+        stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
 
-        if (!aiLock)
+        if (stuck)
         {
-
-            if (TC == null)
-            {
-                FindTC();
-            }
-
-            objID.velo = agent.velocity.magnitude;
-
-            //Timers
-            attackTimer += Time.unscaledDeltaTime;
-            mineTimer += Time.unscaledDeltaTime;
-            repairTimer += Time.unscaledDeltaTime;
-
-            //Check Idle Condition
-            idle = (agent.velocity.magnitude < 0.1f);
-            if (idle)
-            {
-                idleTimer += Time.unscaledDeltaTime;
-            }
-            else
+            Debug.Log(idleTimer);
+            if (idleTimer > maxstuckTime)
             {
                 idleTimer = 0.0f;
-            }
-
-            //Stuck logic (path pending + no movement)
-            stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
-
-            //We are stupid stuck
-            if (idle && idleTimer > maxstuckTime)
-            {
-                stuck = true;
-            }
-
-
-            if (stuck)
-            {
-                Debug.Log(idleTimer);
-                if (idleTimer > maxstuckTime)
-                {
-                    idleTimer = 0.0f;
-                    target.Reset();
-                    Stop();
-                }
-            }
-
-            //Update Laser Beam
-            if (lr != null){
-                lr.SetPosition(0, laserEmitterPositions[currentLaserEmitter].transform.position);
-                if (target.hasTargetObj())
-                {
-                    lr.SetPosition(1, target.tarObject.transform.position);
-                }
-            }
-
-            //Check and fix things
-            target.Sanity();
-            UpdateType();
-
-
-            if (TCRetOverride)
-            {
-                TCRetOverrideBehaviour();
-            }
-            else
-            {
-                if (idle && !target.hasTarget())
-                {
-                    IdleAttackLogic();
-                }
-
-                if (target.hasTarget())
-                {
-                    AttackLogic();
-                }
-            }
-            //Death
-            if (objID.health <= 0)
-            {
-                Destroy(gameObject);
+                target.Reset();
+                Stop();
             }
         }
-    }
 
+        target.Sanity();
 
-    IEnumerator FlashingMyLaserForThePlayerOwO()
-    {
-        //Turn Laser On
-        if (lr != null)
+        if (TCRetOverride)
         {
-            currentLaserEmitter = Random.Range(0, laserEmitterPositions.Count);
-            lr.enabled = true;
+            TCRetOverrideBehaviour();
         }
+        else
+        {
+            if (idle && !target.hasTarget())
+            {
+                IdleAttackLogic();
+            }
 
-        yield return new WaitForSeconds(laserSustainTime);
-        
-        //Turn Laser Off
-        lr.enabled = false;
+            if (target.hasTarget())
+            {
+                AttackLogic();
+            }
+        }
+        //Death
+        if (objID.health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
-
 }
