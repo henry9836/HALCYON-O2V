@@ -107,10 +107,24 @@ public class PlayerController : MonoBehaviour
             if (spawnedObj == null)
             {
                 spawnedObj = Instantiate(lastSelectedBuildingToBuild, mouseInWorldPos, Quaternion.identity);
-                objMeshRenderer = spawnedObj.GetComponent<MeshRenderer>();
+                if (spawnedObj.GetComponent<MeshRenderer>() != null)
+                {
+                    objMeshRenderer = spawnedObj.GetComponent<MeshRenderer>();
+                }
+                else if (spawnedObj.transform.GetChild(0).GetComponent<MeshRenderer>() != null)
+                {
+                    objMeshRenderer = spawnedObj.transform.GetChild(0).GetComponent<MeshRenderer>();
+                }
                 objMeshRenderer.material = buildNotAvailable;
                 spawnedObj.layer = LayerMask.NameToLayer("NoCollide");
-                spawnedObj.GetComponent<NavMeshObstacle>().enabled = false;
+                if (spawnedObj.GetComponent<NavMeshObstacle>() != null)
+                {
+                    spawnedObj.GetComponent<NavMeshObstacle>().enabled = false;
+                }
+                else if (spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>() != null)
+                {
+                    spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>().enabled = false;
+                }
             }
             //Show in world and place if valid
             else
@@ -123,9 +137,20 @@ public class PlayerController : MonoBehaviour
                     //Build
                     if (Input.GetMouseButtonDown(0))
                     {
-                        spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
-                        GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
-                        spawnedObj.GetComponent<BuildingController>().Placed();
+                        if (spawnedObj.GetComponent<ObjectID>() != null)
+                        {
+                            spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                            GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
+                            spawnedObj.GetComponent<BuildingController>().Placed();
+                        }
+                        else if (spawnedObj.transform.GetChild(0).GetComponent<ObjectID>() != null)
+                        {
+                            spawnedObj.transform.GetChild(0).GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                            GM.UpdateResourceCount(playerID, -(spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().costToBuild));
+                            spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().Placed();
+                        }
+                        
+
                         lastSelectedBuildingToBuild = null;
                         spawnedObj = null;
                     }
