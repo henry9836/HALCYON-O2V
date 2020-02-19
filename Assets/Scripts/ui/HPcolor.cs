@@ -17,4 +17,4 @@ public class HPcolor : MonoBehaviour
 
         this.gameObject.GetComponent<Image>().color = new Color(r, g, b, a);
     }
-}
+}    
