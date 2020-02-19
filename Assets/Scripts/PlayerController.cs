@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         mousePick = GetComponent<mousepick>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         //Escape from mode and job
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -219,39 +219,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            //Booster
-            if (Input.GetButton("Boost"))
-            {
-                for (int i = 0; i < selectedUnits.Count; i++)
-                {
-                    //If the AI is in asteriod mode
-                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
-                    if (aiCtrl.asteriodOverride)
-                    {
-                        //Add force at point
-                        //aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime);
-                        aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
-                    }
-                }
-            }
-
-            if (Input.GetAxis("Boost Horizontal") != 0)
-            {
-                
-                for (int i = 0; i < selectedUnits.Count; i++)
-                {
-                    //If we are in asteriod mode
-                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
-                    if (aiCtrl.asteriodOverride)
-                    {
-                        //Add force at point
-                        //aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime);
-                        //aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
-                        //aiCtrl.asteriodBody.AddTorque((selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime))
-                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
-                    }
-                }
-            }
+            
 
 
         }
@@ -262,4 +230,41 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    private void FixedUpdate()
+    {
+        //Move/Attack Mode
+        if (selectedUnits.Count > 0)
+        {
+            //Booster
+            if (Input.GetButton("Boost"))
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If the AI is in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Add force at point
+                        aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
+                    }
+                }
+            }
+
+            if (Input.GetAxis("Boost Horizontal") != 0)
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If we are in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Rotate
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
+                    }
+                }
+            }
+        }
+    }
+
 }
