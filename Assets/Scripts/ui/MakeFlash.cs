@@ -13,8 +13,6 @@ public class MakeFlash : MonoBehaviour
     public float speed;
     private float resettime;
 
-
-
     void Update()
     {
         if (flashing == true)
