@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         mousePick = GetComponent<mousepick>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         //Escape from mode and job
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -219,6 +219,23 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            
+
+
+        }
+        //We don't have any units selected
+        else if (currentActionState != ActionState.BUILDMODE)
+        {
+            currentActionState = ActionState.NONE;
+        }
+
+    }
+
+    private void FixedUpdate()
+    {
+        //Move/Attack Mode
+        if (selectedUnits.Count > 0)
+        {
             //Booster
             if (Input.GetButton("Boost"))
             {
@@ -229,7 +246,7 @@ public class PlayerController : MonoBehaviour
                     if (aiCtrl.asteriodOverride)
                     {
                         //Add force at point
-                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime);
+                        aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
                     }
                 }
             }
@@ -242,19 +259,12 @@ public class PlayerController : MonoBehaviour
                     AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
                     if (aiCtrl.asteriodOverride)
                     {
-                        //Add force at point
-                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime);
+                        //Rotate
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
                     }
                 }
             }
-
-
         }
-        //We don't have any units selected
-        else if (currentActionState != ActionState.BUILDMODE)
-        {
-            currentActionState = ActionState.NONE;
-        }
-
     }
+
 }
