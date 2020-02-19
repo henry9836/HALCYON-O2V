@@ -1350,6 +1350,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230974743}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1382756522 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1941422993, guid: 3cdfa915b67e9cf469112ae340b61f5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 596103147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1382756526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382756522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2bb71dceebda3d4ea9910d72b1ee881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHP: {r: 0, g: 0.12228584, b: 1, a: 1}
+  MinHP: {r: 1, g: 0, b: 0, a: 0.2784314}
 --- !u!1001 &1900529405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1860,6 +1880,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 46353587}
+    - target: {fileID: 291904532595553450, guid: 9673911b64b6cbe4ca5cb1ac3332cedc,
+        type: 3}
+      propertyPath: m_PlaneDistance
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9673911b64b6cbe4ca5cb1ac3332cedc, type: 3}
 --- !u!1001 &2934776489497333785
