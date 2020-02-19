@@ -333,6 +333,7 @@ public class AIDroneController : MonoBehaviour
             transform.position = hit.point;
             agent.enabled = false;
             transform.parent = target.tarObject.transform;
+            GetComponent<CapsuleCollider>().enabled = false;
             asteriodBody = target.tarObject.GetComponent<Rigidbody>();
             asteriodOverride = true;
         }

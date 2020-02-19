@@ -229,13 +229,15 @@ public class PlayerController : MonoBehaviour
                     if (aiCtrl.asteriodOverride)
                     {
                         //Add force at point
-                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime);
+                        //aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime);
+                        aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
                     }
                 }
             }
 
             if (Input.GetAxis("Boost Horizontal") != 0)
             {
+                
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
                     //If we are in asteriod mode
@@ -243,7 +245,10 @@ public class PlayerController : MonoBehaviour
                     if (aiCtrl.asteriodOverride)
                     {
                         //Add force at point
-                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime);
+                        //aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime);
+                        //aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
+                        //aiCtrl.asteriodBody.AddTorque((selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime))
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
                     }
                 }
             }
