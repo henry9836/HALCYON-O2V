@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class TCController : MonoBehaviour
 {
+    public GameObject unitTemplate;
+
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
+    
+    public void SpawnUnit()
+    {
+        GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
+        spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+    }
     private void Start()
     {
         objID = GetComponent<ObjectID>();
