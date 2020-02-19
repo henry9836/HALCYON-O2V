@@ -44,10 +44,6 @@ public class ObjectID : MonoBehaviour
 
         if (health <= 0)
         {
-            if (objID == OBJECTID.UNIT)
-            {
-                gameObject.GetComponent<sparks>().particleKill();
-            }
             Destroy(gameObject);
         }
     }

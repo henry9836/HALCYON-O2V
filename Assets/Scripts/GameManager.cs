@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     int nextID = 0;
     int tcCount = 0;
     public float defaultResources = 50.0f;
-    public GameObject TCTemplate;
     public List<Bank> banks = new List<Bank>();
     public List<GameObject> playerTCs = new List<GameObject>();
     public List<GameObject> aiTCs = new List<GameObject>();
@@ -117,44 +116,6 @@ public class GameManager : MonoBehaviour
                 playerTCs.RemoveAt(i);
             }
         }
-    }
-
-    private void Start()
-    {
-        GameObject[] spawnLocations = GameObject.FindGameObjectsWithTag("SpawnPosition");
-
-        List<GameObject> spawnLocationsList = new List<GameObject>();
-
-        for (int i = 0; i < spawnLocations.Length; i++)
-        {
-            spawnLocationsList.Add(spawnLocations[i]);
-        }
-
-        for (int i = 0; i < MagicTraveller.TCCount; i++)
-        {
-            //Valid spawn position
-            if (i <= spawnLocationsList.Count)
-            {
-                int element = UnityEngine.Random.Range(0, spawnLocationsList.Count);
-                GameObject tmp = Instantiate(TCTemplate, spawnLocationsList[element].transform.position, Quaternion.identity);
-                //Spawn a player
-                if ((i + 1) <= MagicTraveller.PlayerCounter)
-                {
-                    tmp.GetComponent<ObjectID>().ownerPlayerID = ObjectID.PlayerID.PLAYER;
-                }
-                //Spawn an AI
-                else
-                {
-                    tmp.AddComponent<AIBehaviour>();
-                }
-                spawnLocationsList.RemoveAt(element);
-            }
-            else
-            {
-                Debug.LogWarning("Tried to spawn a TC but there were no free spawn locations ignoring...");
-            }
-        }
-
     }
 
     private void FixedUpdate()
