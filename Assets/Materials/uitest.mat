@@ -240,10 +240,10 @@ Material:
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
     - _UseUIAlphaClip: 0
-    - _ZTestDepthEqualForOpaque: 4
+    - _ZTestDepthEqualForOpaque: 8
     - _ZTestGBuffer: 4
     - _ZTestModeDistortion: 4
-    - _ZTestTransparent: 4
+    - _ZTestTransparent: 8
     - _ZWrite: 1
     m_Colors:
     - Color_98FB7FF2: {r: 766.9961, g: 0, b: 0, a: 1}
