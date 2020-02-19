@@ -60,7 +60,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: -100
   far clip plane: 10000
   field of view: 60
   orthographic: 1
@@ -154,7 +154,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 0
+  antialiasing: 3
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -205,7 +205,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movable: 1
-  speed: 0.3
+  speed: 0.1
+  camwall:
+    serializedVersion: 2
+    m_Bits: 0
+  FBLR: []
 --- !u!114 &6622558173884126359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridmask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1536
 --- !u!114 &6622558173884126358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,7 +244,7 @@ MonoBehaviour:
   selectionUI: {fileID: 0}
   gridmask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1536
   points:
   - {x: -4.2430062e-38, y: 6.67e-43, z: 1.6705023e+22}
   - {x: 0.00000021363373, y: -2.2490083e-37, z: 6.64e-43}
@@ -261,7 +265,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitInteractLayers:
     serializedVersion: 2
-    m_Bits: 6144
+    m_Bits: 14336
   checkRadius: 2
+  playerID: -1
+  buildAvailable: {fileID: 2100000, guid: 1b420e8f9885ac348ba99a022c314eff, type: 2}
+  buildNotAvailable: {fileID: 2100000, guid: 27e4ac806020a3b4380471a632e12e11, type: 2}
+  VisualBuildFloor: {fileID: 0}
   currentActionState: 0
+  lastSelectedBuildingToBuild: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+    type: 3}
   selectedUnits: []

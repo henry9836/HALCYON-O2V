@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     //Public
     public LayerMask unitInteractLayers;
     public float checkRadius = 2.0f;
+    public float boosterSpeed = 500.0f;
     public int playerID = -1;
     public Material buildAvailable;
     public Material buildNotAvailable;
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
         mousePick = GetComponent<mousepick>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //Escape from mode and job
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -217,6 +218,37 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+
+            //Booster
+            if (Input.GetButton("Boost"))
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If the AI is in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Add force at point
+                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime);
+                    }
+                }
+            }
+
+            if (Input.GetAxis("Boost Horizontal") != 0)
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If we are in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Add force at point
+                        aiCtrl.asteriodBody.AddForce(selectedUnits[i].transform.right * Input.GetAxis("Boost Horizontal") * boosterSpeed * Time.deltaTime);
+                    }
+                }
+            }
+
+
         }
         //We don't have any units selected
         else if (currentActionState != ActionState.BUILDMODE)
