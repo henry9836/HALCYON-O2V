@@ -482,18 +482,23 @@ public class AIDroneController : MonoBehaviour
             }
         }
 
-        //Get to the enemy
-        if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
+
+        //If we haven't destroyed our gameobject above
+        if (target.tarObject != null)
         {
-            //Go To Point
-            //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
-            if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
+            //Get to the enemy
+            if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
             {
-                target.tarObjectAdjustPos = GetAdjustedPos();
-                Resume();
+                //Go To Point
+                //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
+                if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
+                {
+                    target.tarObjectAdjustPos = GetAdjustedPos();
+                    Resume();
+                }
+                agent.CalculatePath(target.tarObjectAdjustPos, path);
+                agent.SetPath(path);
             }
-            agent.CalculatePath(target.tarObjectAdjustPos, path);
-            agent.SetPath(path);
         }
 
         //Stuck
@@ -507,6 +512,9 @@ public class AIDroneController : MonoBehaviour
     void GoToTargetPos()
     {
         NavMeshPath path = new NavMeshPath();
+
+        //Override TC flag
+        TCRetOverride = false;
 
         //If we are not within range of our target pos
         if (Vector3.Distance(transform.position, target.tarPos) > attackRange)
@@ -786,7 +794,6 @@ public class AIDroneController : MonoBehaviour
 
             if (stuck)
             {
-                Debug.Log(idleTimer);
                 if (idleTimer > maxstuckTime)
                 {
                     idleTimer = 0.0f;
@@ -817,7 +824,15 @@ public class AIDroneController : MonoBehaviour
             {
                 if (idle && !target.hasTarget())
                 {
-                    IdleAttackLogic();
+                    //If we have rocks and we don't have anywhere to go
+                    if (idle && currentInv > 0)
+                    {
+                        TCRetOverride = true;
+                    }
+                    else
+                    {
+                        IdleAttackLogic();
+                    }
                 }
 
                 if (target.hasTarget())

@@ -158,5 +158,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20ddc7f26b050c1439daddbdb8856189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  costOfUnit: 10
-  unit: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49, type: 3}
+  unitTemplate: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49,
+    type: 3}

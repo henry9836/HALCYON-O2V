@@ -4,27 +4,21 @@ using UnityEngine;
 
 public class TCController : MonoBehaviour
 {
-
-    public float costOfUnit = 10.0f;
-    public GameObject unit;
+    public GameObject unitTemplate;
 
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
-
+    
+    public void SpawnUnit()
+    {
+        GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
+        spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+    }
     private void Start()
     {
         objID = GetComponent<ObjectID>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-    }
-
-    public void SpawnUnit()
-    {
-        if (GM.GetResouceCount((int)objID.ownerPlayerID) >= costOfUnit)
-        {
-            GameObject tmp = Instantiate(unit, transform.position, Quaternion.identity);
-            tmp.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
-        }
     }
 
     private void FixedUpdate()
