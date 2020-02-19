@@ -43,4 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0befbc9b2b27e864785454e36cfeb1af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TCTemplate: {fileID: 1407690025781185845, guid: e4b1f62280728d84ebea3ffc8a0527ae,
+    type: 3}
   defaultResources: 50
+  playerTCs: []
+  aiTCs: []

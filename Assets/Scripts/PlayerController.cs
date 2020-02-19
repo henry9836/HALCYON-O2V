@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     //Public
     public LayerMask unitInteractLayers;
     public float checkRadius = 2.0f;
+    public float boosterSpeed = 500.0f;
     public int playerID = -1;
     public Material buildAvailable;
     public Material buildNotAvailable;
@@ -217,6 +218,10 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+
+            
+
+
         }
         //We don't have any units selected
         else if (currentActionState != ActionState.BUILDMODE)
@@ -225,4 +230,41 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    private void FixedUpdate()
+    {
+        //Move/Attack Mode
+        if (selectedUnits.Count > 0)
+        {
+            //Booster
+            if (Input.GetButton("Boost"))
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If the AI is in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Add force at point
+                        aiCtrl.asteriodBody.AddForceAtPosition((selectedUnits[i].transform.forward * boosterSpeed * Time.deltaTime), selectedUnits[i].transform.position);
+                    }
+                }
+            }
+
+            if (Input.GetAxis("Boost Horizontal") != 0)
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If we are in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Rotate
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -10,6 +10,7 @@ public class AIBehaviour : MonoBehaviour
     void Start()
     {
         playerID = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RequestID((int)ObjectID.PlayerID.AI_1);
+        GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
     }
 
     // Update is called once per frame

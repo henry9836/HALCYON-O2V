@@ -96,6 +96,7 @@ public class AIDroneController : MonoBehaviour
     public bool canPlaceBomb = false;
     public bool canAttachTo = false;
     public bool aiLock = false;
+    public bool asteriodOverride = false;
     public float attackRange = 2.0f;
     public float attackDamage = 7.0f;
     public float agroRange = 10.0f;
@@ -106,6 +107,7 @@ public class AIDroneController : MonoBehaviour
     public float repairTime = 5.0f;
     public float repairAmount = 1.0f;
     public float laserSustainTime = 0.3f;
+    public Rigidbody asteriodBody;
 
     //Privates
     private GameManager GM;
@@ -137,7 +139,15 @@ public class AIDroneController : MonoBehaviour
     private float orignialRepairAmount = 1.0f;
 
 
-
+    public void iWasHit(GameObject attacker)
+    {
+        //If I was hit then target agressor and we are on attack stance
+        if (attackState == AttackState.ATTACK)
+        {
+            target.Reset();
+            target = new TargetObject(attacker);
+        }
+    }
     public void updateWorkerType(DroneMode newType)
     {
         droneMode = newType;
@@ -231,6 +241,11 @@ public class AIDroneController : MonoBehaviour
             {
                 target.objID.health -= attackDamage;
             }
+
+            if (target.tarObject.GetComponent<AIDroneController>() != null)
+            {
+                target.tarObject.GetComponent<AIDroneController>().iWasHit(gameObject);
+            }
             
             attackTimer = 0.0f;
         }
@@ -310,7 +325,19 @@ public class AIDroneController : MonoBehaviour
 
     void Attach()
     {
-        Debug.Log("Attach() Called");
+
+        //Raycast and find closet point from our position then attach ourselves onto it and switch into asteriod mode, parent to asteriod also disable AI
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, (target.tarObject.transform.position - transform.position), out hit, interactLayer))
+        {
+            transform.position = hit.point;
+            agent.enabled = false;
+            transform.parent = target.tarObject.transform;
+            GetComponent<CapsuleCollider>().enabled = false;
+            asteriodBody = target.tarObject.GetComponent<Rigidbody>();
+            asteriodOverride = true;
+        }
+
     }
 
     bool HasNeighbourStopped()
@@ -469,9 +496,10 @@ public class AIDroneController : MonoBehaviour
                     Debug.LogWarning("Unspecified action for target {" + target.objID.objID + "}");
                 }
             }
+            //Neighbour Stopped
             else
             {
-                //We are not in range goto enemy
+                //We are not in range goto enemy overriding neighbour
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
                     target.tarObjectAdjustPos = GetAdjustedPos();
@@ -479,21 +507,31 @@ public class AIDroneController : MonoBehaviour
                     agent.SetPath(path);
                     Resume();
                 }
+                //Stop
+                else
+                {
+                    Stop();
+                }
             }
         }
 
-        //Get to the enemy
-        if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
+
+        //If we haven't destroyed our gameobject above
+        if (target.tarObject != null)
         {
-            //Go To Point
-            //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
-            if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
+            //Get to the enemy
+            if (Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange)
             {
-                target.tarObjectAdjustPos = GetAdjustedPos();
-                Resume();
+                //Go To Point
+                //If the adjusted object pos is further away from the tar obj then we can hit then get a new one
+                if (Vector3.Distance(target.tarObject.transform.position, target.tarObjectAdjustPos) > attackRange)
+                {
+                    target.tarObjectAdjustPos = GetAdjustedPos();
+                    Resume();
+                }
+                agent.CalculatePath(target.tarObjectAdjustPos, path);
+                agent.SetPath(path);
             }
-            agent.CalculatePath(target.tarObjectAdjustPos, path);
-            agent.SetPath(path);
         }
 
         //Stuck
@@ -507,6 +545,9 @@ public class AIDroneController : MonoBehaviour
     void GoToTargetPos()
     {
         NavMeshPath path = new NavMeshPath();
+
+        //Override TC flag
+        TCRetOverride = false;
 
         //If we are not within range of our target pos
         if (Vector3.Distance(transform.position, target.tarPos) > attackRange)
@@ -750,85 +791,100 @@ public class AIDroneController : MonoBehaviour
 
         if (!aiLock)
         {
-
-            if (TC == null)
+            if (!asteriodOverride)
             {
-                FindTC();
-            }
+                if (TC == null)
+                {
+                    FindTC();
+                }
 
-            objID.velo = agent.velocity.magnitude;
+                objID.velo = agent.velocity.magnitude;
 
-            //Timers
-            attackTimer += Time.unscaledDeltaTime;
-            mineTimer += Time.unscaledDeltaTime;
-            repairTimer += Time.unscaledDeltaTime;
+                //Timers
+                attackTimer += Time.unscaledDeltaTime;
+                mineTimer += Time.unscaledDeltaTime;
+                repairTimer += Time.unscaledDeltaTime;
 
-            //Check Idle Condition
-            idle = (agent.velocity.magnitude < 0.1f);
-            if (idle)
-            {
-                idleTimer += Time.unscaledDeltaTime;
-            }
-            else
-            {
-                idleTimer = 0.0f;
-            }
-
-            //Stuck logic (path pending + no movement)
-            stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
-
-            //We are stupid stuck
-            if (idle && idleTimer > maxstuckTime)
-            {
-                stuck = true;
-            }
-
-
-            if (stuck)
-            {
-                Debug.Log(idleTimer);
-                if (idleTimer > maxstuckTime)
+                //Check Idle Condition
+                idle = (agent.velocity.magnitude < 0.1f);
+                if (idle)
+                {
+                    idleTimer += Time.unscaledDeltaTime;
+                }
+                else
                 {
                     idleTimer = 0.0f;
-                    target.Reset();
-                    Stop();
                 }
-            }
 
-            //Update Laser Beam
-            if (lr != null){
-                lr.SetPosition(0, laserEmitterPositions[currentLaserEmitter].transform.position);
-                if (target.hasTargetObj())
+                //Stuck logic (path pending + no movement)
+                stuck = (idle && (agent.pathPending || agent.pathStatus == NavMeshPathStatus.PathPartial));
+
+                //We are stupid stuck
+                if (idle && idleTimer > maxstuckTime)
                 {
-                    lr.SetPosition(1, target.tarObject.transform.position);
+                    stuck = true;
+                }
+
+
+                if (stuck)
+                {
+                    if (idleTimer > maxstuckTime)
+                    {
+                        idleTimer = 0.0f;
+                        target.Reset();
+                        Stop();
+                    }
+                }
+
+                //Update Laser Beam
+                if (lr != null)
+                {
+                    lr.SetPosition(0, laserEmitterPositions[currentLaserEmitter].transform.position);
+                    if (target.hasTargetObj())
+                    {
+                        lr.SetPosition(1, target.tarObject.transform.position);
+                    }
+                }
+
+                //Check and fix things
+                target.Sanity();
+                UpdateType();
+
+
+                if (TCRetOverride)
+                {
+                    TCRetOverrideBehaviour();
+                }
+                else
+                {
+                    if (idle && !target.hasTarget())
+                    {
+                        //If we have rocks and we don't have anywhere to go
+                        if (idle && currentInv > 0)
+                        {
+                            TCRetOverride = true;
+                        }
+                        else
+                        {
+                            IdleAttackLogic();
+                        }
+                    }
+
+                    if (target.hasTarget())
+                    {
+                        AttackLogic();
+                    }
+                }
+                //Death
+                if (objID.health <= 0)
+                {
+                    Destroy(gameObject);
                 }
             }
-
-            //Check and fix things
-            target.Sanity();
-            UpdateType();
-
-
-            if (TCRetOverride)
-            {
-                TCRetOverrideBehaviour();
-            }
+            //We are in asteriod mode
             else
             {
-                if (idle && !target.hasTarget())
-                {
-                    IdleAttackLogic();
-                }
-
-                if (target.hasTarget())
-                {
-                    AttackLogic();
-                }
-            }
-            //Death
-            if (objID.health <= 0)
-            {
-                Destroy(gameObject);
+                Debug.Log("Ateriod Mode");
             }
         }
     }
