@@ -659,7 +659,7 @@ MonoBehaviour:
   - {fileID: 2560986921281039443}
   - {fileID: 8402957913403137446}
   attackState: 0
-  droneMode: 0
+  droneMode: 4
   DebugMode: 1
   canMine: 1
   canRepair: 1
@@ -667,6 +667,7 @@ MonoBehaviour:
   canPlaceBomb: 0
   canAttachTo: 0
   aiLock: 0
+  asteriodOverride: 0
   attackRange: 1.6666666
   attackDamage: 7
   agroRange: 10
@@ -677,6 +678,7 @@ MonoBehaviour:
   repairTime: 5
   repairAmount: 1
   laserSustainTime: 0.3
+  asteriodBody: {fileID: 0}
 --- !u!114 &-2625570843457813101
 MonoBehaviour:
   m_ObjectHideFlags: 0
