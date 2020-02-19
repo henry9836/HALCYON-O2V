@@ -137,7 +137,15 @@ public class AIDroneController : MonoBehaviour
     private float orignialRepairAmount = 1.0f;
 
 
-
+    public void iWasHit(GameObject attacker)
+    {
+        //If I was hit then target agressor and we are on attack stance
+        if (attackState == AttackState.ATTACK)
+        {
+            target.Reset();
+            target = new TargetObject(attacker);
+        }
+    }
     public void updateWorkerType(DroneMode newType)
     {
         droneMode = newType;
@@ -230,6 +238,11 @@ public class AIDroneController : MonoBehaviour
             else
             {
                 target.objID.health -= attackDamage;
+            }
+
+            if (target.tarObject.GetComponent<AIDroneController>() != null)
+            {
+                target.tarObject.GetComponent<AIDroneController>().iWasHit(gameObject);
             }
             
             attackTimer = 0.0f;
