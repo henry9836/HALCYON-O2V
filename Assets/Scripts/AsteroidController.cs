@@ -1,17 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 
 public class AsteroidController : MonoBehaviour
 {
-    private ObjectID objID;
-
-    private Vector3 startScale;
+    ObjectID objID;
 
     void Start()
     {
-        startScale = transform.localScale;
         objID = GetComponent<ObjectID>();
     }
     
@@ -21,12 +17,5 @@ public class AsteroidController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        float scale = Mathf.Lerp(Vector3.zero.x, startScale.x, (objID.health / objID.maxHealth));
-
-        Debug.Log(scale);
-
-        transform.localScale = new Vector3(scale, scale, scale);
-
     }
 }
