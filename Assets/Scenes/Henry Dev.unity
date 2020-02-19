@@ -3413,9 +3413,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 27e4ac806020a3b4380471a632e12e11, type: 2}
     - target: {fileID: 6622558173884126361, guid: 6303c39ffc3599c49954897bed4191a7,
         type: 3}
-      propertyPath: VisualBuildFloor
+      propertyPath: lastSelectedBuildingToBuild
       value: 
-      objectReference: {fileID: 1284507732}
+      objectReference: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6303c39ffc3599c49954897bed4191a7, type: 3}
 --- !u!1 &1929187748 stripped

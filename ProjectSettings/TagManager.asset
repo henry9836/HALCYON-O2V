@@ -8,6 +8,9 @@ TagManager:
   - Unit
   - GameManager
   - AIPlayer
+  - SpawnPosition
+  - CarWash
+  - LaserPoint
   layers:
   - Default
   - TransparentFX
