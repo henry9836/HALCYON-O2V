@@ -659,12 +659,12 @@ MonoBehaviour:
   - {fileID: 2560986921281039443}
   - {fileID: 8402957913403137446}
   attackState: 0
-  droneMode: 4
+  droneMode: 0
   DebugMode: 1
   canMine: 1
   canRepair: 1
   canFight: 0
-  canPlaceBomb: 0
+  bomber: 0
   canAttachTo: 0
   aiLock: 0
   asteriodOverride: 0
