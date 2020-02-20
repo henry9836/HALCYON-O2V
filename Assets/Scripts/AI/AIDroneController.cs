@@ -172,8 +172,8 @@ public class AIDroneController : MonoBehaviour
 
             //Do not go somewhere we shouldn't according to our flags
 
-            //We can mine or attach and the target is a resource
-            if ((canAttachTo || canMine) && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
+            //We can mine or attach or bomb and the target is a resource
+            if ((canAttachTo || canMine || bomber) && target.objID.objID == ObjectID.OBJECTID.RESOURCE)
             {
                 //Find a position
                 target.tarObjectAdjustPos = GetAdjustedPos();
@@ -254,8 +254,34 @@ public class AIDroneController : MonoBehaviour
             //Mr bomb man
             else
             {
+                //Get all objs within range needs a little more range in case it doesn't hit building
+                Collider[] cols = Physics.OverlapSphere(transform.position, attackRange + 2.0f, interactLayer);
+
+                //Damage all objs in range
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    if (cols[i].gameObject.GetComponent<ObjectID>() != null) {
+                        //If Building do full damage
+                        ObjectID tmpObjID = cols[i].gameObject.GetComponent<ObjectID>();
+                        if (tmpObjID.objID == ObjectID.OBJECTID.BUILDING)
+                        {
+                            cols[i].gameObject.GetComponent<ObjectID>().health -= attackDamage;
+                        }
+                        //If Unit do 1/5 damage
+                        else if (tmpObjID.objID == ObjectID.OBJECTID.BUILDING)
+                        {
+                            cols[i].gameObject.GetComponent<ObjectID>().health -= attackDamage * 0.2f;
+                        }
+                        //If resource push and do 1/5 damage
+                        else if (tmpObjID.objID == ObjectID.OBJECTID.RESOURCE)
+                        {
+                            cols[i].GetComponent<Rigidbody>().AddExplosionForce(attackDamage * 2.5f, transform.position, attackRange + 2.0f);
+                            cols[i].gameObject.GetComponent<ObjectID>().health -= attackDamage * 0.2f;
+                        }
+                    }
+                }
+
                 //Explode
-                
                 Destroy(gameObject);
 
             }
@@ -493,9 +519,13 @@ public class AIDroneController : MonoBehaviour
                     {
                         Mine();
                     }
-                    if (canAttachTo)
+                    else if (canAttachTo)
                     {
                         Attach();
+                    }
+                    else if (bomber)
+                    {
+                        DealDamage();
                     }
                     else
                     {
