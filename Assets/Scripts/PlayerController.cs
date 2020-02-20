@@ -191,6 +191,7 @@ public class PlayerController : MonoBehaviour
                     {
                         if (cols[i].gameObject.GetComponent<ObjectID>()!= null)
                         {
+                            /*
                             //Do not target our own buildings
                             if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != ObjectID.PlayerID.PLAYER)
                             {
@@ -203,6 +204,9 @@ public class PlayerController : MonoBehaviour
                                 targetObj = cols[i].gameObject;
                                 break;
                             }
+                            */
+                            targetObj = cols[i].gameObject;
+                            break;
                         }
                         else
                         {
