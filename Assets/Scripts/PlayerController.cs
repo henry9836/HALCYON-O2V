@@ -191,20 +191,6 @@ public class PlayerController : MonoBehaviour
                     {
                         if (cols[i].gameObject.GetComponent<ObjectID>()!= null)
                         {
-                            /*
-                            //Do not target our own buildings
-                            if (cols[i].gameObject.GetComponent<ObjectID>().ownerPlayerID != ObjectID.PlayerID.PLAYER)
-                            {
-                                targetObj = cols[i].gameObject;
-                                break;
-                            }
-                            //Useless they are damaged
-                            else if (cols[i].gameObject.GetComponent<ObjectID>().health != cols[i].gameObject.GetComponent<ObjectID>().maxHealth)
-                            {
-                                targetObj = cols[i].gameObject;
-                                break;
-                            }
-                            */
                             targetObj = cols[i].gameObject;
                             break;
                         }
@@ -265,6 +251,30 @@ public class PlayerController : MonoBehaviour
                     {
                         //Rotate
                         aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
+                    }
+                }
+            }
+            
+            if (Input.GetButton("BoostSlowToHalt"))
+            {
+                Debug.Log("Slwoing");
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    //If we are in asteriod mode
+                    AIDroneController aiCtrl = selectedUnits[i].GetComponent<AIDroneController>();
+                    if (aiCtrl.asteriodOverride)
+                    {
+                        //Slow velocity
+                        if (aiCtrl.asteriodBody.velocity.magnitude > 0.1f)
+                        {
+                            aiCtrl.asteriodBody.AddForce(-(aiCtrl.asteriodBody.velocity.normalized) * boosterSpeed * Time.deltaTime);
+                        }
+                        //Stop velocity
+                        else
+                        {
+                            aiCtrl.asteriodBody.velocity = Vector3.zero;
+                        }
+                        
                     }
                 }
             }
