@@ -93,7 +93,7 @@ public class AIDroneController : MonoBehaviour
     public bool canMine = false;
     public bool canRepair = false;
     public bool canFight = false;
-    public bool canPlaceBomb = false;
+    public bool bomber = false;
     public bool canAttachTo = false;
     public bool aiLock = false;
     public bool asteriodOverride = false;
@@ -185,7 +185,7 @@ public class AIDroneController : MonoBehaviour
                 target.tarObjectAdjustPos = GetAdjustedPos();
             }
             //We can fight or we are a bomber and the target is a building or unit the enemy owns
-            else if ((canFight || canPlaceBomb) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
+            else if ((canFight || bomber) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
             {
                 //Find a position
                 target.tarObjectAdjustPos = GetAdjustedPos();
@@ -229,25 +229,36 @@ public class AIDroneController : MonoBehaviour
     {
         if (attackTimer > attackCooldown)
         {
-            StartCoroutine(FlashingMyLaserForThePlayerOwO());
-
-            //Crits for fun
-            int dice = Random.Range(1, 13);
-            if (dice == 12)
+            if (!bomber)
             {
-                target.objID.health -= attackDamage * (Random.Range(1.5f, 2.5f));
+                StartCoroutine(FlashingMyLaserForThePlayerOwO());
+
+                //Crits for fun
+                int dice = Random.Range(1, 13);
+                if (dice == 12)
+                {
+                    target.objID.health -= attackDamage * (Random.Range(1.5f, 2.5f));
+                }
+                else
+                {
+                    target.objID.health -= attackDamage;
+                }
+
+                if (target.tarObject.GetComponent<AIDroneController>() != null)
+                {
+                    target.tarObject.GetComponent<AIDroneController>().iWasHit(gameObject);
+                }
+
+                attackTimer = 0.0f;
             }
+            //Mr bomb man
             else
             {
-                target.objID.health -= attackDamage;
-            }
+                //Explode
+                
+                Destroy(gameObject);
 
-            if (target.tarObject.GetComponent<AIDroneController>() != null)
-            {
-                target.tarObject.GetComponent<AIDroneController>().iWasHit(gameObject);
             }
-            
-            attackTimer = 0.0f;
         }
     }
 
@@ -610,8 +621,8 @@ public class AIDroneController : MonoBehaviour
                             Debug.Log($"I am a miner and my drone mode is {droneMode}");
                             foundResources.Add(cols[i].gameObject);
                         }
-                        //If we can attack or place a bomb and is building or unit
-                        else if ((canPlaceBomb || canFight) && (cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING || cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT))
+                        //If we can attack or bomb and is building or unit
+                        else if ((bomber || canFight) && (cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING || cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT))
                         {
                             Debug.Log($"Found target: {cols[i].gameObject.name}");
 
@@ -702,13 +713,14 @@ public class AIDroneController : MonoBehaviour
         mineMaxInv = orignialMineMaxInv;
         repairTime = orignialRepairTime;
         repairAmount = orignialRepairAmount;
+        objID.ResetHealthToOriginal();
 
         if (droneMode == DroneMode.WORKER)
         {
             canRepair = true;
             canMine = true;
             canFight = true;
-            canPlaceBomb = false;
+            bomber = false;
             canAttachTo = false;
         }
         else if (droneMode == DroneMode.MINER)
@@ -716,7 +728,7 @@ public class AIDroneController : MonoBehaviour
             canRepair = true;
             canMine = true;
             canFight = false;
-            canPlaceBomb = false;
+            bomber = false;
             canAttachTo = false;
 
             //Give a 250% boost to mining rate and inv
@@ -729,7 +741,7 @@ public class AIDroneController : MonoBehaviour
             canRepair = false;
             canMine = false;
             canFight = true;
-            canPlaceBomb = false;
+            bomber = false;
             canAttachTo = false;
 
             //Give a 250% boost to attackDamage and a 15% boost to range
@@ -742,7 +754,7 @@ public class AIDroneController : MonoBehaviour
             canRepair = false;
             canMine = false;
             canFight = false;
-            canPlaceBomb = false;
+            bomber = false;
             canAttachTo = true;
         }
         else if (droneMode == DroneMode.BOMBER)
@@ -750,8 +762,12 @@ public class AIDroneController : MonoBehaviour
             canRepair = true;
             canMine = false;
             canFight = true;
-            canPlaceBomb = true;
+            bomber = true;
             canAttachTo = false;
+
+            //Make glass cannon
+            attackDamage *= 10.0f;
+            objID.ModifyMaxHealth(objID.maxHealth * 0.1f);
         }
         else
         {
