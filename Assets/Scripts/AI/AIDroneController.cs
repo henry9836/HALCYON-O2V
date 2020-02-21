@@ -178,17 +178,26 @@ public class AIDroneController : MonoBehaviour
                 //Find a position
                 target.tarObjectAdjustPos = GetAdjustedPos();
             }
-            //We can repair and the target is a building that we own
-            else if (canRepair && target.objID.objID == ObjectID.OBJECTID.BUILDING && target.objID.ownerPlayerID == objID.ownerPlayerID)
+            //We can attack or repair and the target is a building that we own
+            else if ((canAttachTo || canRepair) && target.objID.objID == ObjectID.OBJECTID.BUILDING && target.objID.ownerPlayerID == objID.ownerPlayerID)
             {
                 //Find a position
                 target.tarObjectAdjustPos = GetAdjustedPos();
             }
-            //We can fight or we are a bomber and the target is a building or unit the enemy owns
-            else if ((canFight || bomber) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
+            //We can fight or attack or we are a bomber and the target is a building or unit the enemy owns
+            else if ((canFight || canAttachTo || bomber) && (target.objID.objID == ObjectID.OBJECTID.BUILDING || target.objID.objID == ObjectID.OBJECTID.UNIT) && target.objID.ownerPlayerID != objID.ownerPlayerID)
             {
-                //Find a position
-                target.tarObjectAdjustPos = GetAdjustedPos();
+                //Do not boost a unit
+                if (canAttachTo && target.objID.objID == ObjectID.OBJECTID.BUILDING)
+                {
+                    //Find a position
+                    target.tarObjectAdjustPos = GetAdjustedPos();
+                }
+                else if (!canAttachTo)
+                {
+                    //Find a position
+                    target.tarObjectAdjustPos = GetAdjustedPos();
+                }
             }
             else
             {
@@ -319,6 +328,7 @@ public class AIDroneController : MonoBehaviour
 
     void Repair()
     {
+        Debug.Log("Repair() called");
         if (repairTimer >= repairTime)
         {
             StartCoroutine(FlashingMyLaserForThePlayerOwO());
@@ -362,7 +372,7 @@ public class AIDroneController : MonoBehaviour
 
     void Attach()
     {
-
+        Debug.Log("Attach() Called");
         //Raycast and find closet point from our position then attach ourselves onto it and switch into asteriod mode, parent to asteriod also disable AI
         RaycastHit hit;
         if (Physics.Raycast(transform.position, (target.tarObject.transform.position - transform.position), out hit, interactLayer))
@@ -371,7 +381,16 @@ public class AIDroneController : MonoBehaviour
             agent.enabled = false;
             transform.parent = target.tarObject.transform;
             GetComponent<CapsuleCollider>().enabled = false;
+            if (target.tarObject.GetComponent<Rigidbody>() == null)
+            {
+                target.tarObject.AddComponent<Rigidbody>();
+            }
             asteriodBody = target.tarObject.GetComponent<Rigidbody>();
+            asteriodBody.useGravity = false;
+            asteriodBody.constraints = RigidbodyConstraints.FreezePositionY;
+            asteriodBody.constraints = RigidbodyConstraints.FreezeRotationX;
+            asteriodBody.constraints = RigidbodyConstraints.FreezeRotationZ;
+            asteriodBody.angularDrag = 9999;
             asteriodOverride = true;
         }
 
@@ -475,6 +494,7 @@ public class AIDroneController : MonoBehaviour
 
     void AttackGameObject()
     {
+        Debug.Log($"Attacking Object: {target.tarObject.name}");
         NavMeshPath path = new NavMeshPath();
         //Arrived at target object position
         if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
@@ -485,15 +505,19 @@ public class AIDroneController : MonoBehaviour
                 //Stop we have reached target
                 Stop();
 
-                //What do we do with object
+                //If the target is a unit or building
                 if (target.objID.objID == ObjectID.OBJECTID.UNIT || target.objID.objID == ObjectID.OBJECTID.BUILDING)
                 {
-                    //If it is our building and we can repair
+                    //If it is our building and we can repair or attach
                     if (target.objID.ownerPlayerID == objID.ownerPlayerID)
                     {
                         if (canRepair)
                         {
                             Repair();
+                        }
+                        else if (canAttachTo)
+                        {
+                            Attach();
                         }
                         else
                         {
@@ -505,6 +529,10 @@ public class AIDroneController : MonoBehaviour
                         if (canFight)
                         {
                             DealDamage();
+                        }
+                        else if (canAttachTo)
+                        {
+                            Attach();
                         }
                         else
                         {
@@ -602,7 +630,6 @@ public class AIDroneController : MonoBehaviour
         //Arrived
         if (Vector3.Distance(transform.position, target.tarPos) < 1.0f || HasNeighbourStopped())
         {
-            Debug.LogWarning("Arrived" + gameObject.name);
             Stop();
             target.Reset();
         }
@@ -648,13 +675,11 @@ public class AIDroneController : MonoBehaviour
                         //Add if is a resource and we in mine mode and we can mine
                         if (canMine && cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                         {
-                            Debug.Log($"I am a miner and my drone mode is {droneMode}");
                             foundResources.Add(cols[i].gameObject);
                         }
                         //If we can attack or bomb and is building or unit
                         else if ((bomber || canFight) && (cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.BUILDING || cols[i].gameObject.GetComponent<ObjectID>().objID == ObjectID.OBJECTID.UNIT))
                         {
-                            Debug.Log($"Found target: {cols[i].gameObject.name}");
 
                             //Make a new Target
                             target = new TargetObject(cols[i].gameObject);
@@ -692,20 +717,6 @@ public class AIDroneController : MonoBehaviour
 
             return true;
         }
-
-        //Reset our mode to a default since there is no resources nearby
-        //if (droneMode == DroneMode.MINER && canRepair)
-        //{
-        //    droneMode = DroneMode.WORKER;
-        //}
-        //else if (droneMode == DroneMode.MINER && !canRepair)
-        //{
-        //    droneMode = DroneMode.FIGHTER;
-        //}
-        //else
-        //{
-        //    droneMode = DroneMode.WORKER;
-        //}
 
         return false;
     }
