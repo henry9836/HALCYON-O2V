@@ -1909,6 +1909,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4582045601793619418, guid: 75f98e5bf1d8aac4bb151175686487a2,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.8235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 4582045601793619418, guid: 75f98e5bf1d8aac4bb151175686487a2,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4582045601793619418, guid: 75f98e5bf1d8aac4bb151175686487a2,
+        type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7007562658091627907, guid: 75f98e5bf1d8aac4bb151175686487a2,
         type: 3}
       propertyPath: m_LocalPosition.x
