@@ -112,8 +112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownerPlayerID: 0
   objID: 3
-  health: 10
-  maxHealth: 10
+  health: 2500
+  maxHealth: 2500
   velo: 0
 --- !u!114 &8253096406471153655
 MonoBehaviour:
