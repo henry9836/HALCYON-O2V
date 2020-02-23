@@ -37,6 +37,7 @@ public class AIBehaviour : MonoBehaviour
 
     public List<float> balanceHistory = new List<float>();
     private List<GameObject> units = new List<GameObject>();
+    private List<GameObject> idleUnits = new List<GameObject>();
     private GameManager GM;
     private ObjectID objID;
     public float profitCheckTimer = 0.0f;
@@ -49,6 +50,7 @@ public class AIBehaviour : MonoBehaviour
     private scoutedObject closestKnownEnemyBuilding = null;
     private scoutedObject closestKnownEnemyTC = null;
     private TCController TC;
+    private GameObject scoutUnit;
 
     public void regNewSeenObject(GameObject obj)
     {
@@ -91,9 +93,20 @@ public class AIBehaviour : MonoBehaviour
                 //Is the avg not higher than our last average?
                 if (avg < lastBalanceAvg)
                 {
+                    //Do we know any resources
+                    if (closestKnownResource != null)
+                    {
+
+                    }
+                    else
+                    {
+                        //Scout
+                        Scout();
+                    }
+
                     Debug.Log($"Spawning Unit...");
                     //Make the profit things happen
-
+                    
 
                     //Spawn unit
                     units.Add(TC.SpawnUnit());
@@ -113,6 +126,19 @@ public class AIBehaviour : MonoBehaviour
                 balanceHistory.Add(GM.GetResouceCount(playerID));
             }
 
+        }
+    }
+
+    void CreateScout()
+    {
+
+    }
+
+    void Scout()
+    {
+        if (scoutUnit == null)
+        {
+            CreateScout();
         }
     }
 
@@ -242,17 +268,47 @@ public class AIBehaviour : MonoBehaviour
                         if (Vector3.Distance(transform.position, seenObjects[i].positionSpotted) < closestKnownEnemyTCDistance)
                         {
                             closestKnownEnemyTC = seenObjects[i];
+                            closestKnownEnemyTCDistance = Vector3.Distance(transform.position, seenObjects[i].positionSpotted);
                         }
                     }
                     else {
                         if (Vector3.Distance(transform.position, seenObjects[i].positionSpotted) < closestKnownEnemyBuildingDistance)
                         {
-
+                            closestKnownEnemyBuilding = seenObjects[i];
+                            closestKnownEnemyBuildingDistance = Vector3.Distance(transform.position, seenObjects[i].positionSpotted);
                         }
+                    }
+                }
+                else if (seenObjects[i].objType == ObjectID.OBJECTID.UNIT)
+                {
+                    if (Vector3.Distance(transform.position, seenObjects[i].positionSpotted) < closestKnownEnemyUnitDistance)
+                    {
+                        closestKnownEnemyUnit = seenObjects[i];
+                        closestKnownEnemyUnitDistance = Vector3.Distance(transform.position, seenObjects[i].positionSpotted);
+                    }
+                }
+                else if (seenObjects[i].objType == ObjectID.OBJECTID.RESOURCE)
+                {
+                    if (Vector3.Distance(transform.position, seenObjects[i].positionSpotted) < closestKnownResourceDistance)
+                    {
+                        closestKnownResource = seenObjects[i];
+                        closestKnownResourceDistance = Vector3.Distance(transform.position, seenObjects[i].positionSpotted);
                     }
                 }
             }
         }
+
+        //Check for idle workers
+        idleUnits.Clear();
+
+        for (int i = 0; i < units.Count; i++)
+        {
+            if (units[i].GetComponent<AIDroneController>().isIdle())
+            {
+                idleUnits.Add(units[i]);
+            }
+        }
+
 
         yield return null;
     }
