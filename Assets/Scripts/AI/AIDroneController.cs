@@ -157,8 +157,12 @@ public class AIDroneController : MonoBehaviour
     {
         return new aiDebug(target, stuck, idle, attackState);
     }
-
-
+    
+    public bool isIdle()
+    {
+        return idle;
+    }
+    
     public bool isAIStopped()
     {
         return agent.isStopped;

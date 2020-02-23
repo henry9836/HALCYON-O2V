@@ -10,10 +10,11 @@ public class TCController : MonoBehaviour
     private ObjectID objID;
     private GameManager GM;
     
-    public void SpawnUnit()
+    public GameObject SpawnUnit()
     {
         GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
         spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+        return spawnedObj;
     }
     private void Start()
     {
@@ -35,5 +36,6 @@ public class TCController : MonoBehaviour
             }
             registered = true;
         }
+
     }
 }
