@@ -20,10 +20,17 @@ public class TCController : MonoBehaviour
     {
         objID = GetComponent<ObjectID>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        GetComponent<Rigidbody>().Sleep();
     }
 
     private void FixedUpdate()
     {
+
+        if (!registered)
+        {
+            GetComponent<Rigidbody>().Sleep();
+        }
+
         if (!registered && objID.ownerPlayerID != ObjectID.PlayerID.UNASSIGNED)
         {
             if (objID.ownerPlayerID != ObjectID.PlayerID.PLAYER)
