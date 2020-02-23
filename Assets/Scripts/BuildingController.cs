@@ -12,6 +12,9 @@ public class BuildingController : MonoBehaviour
     public bool placed = false;
     public Material defaultMaterial;
 
+    private NavMeshAgent agent;
+    private NavMeshPath path;
+
     public void Placed()
     {
         gameObject.layer = LayerMask.NameToLayer("Building");
@@ -25,6 +28,8 @@ public class BuildingController : MonoBehaviour
     private void Start()
     {
         objID = GetComponent<ObjectID>();
+        agent = GetComponent<NavMeshAgent>();
+        path = new NavMeshPath();
     }
 
     // Update is called once per frame
@@ -32,17 +37,12 @@ public class BuildingController : MonoBehaviour
     {
         if (placed)
         {
-
-            if (objID.health <= 0)
-            {
-                Destroy(gameObject);
-            }
-
             //We have been built
             if (!built && objID.health == objID.maxHealth)
             {
                 built = true;
             }
+
         }
     }
 }
