@@ -6,6 +6,7 @@ public class minimap : MonoBehaviour, IPointerClickHandler
 {
     public LayerMask grid;
     private Vector3 campos;
+    public float minimapscale = 0.7f;
 
     void Start()
     {
@@ -49,7 +50,7 @@ public class minimap : MonoBehaviour, IPointerClickHandler
 
             Debug.Log("Correct Cursor Pos: " + xpos + " " + ypos);
 
-            movemaincam(new Vector2(xpos, ypos) * 0.2f);
+            movemaincam(new Vector2(xpos, ypos) * minimapscale);
         }
     }
 
@@ -73,6 +74,7 @@ public class minimap : MonoBehaviour, IPointerClickHandler
         }
 
         Vector3 posdiff = hitUI.point - hit.point;
+        //posdiff *= 2;
 
         cam.gameObject.transform.position += new Vector3(posdiff.x + (posdiff.y * Mathf.Sqrt(2.0f)), 0.0f, posdiff.z + (posdiff.y * Mathf.Sqrt(2.0f)));
 
