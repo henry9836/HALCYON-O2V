@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5955773959104471282}
   - component: {fileID: 1424983661452893545}
   - component: {fileID: 8946601362167791566}
+  - component: {fileID: -2042700491692407074}
+  - component: {fileID: 223479490}
   m_Layer: 0
   m_Name: Blackhole
   m_TagString: Untagged
@@ -28,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4779814204762483878}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.33, y: 17.88, z: -4.85}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -89,7 +91,37 @@ SphereCollider:
   m_GameObject: {fileID: 4779814204762483878}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &-2042700491692407074
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779814204762483878}
+  serializedVersion: 2
+  m_Mass: 1e+9
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 84
+  m_CollisionDetection: 0
+--- !u!114 &223479490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779814204762483878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f13c88478368fc14f9424d48091fda55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 60
+  power: 10
