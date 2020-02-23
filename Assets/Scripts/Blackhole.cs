@@ -5,6 +5,7 @@ using UnityEngine;
 public class Blackhole : MonoBehaviour
 {
     public float radius = 5.0f;
+    public float power = 0.7f;
 
     public void FixedUpdate()
     {
@@ -15,7 +16,15 @@ public class Blackhole : MonoBehaviour
 
             if (rb != null)
             {
-                rb.AddExplosionForce(-10.0f, this.transform.position, radius, 3.0f);
+                float gravityIntensity = Vector3.Distance(transform.position, hit.transform.position) / 5.0f;
+                hit.attachedRigidbody.AddForce((transform.position - hit.transform.position) * gravityIntensity * hit.attachedRigidbody.mass * power * Time.smoothDeltaTime);
+                //Debug.DrawRay(hit.transform.position, transform.position - hit.transform.position);
+
+                if (Vector3.Distance(transform.position, hit.transform.position) < 1.0f)
+                {
+                    Destroy(hit.gameObject);
+                
+                }
             }
         }
     }
