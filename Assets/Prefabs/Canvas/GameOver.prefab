@@ -460,6 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6773370976787670950}
   - component: {fileID: 5477352466882758861}
+  - component: {fileID: 7551034713937348043}
   - component: {fileID: 4700854717336598115}
   m_Layer: 5
   m_Name: healthFeedback
@@ -495,6 +496,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5424477708733707170}
   m_CullTransparentMesh: 0
+--- !u!114 &7551034713937348043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424477708733707170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a96406149bc785488b0d80bb13aa9a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashing: 0
+  fincol: {r: 0, g: 0, b: 0, a: 0}
+  startcol: {r: 0, g: 0, b: 0, a: 0}
+  speed: 0
 --- !u!114 &4700854717336598115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,7 +630,7 @@ GameObject:
   - component: {fileID: 5835084427209100430}
   - component: {fileID: 5835084427209100429}
   m_Layer: 5
-  m_Name: GameOver 1 1
+  m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
