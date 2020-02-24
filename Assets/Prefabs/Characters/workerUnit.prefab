@@ -690,7 +690,6 @@ GameObject:
   - component: {fileID: -2625570843457813101}
   - component: {fileID: -2485097816674833972}
   - component: {fileID: 4228376089277361154}
-  - component: {fileID: 699601136}
   m_Layer: 11
   m_Name: workerUnit
   m_TagString: Unit
@@ -905,22 +904,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!54 &699601136
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7236769104955452519}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
 --- !u!1 &7832660570133230992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,7 +1191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Version: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 68662ea9f9d023843a4b24e4edaf53c5, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 1
   m_UVScale: {x: 1, y: 1}
