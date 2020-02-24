@@ -117,6 +117,31 @@ public class GameManager : MonoBehaviour
         return -999;
     }
 
+    public void setUnitCount(int ID, int set)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                banks[i].currUnit = set;
+                break;
+            }
+        }
+    }
+
+    public void UpdateUnitCountMax(int ID, int change)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                banks[i].maxUnit += change;
+                break;
+            }
+        }
+    }
+
+
     public void UpdateResourceCount(int ID, float change)
     {
         for (int i = 0; i < banks.Count; i++)

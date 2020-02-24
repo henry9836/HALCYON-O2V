@@ -17,16 +17,18 @@ public class TCController : MonoBehaviour
     
     public GameObject SpawnUnit()
     {
-        GameManager manager = GameObject.Find("GameManger").GetComponent<GameManager>();
         int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
 
-        if ((manager.GetResouceCount(player) >= baseCost) && (manager.GetUnitCount(player) < manager.GetUnitCountMax(player)))
+        if ((GM.GetResouceCount(player) >= baseCost) && (GM.GetUnitCount(player) < GM.GetUnitCountMax(player)))
         {
-            manager.UpdateResourceCount(player, -baseCost);
+
+            Debug.Log("spawn unit");
+            GM.UpdateResourceCount(player, -baseCost);
             GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
             spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
 
             playerunit.Add(spawnedObj);
+            GM.setUnitCount(player, playerunit.Count);
             return spawnedObj;
         }
 
@@ -66,6 +68,8 @@ public class TCController : MonoBehaviour
 
     public IEnumerator unitremover()
     {
+        int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
+
         while (true)
         {
             for (int i = 0; i < playerunit.Count; i++)
@@ -73,10 +77,14 @@ public class TCController : MonoBehaviour
                 if (playerunit[i] == null)
                 {
                     playerunit.RemoveAt(i);
-                    i--;
                 }
+                yield return null;
+
             }
+            GM.setUnitCount(player, playerunit.Count);
+
             yield return null;
         }
+
     }
 }

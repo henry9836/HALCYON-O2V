@@ -10,7 +10,7 @@ public class SpawnExampleScript : MonoBehaviour
     public void Spawn()
     {
 
-        Debug.Log("Spawning Unit");
+        Debug.Log("clicked spawn");
 
         if (TC == null)
         {
