@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public class Bank
     {
+        public int maxUnit = 10;
+        public int currUnit = 0;
         public int ID;
         public float resourceCount;
+
+
 
         public Bank(int _ID, float _startingResource)
         {
@@ -87,6 +91,30 @@ public class GameManager : MonoBehaviour
         }
 
         return 0.0f;
+    }
+
+    public int GetUnitCount(int ID)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                return (banks[i].currUnit);
+            }
+        }
+        return -999;
+    }
+
+    public int GetUnitCountMax(int ID)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                return (banks[i].maxUnit);
+            }
+        }
+        return -999;
     }
 
     public void UpdateResourceCount(int ID, float change)

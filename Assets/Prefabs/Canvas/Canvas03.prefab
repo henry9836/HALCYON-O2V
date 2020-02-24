@@ -6006,6 +6006,7 @@ GameObject:
   - component: {fileID: 1514143202838352783}
   - component: {fileID: 773240626774842311}
   - component: {fileID: 4761983380577033316}
+  - component: {fileID: 1722361138}
   m_Layer: 5
   m_Name: T_Dollar Sign
   m_TagString: Untagged
@@ -6072,6 +6073,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: $ERR
+--- !u!114 &1722361138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2523728595750896084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea6aa3d79d48aa4f8f5d4b9ed17f7a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2680925777344230383
 GameObject:
   m_ObjectHideFlags: 0
@@ -11380,6 +11393,7 @@ GameObject:
   - component: {fileID: 9017120807273294406}
   - component: {fileID: 3234817098255282552}
   - component: {fileID: 7757159667199732115}
+  - component: {fileID: 2004694450}
   m_Layer: 5
   m_Name: MaxUnit
   m_TagString: Untagged
@@ -11446,6 +11460,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: ERROR MAX UNIT
+--- !u!114 &2004694450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3345533092815573648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 268587aab44674a4792008c5bda2097d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3381022220143057326
 GameObject:
   m_ObjectHideFlags: 0
@@ -13083,7 +13109,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7857289737055809333}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: Spawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6153561703433946336
 GameObject:
   m_ObjectHideFlags: 0
@@ -13290,36 +13327,6 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 1, y: 1}
   m_UseGraphicAlpha: 1
---- !u!1 &6548393692676776579
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3018936861868879637}
-  m_Layer: 0
-  m_Name: Buttons
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3018936861868879637
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6548393692676776579}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7997795919603197508}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6876104212043231947
 GameObject:
   m_ObjectHideFlags: 0
@@ -13960,7 +13967,6 @@ Transform:
   m_Children:
   - {fileID: 715654555255939292}
   - {fileID: 1514143202838352783}
-  - {fileID: 3018936861868879637}
   m_Father: {fileID: 2688452072122695830}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14324,7 +14330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
