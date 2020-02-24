@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be0ee72b8b87064885208ad9a272e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carWashType: 2
+  carWashType: 4
 --- !u!54 &8329563967812637206
 Rigidbody:
   m_ObjectHideFlags: 0
