@@ -10,19 +10,27 @@ public class TCController : MonoBehaviour
     private ObjectID objID;
     private GameManager GM;
     
-    public void SpawnUnit()
+    public GameObject SpawnUnit()
     {
         GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
         spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+        return spawnedObj;
     }
     private void Start()
     {
         objID = GetComponent<ObjectID>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        GetComponent<Rigidbody>().Sleep();
     }
 
     private void FixedUpdate()
     {
+
+        if (!registered)
+        {
+            GetComponent<Rigidbody>().Sleep();
+        }
+
         if (!registered && objID.ownerPlayerID != ObjectID.PlayerID.UNASSIGNED)
         {
             if (objID.ownerPlayerID != ObjectID.PlayerID.PLAYER)
@@ -35,5 +43,6 @@ public class TCController : MonoBehaviour
             }
             registered = true;
         }
+
     }
 }

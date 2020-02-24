@@ -123,10 +123,16 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(SpawnTCs());
     }
+
     private void FixedUpdate()
     {
-        //Once tcs are registered
-        if (tcCount >= 2)
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+            //Once tcs are registered
+            if (tcCount >= 2)
         {
             //Check who is alive
             //Player lost

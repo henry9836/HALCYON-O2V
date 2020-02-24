@@ -1102,7 +1102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Version: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 68662ea9f9d023843a4b24e4edaf53c5, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 1
   m_UVScale: {x: 1, y: 1}
