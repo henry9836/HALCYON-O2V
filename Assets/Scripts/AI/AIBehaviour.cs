@@ -258,7 +258,7 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundResources.Length; i++)
         {
             //If not inside the game world enough
-            Debug.Log($"Our distance to resource is: {Vector3.Distance(foundResources[i].transform.position, transform.position)} and we only allow within {acceptableAsteriodDistance}");
+            //Debug.Log($"Our distance to resource is: {Vector3.Distance(foundResources[i].transform.position, transform.position)} and we only allow within {acceptableAsteriodDistance}");
             if (Vector3.Distance(foundResources[i].transform.position, transform.position) < acceptableAsteriodDistance)
             {
                 resources.Add(new scoutedObject(foundResources[i]));
@@ -387,7 +387,7 @@ public class AIBehaviour : MonoBehaviour
                 //build more units
                 for (int i = amountofUnitsAffected; i < 5; i++)
                 {
-                    TC.SpawnUnit(TCController.STORE.BASE);
+                    TC.SpawnUnit(TCController.STORE.BASE, true);
                 }
             }
         }
