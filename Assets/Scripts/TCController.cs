@@ -7,6 +7,10 @@ public class TCController : MonoBehaviour
     public GameObject unitTemplate;
 
     public float baseCost = 100;
+    public float mineCost = 5000;
+    public float attackCost = 100000;
+    public float boostCost = 150000;
+    public float escapeCost = 999999;
 
     private bool registered = false;
     private ObjectID objID;
