@@ -15,6 +15,7 @@ TagManager:
   - Blackhole
   - Ground
   - Henry'sStupidCube
+  - CarWashParent
   layers:
   - Default
   - TransparentFX

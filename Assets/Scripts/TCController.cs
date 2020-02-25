@@ -30,7 +30,7 @@ public class TCController : MonoBehaviour
         ESCAPE,
     };
 
-    public GameObject SpawnUnit(TCController.STORE tospawn, bool amAI)
+    public GameObject SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
     {
         if (tospawn == STORE.BASE)
         {
