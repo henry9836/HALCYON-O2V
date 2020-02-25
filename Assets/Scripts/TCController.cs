@@ -18,8 +18,6 @@ public class TCController : MonoBehaviour
     public List<GameObject> playerunit = new List<GameObject>();
     private int unitCount = 0;
 
-
-
     public GameObject SpawnUnit()
     {
         if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
