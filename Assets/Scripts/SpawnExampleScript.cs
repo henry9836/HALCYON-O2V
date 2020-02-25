@@ -35,6 +35,12 @@ public class SpawnExampleScript : MonoBehaviour
         TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.ESCAPE, false);
     }
 
+    public void Spawnhouse()
+    {
+        fixTC();
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.HOUSE, false);
+    }
+
     public void fixTC()
     {
         if (TC == null)

@@ -129,13 +129,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateUnitCountMax(int ID, int change)
+    public void setUnitCountMax(int ID, int set)
     {
         for (int i = 0; i < banks.Count; i++)
         {
             if (banks[i].ID == ID)
             {
-                banks[i].maxUnit += change;
+                banks[i].maxUnit = set;
                 break;
             }
         }

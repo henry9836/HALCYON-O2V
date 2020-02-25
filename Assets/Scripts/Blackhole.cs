@@ -9,8 +9,8 @@ public class Blackhole : MonoBehaviour
 
     private float minScale = 10.0f;
     private float maxscale = 300.0f;
-    private float timer = 0.0f;
-    private float twomintimer = 300.0f;
+    public float timer = 0.0f;
+    public float twomintimer = 420.0f;
 
     public void Update()
     {
