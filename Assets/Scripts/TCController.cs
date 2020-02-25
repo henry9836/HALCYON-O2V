@@ -44,7 +44,6 @@ public class TCController : MonoBehaviour
                 GameObject spawnedObj = Instantiate(unitTemplate, (transform.position + (new Vector3(Random.Range(-1.0f,1.0f),0.0f, Random.Range(-1.0f, 1.0f)) * 5.0f)), Quaternion.identity);
                 spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 playerunit.Add(spawnedObj);
-                //return spawnedObj;
             }
         }
         else if (tospawn == STORE.MINECW)
@@ -135,16 +134,15 @@ public class TCController : MonoBehaviour
 
         //return (null);
     }
-    private void Start()
+    void Start()
     {
         objID = GetComponent<ObjectID>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         GetComponent<Rigidbody>().Sleep();
-        StartCoroutine(unitremover());
         playerCtrl = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
 
         if (!registered)
@@ -170,39 +168,21 @@ public class TCController : MonoBehaviour
         }
 
 
+
+
     }
 
-    public IEnumerator unitCreator()
+    void Update()
     {
-        Modifylock = true;
-        yield return new WaitForSeconds(3.0f);
-
-
-        Modifylock = false;
-        yield return null;
-    }
-
-    public IEnumerator unitremover()
-    {
-
-        while (true)
+        for (int i = 0; i < playerunit.Count; i++)
         {
-            if (!Modifylock)
+            if (playerunit[i] == null)
             {
-                for (int i = 0; i < playerunit.Count; i++)
-                {
-                    if (playerunit[i] == null)
-                    {
-                        playerunit.RemoveAt(i);
-                    }
-                    yield return null;
-
-                }
-                unitCount = playerunit.Count;
-                GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
+                playerunit.RemoveAt(i);
             }
-            yield return null;
         }
-
+        unitCount = playerunit.Count;
+        GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
     }
+
 }
