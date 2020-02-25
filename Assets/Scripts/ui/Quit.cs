@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Quit : MonoBehaviour
 {
-    public void Begone()
+    public void Menu()
     {
-        Application.Quit();
+        Application.Menu();
 
     }
 
