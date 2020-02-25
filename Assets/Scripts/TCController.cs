@@ -34,20 +34,16 @@ public class TCController : MonoBehaviour
     {
         if (tospawn == STORE.BASE)
         {
-            if (!amAI)
+            if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
             {
-                if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
-                {
-                    Debug.Log("spawn base");
-                    GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
-                    GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
-                    spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
-                    playerunit.Add(spawnedObj);
-                    GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
-                    return spawnedObj;
-                }
+                Debug.Log("spawn base");
+                GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
+                GameObject spawnedObj = Instantiate(unitTemplate, (transform.position + (new Vector3(Random.Range(-1.0f,1.0f),0.0f, Random.Range(-1.0f, 1.0f)) * 5.0f)), Quaternion.identity);
+                spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+                playerunit.Add(spawnedObj);
+                GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
+                return spawnedObj;
             }
-
         }
         else if (tospawn == STORE.MINECW)
         {
@@ -59,6 +55,10 @@ public class TCController : MonoBehaviour
 
                     playerCtrl.lastSelectedBuildingToBuild = carWashMiner;
                 }
+                else
+                {
+
+                }
             }
         }
         else if (tospawn == STORE.ATTACKCW)
@@ -69,6 +69,10 @@ public class TCController : MonoBehaviour
                 {
                     playerCtrl.lastSelectedBuildingToBuild = carWashFighter;
                 }
+                else
+                {
+
+                }
             }
         }
         else if (tospawn == STORE.BOOSTCW)
@@ -78,6 +82,10 @@ public class TCController : MonoBehaviour
                 if (!amAI)
                 {
                     playerCtrl.lastSelectedBuildingToBuild = carWashBoost;
+                }
+                else
+                {
+
                 }
             }
         }

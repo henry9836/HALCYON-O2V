@@ -365,7 +365,7 @@ public class AIBehaviour : MonoBehaviour
         if (!madeProfit && validProfitCheck)
         {
 
-            Debug.Log("Enter Spawn Code Section");
+            Debug.Log($"Idle Unit Count: {idleUnits.Count}");
 
             int amountofUnitsAffected = 0;
 
@@ -392,12 +392,10 @@ public class AIBehaviour : MonoBehaviour
                 //build more units
                 for (int i = amountofUnitsAffected; i < 5; i++)
                 {
-                    TC.SpawnUnit(TCController.STORE.BASE);
-                    Debug.Log("Spawned Unit Called");
+                    TC.SpawnUnit(TCController.STORE.BASE, true);
                 }
             }
 
-            Debug.Log("Exitting Spawn Code Section");
         }
 
         /*
