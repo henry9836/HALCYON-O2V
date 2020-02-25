@@ -116,6 +116,7 @@ public class AIBehaviour : MonoBehaviour
         //TICK TICK TICK TICK TICK TICK TICK TICK TICK TICK TICK 
         TickTickTickTickTickTickTickTickTickTickTickTickTickTick();
         //IF ESCAPE IS THING THEN DO THE ESCAPE THING
+        if ()
 
         //OTHERWISE DO THE OTHER THINGS
         if (!AIStepLock)
