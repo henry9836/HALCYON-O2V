@@ -12,6 +12,8 @@ TagManager:
   - CarWash
   - LaserPoint
   - Resource
+  - Blackhole
+  - Ground
   layers:
   - Default
   - TransparentFX
