@@ -26,11 +26,11 @@ public class arrowmove : MonoBehaviour
             newPos += Input.GetAxisRaw("Horizontal") * new Vector3(1.0f, 0.0f, -1.0f);
 
 
-            if (Input.mousePosition.y >= Screen.height)
+            if (Input.mousePosition.y >= Screen.height - 1.0f)
             {
                 newPos += new Vector3(1.0f, 0.0f, 1.0f);
             }
-            if (Input.mousePosition.x >= Screen.width)
+            if (Input.mousePosition.x >= Screen.width - 1.0f)
             {
                 newPos += new Vector3(1.0f, 0.0f, -1.0f);
             }
