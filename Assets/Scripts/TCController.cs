@@ -18,20 +18,31 @@ public class TCController : MonoBehaviour
     public List<GameObject> playerunit = new List<GameObject>();
     private int unitCount = 0;
 
-    public GameObject SpawnUnit()
+    public enum STORE
     {
-        if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
+        BASE,
+        MINECW,
+        ATTACKCW,
+        BOOSTCW,
+        ESCAPE,
+    };
+
+    public GameObject SpawnUnit(TCController.STORE tospawn)
+    {
+        if (tospawn == STORE.BASE)
         {
-
-            Debug.Log("spawn unit");
-            GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
-            GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
-            spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
-
-            playerunit.Add(spawnedObj);
-            GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
-            return spawnedObj;
+            if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
+            {
+                Debug.Log("spawn unit");
+                GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
+                GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
+                spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+                playerunit.Add(spawnedObj);
+                GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
+                return spawnedObj;
+            }
         }
+
 
         return (null);
     }
