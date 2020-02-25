@@ -55,7 +55,7 @@ public class AIBehaviour : MonoBehaviour
     public Vector2 profitCheckRandomRange = new Vector2(5.0f, 20.0f);
 
     //Privates
-    public List<float> balanceHistory = new List<float>() { 500.0f, 500.0f, 500.0f, 500.0f, 500.0f };
+    public List<float> balanceHistory = new List<float>() { Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity };
     private List<aiObject> units = new List<aiObject>();
     private List<aiObject> idleUnits = new List<aiObject>();
     private List<aiObject> enemyUnits = new List<aiObject>();
@@ -106,7 +106,7 @@ public class AIBehaviour : MonoBehaviour
         TC = GetComponent<TCController>();
         blackHole = GameObject.FindGameObjectWithTag("Blackhole");
         ground = GameObject.FindGameObjectWithTag("Ground");
-        acceptableAsteriodDistance = ((ground.transform.localScale.x / 2.0f) - (ground.transform.localScale.x * 0.1f));
+        acceptableAsteriodDistance = Vector3.Distance(ground.transform.position, GameObject.FindGameObjectWithTag("Henry'sStupidCube").transform.position);
 
         baseCost = TC.baseCost;
         mineCost = TC.mineCost;
@@ -258,6 +258,7 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundResources.Length; i++)
         {
             //If not inside the game world enough
+            Debug.Log($"Our distance to resource is: {Vector3.Distance(foundResources[i].transform.position, transform.position)} and we only allow within {acceptableAsteriodDistance}");
             if (Vector3.Distance(foundResources[i].transform.position, transform.position) < acceptableAsteriodDistance)
             {
                 resources.Add(new scoutedObject(foundResources[i]));
@@ -266,7 +267,7 @@ public class AIBehaviour : MonoBehaviour
                 {
                     if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
                     {
-                        closestKnownResource = resources[i].obj;
+                        closestKnownResource = resources[resources.Count - 1].obj;
                         tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
                     }
                 }
@@ -386,7 +387,7 @@ public class AIBehaviour : MonoBehaviour
                 //build more units
                 for (int i = amountofUnitsAffected; i < 5; i++)
                 {
-                    TC.SpawnUnit();
+                    TC.SpawnUnit(TCController.STORE.BASE);
                 }
             }
         }
