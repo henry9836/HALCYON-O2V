@@ -78,6 +78,11 @@ public class AIBehaviour : MonoBehaviour
     private float knowledgeThreshold = 5.0f;
     private float acceptableAsteriodDistance = 100.0f;
     private bool AIStepLock = false;
+    private float baseCost = 100;
+    private float mineCost = 5000;
+    private float attackCost = 100000;
+    private float boostCost = 150000;
+    private float escapeCost = 999999;
 
     // Start is called before the first frame update
     void Start()
@@ -102,13 +107,23 @@ public class AIBehaviour : MonoBehaviour
         blackHole = GameObject.FindGameObjectWithTag("Blackhole");
         ground = GameObject.FindGameObjectWithTag("Ground");
         acceptableAsteriodDistance = ((ground.transform.localScale.x / 2.0f) - (ground.transform.localScale.x * 0.1f));
-    }
+
+        baseCost = TC.baseCost;
+        mineCost = TC.mineCost;
+        attackCost = TC.attackCost;
+        boostCost = TC.boostCost;
+        escapeCost = TC.escapeCost;
+}
 
     void TickTickTickTickTickTickTickTickTickTickTickTickTickTick()
     {
         profitCheckTimer += Time.unscaledDeltaTime;
     }
 
+    void Escape()
+    {
+
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -116,10 +131,13 @@ public class AIBehaviour : MonoBehaviour
         //TICK TICK TICK TICK TICK TICK TICK TICK TICK TICK TICK 
         TickTickTickTickTickTickTickTickTickTickTickTickTickTick();
         //IF ESCAPE IS THING THEN DO THE ESCAPE THING
-        if ()
+        if (escapeCost <= GM.GetResouceCount(playerID))
+        {
+            Escape();
+        }
 
         //OTHERWISE DO THE OTHER THINGS
-        if (!AIStepLock)
+        else if (!AIStepLock)
         {
             StartCoroutine(AIStep());
         }

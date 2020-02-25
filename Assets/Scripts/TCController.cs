@@ -7,14 +7,16 @@ public class TCController : MonoBehaviour
     public GameObject unitTemplate;
 
     public float baseCost = 100;
+    public float mineCost = 5000;
+    public float attackCost = 100000;
+    public float boostCost = 150000;
+    public float escapeCost = 999999;
 
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
     public List<GameObject> playerunit = new List<GameObject>();
 
-
-    
     public GameObject SpawnUnit()
     {
         int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
