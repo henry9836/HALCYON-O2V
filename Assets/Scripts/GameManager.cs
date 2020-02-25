@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public class Bank
     {
+        public int maxUnit = 10;
+        public int currUnit = 0;
         public int ID;
         public float resourceCount;
+
+
 
         public Bank(int _ID, float _startingResource)
         {
@@ -89,6 +93,55 @@ public class GameManager : MonoBehaviour
         return 0.0f;
     }
 
+    public int GetUnitCount(int ID)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                return (banks[i].currUnit);
+            }
+        }
+        return -999;
+    }
+
+    public int GetUnitCountMax(int ID)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                return (banks[i].maxUnit);
+            }
+        }
+        return -999;
+    }
+
+    public void setUnitCount(int ID, int set)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                banks[i].currUnit = set;
+                break;
+            }
+        }
+    }
+
+    public void UpdateUnitCountMax(int ID, int change)
+    {
+        for (int i = 0; i < banks.Count; i++)
+        {
+            if (banks[i].ID == ID)
+            {
+                banks[i].maxUnit += change;
+                break;
+            }
+        }
+    }
+
+
     public void UpdateResourceCount(int ID, float change)
     {
         for (int i = 0; i < banks.Count; i++)
@@ -123,10 +176,16 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(SpawnTCs());
     }
+
     private void FixedUpdate()
     {
-        //Once tcs are registered
-        if (tcCount >= 2)
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+            //Once tcs are registered
+            if (tcCount >= 2)
         {
             //Check who is alive
             //Player lost

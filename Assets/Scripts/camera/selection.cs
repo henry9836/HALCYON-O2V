@@ -92,21 +92,18 @@ public class selection : MonoBehaviour
 
             for (int i = 0; i < units.Length; i++)
             {
-                Debug.Log("Hello I am selection");
                 //Owned by the player
                 if (units[i].GetComponent<ObjectID>().ownerPlayerID == ObjectID.PlayerID.PLAYER)
                 {
                     //If within our mouse selection
                     if (selectunits(units[i].transform.position) == true)
                     {
-                        Debug.Log($"Found Unit: {units[i].name}");
                         GetComponent<PlayerController>().selectedUnits.Add(units[i]);
                         units[i].transform.GetChild(0).gameObject.SetActive(true);
                         units[i].transform.GetChild(1).gameObject.SetActive(true);
                     }
                     else
                     {
-                        Debug.Log($"Not Found Unit: {units[i].name}");
                         units[i].transform.GetChild(0).gameObject.SetActive(false);
                         units[i].transform.GetChild(1).gameObject.SetActive(false);
                     }

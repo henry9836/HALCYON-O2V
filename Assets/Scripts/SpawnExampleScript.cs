@@ -9,6 +9,9 @@ public class SpawnExampleScript : MonoBehaviour
 
     public void Spawn()
     {
+
+        Debug.Log("clicked spawn");
+
         if (TC == null)
         {
             int playerID = GetComponent<PlayerController>().playerID;
