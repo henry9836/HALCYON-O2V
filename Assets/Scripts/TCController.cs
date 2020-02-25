@@ -12,23 +12,22 @@ public class TCController : MonoBehaviour
     private ObjectID objID;
     private GameManager GM;
     public List<GameObject> playerunit = new List<GameObject>();
+    private int unitCount = 0;
 
 
-    
+
     public GameObject SpawnUnit()
     {
-        int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
-
-        if ((GM.GetResouceCount(player) >= baseCost) && (GM.GetUnitCount(player) < GM.GetUnitCountMax(player)))
+        if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
         {
 
             Debug.Log("spawn unit");
-            GM.UpdateResourceCount(player, -baseCost);
+            GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
             GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
             spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
 
             playerunit.Add(spawnedObj);
-            GM.setUnitCount(player, playerunit.Count);
+            GM.setUnitCount((int)objID.ownerPlayerID, playerunit.Count);
             return spawnedObj;
         }
 
@@ -62,13 +61,17 @@ public class TCController : MonoBehaviour
             }
             registered = true;
         }
+        else
+        {
+            GM.setUnitCount((int)objID.ownerPlayerID, unitCount);
+        }
+
 
     }
 
 
     public IEnumerator unitremover()
     {
-        int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
 
         while (true)
         {
@@ -81,7 +84,7 @@ public class TCController : MonoBehaviour
                 yield return null;
 
             }
-            GM.setUnitCount(player, playerunit.Count);
+            unitCount = playerunit.Count;
 
             yield return null;
         }
