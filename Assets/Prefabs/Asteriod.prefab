@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 8777489750318977696}
   m_Layer: 13
   m_Name: Asteriod
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
