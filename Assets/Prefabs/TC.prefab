@@ -145,6 +145,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitTemplate: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49,
     type: 3}
+  carWashMiner: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+    type: 3}
+  carWashBoost: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+    type: 3}
+  carWashFighter: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+    type: 3}
+  baseCost: 100
+  mineCost: 5000
+  attackCost: 100000
+  boostCost: 150000
+  escapeCost: 999999
+  playerunit: []
 --- !u!208 &-1116515097580439637
 NavMeshObstacle:
   m_ObjectHideFlags: 0
