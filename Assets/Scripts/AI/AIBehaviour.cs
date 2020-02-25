@@ -386,7 +386,7 @@ public class AIBehaviour : MonoBehaviour
                 //build more units
                 for (int i = amountofUnitsAffected; i < 5; i++)
                 {
-                    TC.SpawnUnit();
+                    TC.SpawnUnit(TCController.STORE.BASE, true);
                 }
             }
         }
