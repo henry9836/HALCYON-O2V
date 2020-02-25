@@ -38,7 +38,7 @@ public class TCController : MonoBehaviour
             {
                 if ((GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
                 {
-                    Debug.Log("spawn unit");
+                    Debug.Log("spawn base");
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
                     GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
                     spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
@@ -55,6 +55,8 @@ public class TCController : MonoBehaviour
             { 
                 if (!amAI)
                 {
+                    Debug.Log("spawn mince");
+
                     playerCtrl.lastSelectedBuildingToBuild = carWashMiner;
                 }
             }
