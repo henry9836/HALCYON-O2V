@@ -55,7 +55,7 @@ public class AIBehaviour : MonoBehaviour
     public Vector2 profitCheckRandomRange = new Vector2(5.0f, 20.0f);
 
     //Privates
-    public List<float> balanceHistory = new List<float>() { Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity };
+    public List<float> balanceHistory = new List<float>() { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
     private List<aiObject> units = new List<aiObject>();
     private List<aiObject> idleUnits = new List<aiObject>();
     private List<aiObject> enemyUnits = new List<aiObject>();
@@ -258,15 +258,17 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundResources.Length; i++)
         {
             //If not inside the game world enough
-            //Debug.Log($"Our distance to resource is: {Vector3.Distance(foundResources[i].transform.position, transform.position)} and we only allow within {acceptableAsteriodDistance}");
             if (Vector3.Distance(foundResources[i].transform.position, transform.position) < acceptableAsteriodDistance)
             {
+                Debug.Log("I foudn one boss");
                 resources.Add(new scoutedObject(foundResources[i]));
 
                 if (resources[resources.Count - 1].obj != null)
                 {
                     if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
                     {
+
+                        Debug.Log("I foudn a better one boss");
                         closestKnownResource = resources[resources.Count - 1].obj;
                         tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
                     }
@@ -362,6 +364,9 @@ public class AIBehaviour : MonoBehaviour
         //If we didn't make a profit
         if (!madeProfit && validProfitCheck)
         {
+
+            Debug.Log($"Idle Unit Count: {idleUnits.Count}");
+
             int amountofUnitsAffected = 0;
 
             //Do we have idle miners
@@ -390,6 +395,7 @@ public class AIBehaviour : MonoBehaviour
                     TC.SpawnUnit(TCController.STORE.BASE, true);
                 }
             }
+
         }
 
         /*
