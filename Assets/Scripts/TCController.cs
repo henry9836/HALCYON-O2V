@@ -6,21 +6,40 @@ public class TCController : MonoBehaviour
 {
     public GameObject unitTemplate;
 
+    public float baseCost = 100;
+
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
+    public List<GameObject> playerunit = new List<GameObject>();
+
+
     
     public GameObject SpawnUnit()
     {
-        GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
-        spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
-        return spawnedObj;
+        int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
+
+        if ((GM.GetResouceCount(player) >= baseCost) && (GM.GetUnitCount(player) < GM.GetUnitCountMax(player)))
+        {
+
+            Debug.Log("spawn unit");
+            GM.UpdateResourceCount(player, -baseCost);
+            GameObject spawnedObj = Instantiate(unitTemplate, transform.position, Quaternion.identity);
+            spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
+
+            playerunit.Add(spawnedObj);
+            GM.setUnitCount(player, playerunit.Count);
+            return spawnedObj;
+        }
+
+        return (null);
     }
     private void Start()
     {
         objID = GetComponent<ObjectID>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         GetComponent<Rigidbody>().Sleep();
+        StartCoroutine(unitremover());
     }
 
     private void FixedUpdate()
@@ -42,6 +61,29 @@ public class TCController : MonoBehaviour
                 GM.regTC(false, gameObject);
             }
             registered = true;
+        }
+
+    }
+
+
+    public IEnumerator unitremover()
+    {
+        int player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().playerID;
+
+        while (true)
+        {
+            for (int i = 0; i < playerunit.Count; i++)
+            {
+                if (playerunit[i] == null)
+                {
+                    playerunit.RemoveAt(i);
+                }
+                yield return null;
+
+            }
+            GM.setUnitCount(player, playerunit.Count);
+
+            yield return null;
         }
 
     }
