@@ -16,6 +16,7 @@ TagManager:
   - Ground
   - Henry'sStupidCube
   - CarWashParent
+  - Turret
   layers:
   - Default
   - TransparentFX

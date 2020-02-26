@@ -145,17 +145,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitTemplate: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49,
     type: 3}
-  carWashMiner: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+  carWashMiner: {fileID: 2023028921290819601, guid: 75a7ba3d2dc43db44a9151b906630475,
     type: 3}
-  carWashBoost: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+  carWashBoost: {fileID: 6666386301793371771, guid: 4790ba9f68238dc44bdcc75fa61eda74,
     type: 3}
-  carWashFighter: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
+  carWashFighter: {fileID: 6629650748117201513, guid: 4c2401abb93fcf84790d8c2e36f0c99d,
+    type: 3}
+  turretTemplate: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a,
+    type: 3}
+  houseTemplate: {fileID: 2531690608690252967, guid: ac8b8228e0979924aa062ca60fdc60e1,
     type: 3}
   baseCost: 100
   mineCost: 5000
   attackCost: 100000
   boostCost: 150000
+  housecost: 1000
+  turretCost: 50000
   escapeCost: 999999
+  gamewinUI: {fileID: 0}
+  gameLossUI: {fileID: 0}
   playerunit: []
 --- !u!208 &-1116515097580439637
 NavMeshObstacle:

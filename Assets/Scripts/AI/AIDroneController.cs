@@ -43,7 +43,7 @@ public class AIDroneController : MonoBehaviour
         {
             if (tarObject == null)
             {
-                tarObjectAdjustPos = Vector3.zero;
+                Reset();
             }
         }
 
