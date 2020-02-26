@@ -583,32 +583,48 @@ public class AIBehaviour : MonoBehaviour
                 {
                     case AIDroneController.DroneMode.FIGHTER:
                         {
-                            TC.SpawnUnit(TCController.STORE.ATTACKCW, true, destroyedBuildings[elementToFix]);
+                            if (TC.SpawnUnit(TCController.STORE.ATTACKCW, true, destroyedBuildings[elementToFix]))
+                            {
+                                destroyedBuildings.RemoveAt(i);
+                            }
                             break;
                         }
                     case AIDroneController.DroneMode.MINER:
                         {
-                            TC.SpawnUnit(TCController.STORE.MINECW, true, destroyedBuildings[elementToFix]);
+                            if (TC.SpawnUnit(TCController.STORE.MINECW, true, destroyedBuildings[elementToFix]))
+                            {
+                                destroyedBuildings.RemoveAt(i);
+                            }
                             break;
                         }
                     case AIDroneController.DroneMode.BOOSTER:
                         {
-                            TC.SpawnUnit(TCController.STORE.BOOSTCW, true, destroyedBuildings[elementToFix]);
+                            if (TC.SpawnUnit(TCController.STORE.BOOSTCW, true, destroyedBuildings[elementToFix]))
+                            {
+                                destroyedBuildings.RemoveAt(i);
+                            }
                             break;
                         }
                     default:
                         {
+                            Debug.LogWarning($"Unknown Type of CarWash Cannot Rebuilt {destroyedBuildings[elementToFix].carWashType}");
                             break;
                         }
                 }
             }
             else if (destroyedBuildings[elementToFix].isTurret)
             {
-                TC.SpawnUnit(TCController.STORE.TURRET, true, destroyedBuildings[i]);
+                if (TC.SpawnUnit(TCController.STORE.TURRET, true, destroyedBuildings[i]))
+                {
+                    destroyedBuildings.RemoveAt(i);
+                }
             }
             else if (destroyedBuildings[elementToFix].isHouse)
             {
-                TC.SpawnUnit(TCController.STORE.HOUSE, true, destroyedBuildings[i]);
+                if (TC.SpawnUnit(TCController.STORE.HOUSE, true, destroyedBuildings[i]))
+                {
+                    destroyedBuildings.RemoveAt(i);
+                }
             }
             else
             {
