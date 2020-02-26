@@ -111,6 +111,8 @@ public class AIBehaviour : MonoBehaviour
     public bool hasMinerCW = false;
     public bool hasFighterCW = false;
     public bool hasBoosterCW = false;
+    public float timeOutThread = 0.0f;
+    private float timeOutThreadThreshold = 6.0f;
 
 
     public void assignCity(List<GameObject> _outpostBuildings)
@@ -124,6 +126,7 @@ public class AIBehaviour : MonoBehaviour
     void TickTickTickTickTickTickTickTickTickTickTickTickTickTick()
     {
         profitCheckTimer += Time.unscaledDeltaTime;
+        timeOutThread += Time.unscaledDeltaTime;
     }
 
     void Escape()
@@ -177,7 +180,16 @@ public class AIBehaviour : MonoBehaviour
         //OTHERWISE DO THE OTHER THINGS
         else if (!AIStepLock)
         {
+            timeOutThread = 0.0f;
             StartCoroutine(AIStep());
+        }
+
+        else if (timeOutThreadThreshold < timeOutThread)
+        {
+            Debug.LogWarning("AI Step Reached Timeout, Skipping Step...");
+            StopCoroutine(AIStep());
+            timeOutThread = 0.0f;
+            AIStepLock = false;
         }
     }
     
@@ -185,6 +197,7 @@ public class AIBehaviour : MonoBehaviour
     {
         //Lock
         AIStepLock = true;
+
 
         /*
          * 

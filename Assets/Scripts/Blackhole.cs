@@ -14,7 +14,7 @@ public class Blackhole : MonoBehaviour
 
     public void Update()
     {
-        timer += Time.deltaTime;
+        timer += Time.unscaledDeltaTime;
         float theScale = Mathf.Lerp(minScale, maxscale, timer/twomintimer);
 
         gameObject.transform.localScale = new Vector3(theScale, theScale, theScale);
