@@ -11,6 +11,9 @@ TagManager:
   - SpawnPosition
   - CarWash
   - LaserPoint
+  - Resource
+  - Blackhole
+  - Ground
   layers:
   - Default
   - TransparentFX
