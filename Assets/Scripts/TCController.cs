@@ -94,7 +94,9 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -mineCost);
-                    Instantiate(carWashMiner, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashMiner, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
             }
         }
@@ -113,7 +115,9 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -attackCost);
-                    Instantiate(carWashFighter, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashFighter, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
             }
         }
@@ -132,7 +136,9 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -boostCost);
-                    Instantiate(carWashBoost, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashBoost, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
             }
         }
@@ -151,7 +157,9 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -housecost);
-                    Instantiate(houseTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(houseTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
             }
         }
@@ -183,7 +191,9 @@ public class TCController : MonoBehaviour
             else
             {
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -turretCost);
-                Instantiate(turretTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                GameObject refer = Instantiate(turretTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                //Assign ownership
+                refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
             }
         }
 
@@ -224,11 +234,13 @@ public class TCController : MonoBehaviour
         {
             if (objID.ownerPlayerID != ObjectID.PlayerID.PLAYER)
             {
-                GM.regTC(true, gameObject);
+                //This make issues occur
+                //GM.regTC(true, gameObject);
             }
             else
             {
-                GM.regTC(false, gameObject);
+                //This make issues occuer
+                //GM.regTC(false, gameObject);
             }
             registered = true;
         }

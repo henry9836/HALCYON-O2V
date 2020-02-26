@@ -56,12 +56,12 @@ public class AIBehaviour : MonoBehaviour
         {
             obj = _obj;
             lastSeenPosition = obj.transform.position;
-            objID = obj.GetComponent<ObjectID>().objID;
 
             if (obj.tag == "CarWashParent")
             {
                 carWashType = obj.GetComponentInChildren<CarWash>().carWashType;
                 isCarWash = true;
+                objID = obj.GetComponentInChildren<ObjectID>().objID;
             }
             else if (obj.tag == "Turret")
             {
@@ -72,10 +72,15 @@ public class AIBehaviour : MonoBehaviour
                 isHouse = true;
             }
 
+            if (objID == ObjectID.OBJECTID.UNASSIGNED)
+            {
+                objID = obj.GetComponent<ObjectID>().objID;
+            }
+
         }
 
         public GameObject obj;
-        public ObjectID.OBJECTID objID;
+        public ObjectID.OBJECTID objID = ObjectID.OBJECTID.UNASSIGNED;
         public AIDroneController.DroneMode carWashType = AIDroneController.DroneMode.BOMBER;
         public Vector3 lastSeenPosition;
         public bool isCarWash = false;
@@ -133,6 +138,11 @@ public class AIBehaviour : MonoBehaviour
         {
             outpostBuildings.Add(new outpostBuilding(_outpostBuildings[i]));
         }
+    }
+
+    public void assignCity(GameObject _outpostBuilding)
+    {
+        outpostBuildings.Add(new outpostBuilding(_outpostBuilding));
     }
 
     void TickTickTickTickTickTickTickTickTickTickTickTickTickTick()
@@ -393,8 +403,7 @@ public class AIBehaviour : MonoBehaviour
             {
                 if (outpostBuildings[i].obj.tag == "CarWashParent")
                 {
-                    AIDroneController.DroneMode mode = GetComponentInChildren<CarWash>().carWashType;
-                    switch (mode)
+                    switch (outpostBuildings[i].carWashType)
                     {
                         case AIDroneController.DroneMode.BOOSTER:
                             {
@@ -413,7 +422,7 @@ public class AIBehaviour : MonoBehaviour
                             }
                         default:
                             {
-                                Debug.LogWarning($"Found Unknown Type: {mode}");
+                                Debug.LogWarning($"Found Unknown Type: {outpostBuildings[i].carWashType}");
                                 break;
                             };
                     }
