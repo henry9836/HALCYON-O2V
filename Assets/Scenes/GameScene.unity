@@ -580,6 +580,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1217747233, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1262377129, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -603,6 +607,10 @@ PrefabInstance:
     - target: {fileID: 1262377129, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1479590142, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 123688278695258380, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
         type: 3}
@@ -719,6 +727,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas03
       objectReference: {fileID: 0}
+    - target: {fileID: 865687568608767687, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 993660830202672991, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -729,6 +742,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1575511885}
+    - target: {fileID: 3598963284512022567, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4086423589073006684, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -754,12 +772,36 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1575511885}
+    - target: {fileID: 6095527322553171935, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6101821142227217718, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7085039989536757277, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 2310.12
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7960167158158127843, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8805649585765118099, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1479590141, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
+    - {fileID: 4630804910408750119, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
+    - {fileID: 8260586299209356570, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
+    - {fileID: 3752181840752803181, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8b58d59420a1ac84b9b4cd3db7c56246, type: 3}
 --- !u!1 &577518724
 GameObject:
@@ -970,8 +1012,26 @@ PrefabInstance:
     - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
         type: 3}
       propertyPath: defaultResources
-      value: 5000
+      value: 500
       objectReference: {fileID: 0}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: fighterCW
+      value: 
+      objectReference: {fileID: 6629650748117201513, guid: 4c2401abb93fcf84790d8c2e36f0c99d,
+        type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: minerCW
+      value: 
+      objectReference: {fileID: 2023028921290819601, guid: 75a7ba3d2dc43db44a9151b906630475,
+        type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: turret
+      value: 
+      objectReference: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a,
+        type: 3}
     - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
         type: 3}
       propertyPath: m_LocalPosition.x
