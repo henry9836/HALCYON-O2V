@@ -51,6 +51,29 @@ public class AIBehaviour : MonoBehaviour
         public AIDroneController aiCtrl;
     };
 
+    public class outpostBuilding{
+        public outpostBuilding(GameObject _obj)
+        {
+            obj = _obj;
+            lastSeenPosition = obj.transform.position;
+            objID = obj.GetComponent<ObjectID>().objID;
+
+            if (obj.tag == "CarWashParent")
+            {
+                carWashType = obj.GetComponentInChildren<CarWash>().carWashType;
+                isCarWash = true;
+            }
+
+        }
+
+        public GameObject obj;
+        public ObjectID.OBJECTID objID;
+        public AIDroneController.DroneMode carWashType = AIDroneController.DroneMode.BOMBER;
+        public Vector3 lastSeenPosition;
+        public bool isCarWash = false;
+
+    };
+
     public int playerID = -1;
     public Vector2 profitCheckRandomRange = new Vector2(5.0f, 20.0f);
 
@@ -61,6 +84,8 @@ public class AIBehaviour : MonoBehaviour
     private List<aiObject> enemyUnits = new List<aiObject>();
     private List<scoutedObject> enemyBuilds = new List<scoutedObject>();
     private List<scoutedObject> resources = new List<scoutedObject>();
+    private List<outpostBuilding> outpostBuildings = new List<outpostBuilding>();
+    private List<outpostBuilding> destroyedBuildings = new List<outpostBuilding>();
     private GameManager GM;
     private ObjectID objID;
     private TCController TC;
@@ -83,6 +108,32 @@ public class AIBehaviour : MonoBehaviour
     private float attackCost = 100000;
     private float boostCost = 150000;
     private float escapeCost = 999999;
+    public bool hasMinerCW = false;
+    public bool hasFighterCW = false;
+    public bool hasBoosterCW = false;
+    public float timeOutThread = 0.0f;
+    private float timeOutThreadThreshold = 6.0f;
+
+
+    public void assignCity(List<GameObject> _outpostBuildings)
+    {
+        for (int i = 0; i < _outpostBuildings.Count; i++)
+        {
+            outpostBuildings.Add(new outpostBuilding(_outpostBuildings[i]));
+        }
+    }
+
+    void TickTickTickTickTickTickTickTickTickTickTickTickTickTick()
+    {
+        profitCheckTimer += Time.unscaledDeltaTime;
+        timeOutThread += Time.unscaledDeltaTime;
+    }
+
+    void Escape()
+    {
+        //Win Condition
+        TC.SpawnUnit(TCController.STORE.ESCAPE, true);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -113,16 +164,6 @@ public class AIBehaviour : MonoBehaviour
         attackCost = TC.attackCost;
         boostCost = TC.boostCost;
         escapeCost = TC.escapeCost;
-}
-
-    void TickTickTickTickTickTickTickTickTickTickTickTickTickTick()
-    {
-        profitCheckTimer += Time.unscaledDeltaTime;
-    }
-
-    void Escape()
-    {
-
     }
 
     // Update is called once per frame
@@ -139,7 +180,16 @@ public class AIBehaviour : MonoBehaviour
         //OTHERWISE DO THE OTHER THINGS
         else if (!AIStepLock)
         {
+            timeOutThread = 0.0f;
             StartCoroutine(AIStep());
+        }
+
+        else if (timeOutThreadThreshold < timeOutThread)
+        {
+            Debug.LogWarning("AI Step Reached Timeout, Skipping Step...");
+            StopCoroutine(AIStep());
+            timeOutThread = 0.0f;
+            AIStepLock = false;
         }
     }
     
@@ -147,6 +197,7 @@ public class AIBehaviour : MonoBehaviour
     {
         //Lock
         AIStepLock = true;
+
 
         /*
          * 
@@ -189,6 +240,9 @@ public class AIBehaviour : MonoBehaviour
         enemyUnits.Clear();
         enemyBuilds.Clear();
 
+        //Attacking unit counters
+        int friendlyAttackUnits = 0;
+        int enemyAttackUnits = 0;
 
         float tmpDistance = Mathf.Infinity;
 
@@ -223,14 +277,36 @@ public class AIBehaviour : MonoBehaviour
 
         for (int i = 0; i < foundBuildingsCWs.Length; i++)
         {
-            //Filter out friendlies
-            if (foundBuildingsCWs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
+            //Filter out fakes
+            if (foundBuildingsCWs[i].GetComponent<ObjectID>() != null)
             {
-                enemyBuilds.Add(new scoutedObject(foundBuildingsCWs[i]));
-                if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
+                //Filter out friendlies
+                if (foundBuildingsCWs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
                 {
-                    closestKnownEnemyBuilding = enemyBuilds[enemyBuilds.Count - 1].obj;
-                    tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
+                    enemyBuilds.Add(new scoutedObject(foundBuildingsCWs[i]));
+                    if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
+                    {
+                        closestKnownEnemyBuilding = enemyBuilds[enemyBuilds.Count - 1].obj;
+                        tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
+                    }
+                }
+                //If it ours check if we own it as it may of been repaired
+                else
+                {
+                    bool knowOfCW = false;
+                    for (int j = 0; j < outpostBuildings.Count; j++)
+                    {
+                        if (outpostBuildings[j].obj == foundBuildingsCWs[i])
+                        {
+                            knowOfCW = true;
+                        }
+                    }
+
+                    if (!knowOfCW)
+                    {
+                        outpostBuildings.Add(new outpostBuilding(foundBuildingsCWs[i]));
+                    }
+
                 }
             }
             yield return null;
@@ -243,12 +319,22 @@ public class AIBehaviour : MonoBehaviour
             //Filter out friendlies
             if (foundWorldUnits[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
             {
+                //Counter
+                if (foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.FIGHTER || foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.BOOSTER)
+                {
+                    enemyAttackUnits++;
+                }
                 enemyUnits.Add(new aiObject(foundWorldUnits[i]));
                 if (Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position) < tmpDistance)
                 {
                     closestKnownEnemyUnit = enemyUnits[enemyUnits.Count - 1];
                     tmpDistance = Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position);
                 }
+            }
+            else
+            {
+                //Counter
+                friendlyAttackUnits++;
             }
             yield return null;
         }
@@ -279,6 +365,53 @@ public class AIBehaviour : MonoBehaviour
 
         /*
          * 
+         * Is base missing Things
+         * 
+         */
+
+        for (int i = 0; i < outpostBuildings.Count; i++)
+        {
+            //Building was destoryed
+            if (outpostBuildings[i].obj == null)
+            {
+                destroyedBuildings.Add(outpostBuildings[i]);
+                outpostBuildings.RemoveAt(i);
+            }
+            else
+            {
+                if (outpostBuildings[i].obj.tag == "CarWashParent")
+                {
+                    AIDroneController.DroneMode mode = GetComponentInChildren<CarWash>().carWashType;
+                    switch (mode)
+                    {
+                        case AIDroneController.DroneMode.BOOSTER:
+                            {
+                                hasBoosterCW = true;
+                                break;
+                            }
+                        case AIDroneController.DroneMode.FIGHTER:
+                            {
+                                hasFighterCW = true;
+                                break;
+                            }
+                        case AIDroneController.DroneMode.MINER:
+                            {
+                                hasMinerCW = true;
+                                break;
+                            }
+                        default:
+                            {
+                                Debug.LogWarning($"Found Unknown Type: {mode}");
+                                break;
+                            };
+                    }
+
+                }
+            }
+        }
+
+        /*
+         * 
          * SAFETY IS NUMBER SIX PRIORITY
          * 
          */
@@ -305,51 +438,59 @@ public class AIBehaviour : MonoBehaviour
          */
 
         bool madeProfit = false;
-        bool validProfitCheck = false;
 
-        if (profitCheckTimer > profitCheckThreshold)
-        {
-            //Reset timer
-            profitCheckThreshold = Random.Range(profitCheckRandomRange.x, profitCheckRandomRange.y);
-            profitCheckTimer = 0.0f;
+        Debug.Log($"{escapeCost}");
+        Debug.Log($"{blackHole.GetComponent<Blackhole>()}");
+        Debug.Log($"{GM.GetResouceCount(playerID)}");
 
-            //Do we have enough history to get avg?
-            if (balanceHistory.Count >= 5)
-            {
-                float avg = 0.0f;
+        madeProfit = ((escapeCost / (blackHole.GetComponent<Blackhole>().twomintimer / blackHole.GetComponent<Blackhole>().timer)) < GM.GetResouceCount(playerID));
 
-                //Get average
-                for (int i = 0; i < balanceHistory.Count; i++)
-                {
-                    avg += balanceHistory[i];
+        //bool madeProfit = false;
+        //bool validProfitCheck = false;
 
-                    yield return null;
-                }
-                avg /= balanceHistory.Count;
+        //if (profitCheckTimer > profitCheckThreshold)
+        //{
+        //    //Reset timer
+        //    profitCheckThreshold = Random.Range(profitCheckRandomRange.x, profitCheckRandomRange.y);
+        //    profitCheckTimer = 0.0f;
 
-                //Is the avg not higher than our last average?
-                if (avg < lastBalanceAvg)
-                {
-                    madeProfit = false;
-                    validProfitCheck = true;
-                }
-                else
-                {
-                    madeProfit = true;
-                    validProfitCheck = true;
-                }
+        //    //Do we have enough history to get avg?
+        //    if (balanceHistory.Count >= 5)
+        //    {
+        //        float avg = 0.0f;
 
-                //Update last balance and clear list
-                lastBalanceAvg = avg;
-                balanceHistory.Clear();
+        //        //Get average
+        //        for (int i = 0; i < balanceHistory.Count; i++)
+        //        {
+        //            avg += balanceHistory[i];
 
-            }
-            //Add onto history
-            else
-            {
-                balanceHistory.Add(GM.GetResouceCount(playerID));
-            }
-        }
+        //            yield return null;
+        //        }
+        //        avg /= balanceHistory.Count;
+
+        //        //Is the avg not higher than our last average?
+        //        if (avg < lastBalanceAvg)
+        //        {
+        //            madeProfit = false;
+        //            validProfitCheck = true;
+        //        }
+        //        else
+        //        {
+        //            madeProfit = true;
+        //            validProfitCheck = true;
+        //        }
+
+        //        //Update last balance and clear list
+        //        lastBalanceAvg = avg;
+        //        balanceHistory.Clear();
+
+        //    }
+        //    //Add onto history
+        //    else
+        //    {
+        //        balanceHistory.Add(GM.GetResouceCount(playerID));
+        //    }
+        //}
 
 
 
@@ -362,7 +503,7 @@ public class AIBehaviour : MonoBehaviour
 
        
         //If we didn't make a profit
-        if (!madeProfit && validProfitCheck)
+        if (!madeProfit)
         {
 
             Debug.Log($"Idle Unit Count: {idleUnits.Count}");
@@ -372,10 +513,17 @@ public class AIBehaviour : MonoBehaviour
             //Do we have idle miners
             for (int i = 0; i < idleUnits.Count; i++)
             {
+
                 if ((idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.MINER) || (idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.WORKER))
                 {
                     //Target resource until we have at least five
                     idleUnits[i].aiCtrl.UpdateTargetPos(Vector3.zero, closestKnownResource);
+
+                    if (hasMinerCW)
+                    {
+                        idleUnits[i].aiCtrl.droneMode = AIDroneController.DroneMode.MINER;
+                    }
+
                     amountofUnitsAffected++;
                 }
                 if (amountofUnitsAffected >= 5)
@@ -392,7 +540,14 @@ public class AIBehaviour : MonoBehaviour
                 //build more units
                 for (int i = amountofUnitsAffected; i < 5; i++)
                 {
-                    TC.SpawnUnit(TCController.STORE.BASE, true);
+                    if (hasMinerCW)
+                    {
+                        TC.SpawnUnit(TCController.STORE.BASE, true, AIDroneController.DroneMode.MINER);
+                    }
+                    else
+                    {
+                        TC.SpawnUnit(TCController.STORE.BASE, true);
+                    }
                 }
             }
 
@@ -400,22 +555,90 @@ public class AIBehaviour : MonoBehaviour
 
         /*
          * 
-         * Does anyone have bad rep
+         * Does anyone have bad rep (units and buildings will need a function for this)
          * 
          */
 
 
         /*
          * 
-         * Is Unit Count OK
+         * Is Attack Unit Count OK
          * 
          */
 
+        //If we don't have a bigger army than slightly more than 1/4 of all enemy units on the map
+        float sliceOfEnemyUnitCount = ((enemyAttackUnits * 0.25f) + (enemyAttackUnits * 0.2f));
+        if (sliceOfEnemyUnitCount > friendlyAttackUnits)
+        {
+            //Convert base units to fighter if we have a CW
+            if (hasFighterCW)
+            {
+                //Use idle units until we have used enough
+                if (idleUnits.Count > 0)
+                {
+                    for (int i = 0; i < idleUnits.Count; i++)
+                    {
+                        idleUnits[i].aiCtrl.droneMode = AIDroneController.DroneMode.FIGHTER;
+                        friendlyAttackUnits++;
+                        if (friendlyAttackUnits >= sliceOfEnemyUnitCount)
+                        {
+                            break;
+                        }
+                    }
+                }
+                //Otherwise make new units equal to how many we need
+                else
+                {
+                    for (int i = 0; i < (sliceOfEnemyUnitCount - friendlyAttackUnits); i++)
+                    {
+                        TC.SpawnUnit(TCController.STORE.BASE, true, AIDroneController.DroneMode.FIGHTER);
+                    }
+                }
+            }
+        }
+
+
         /*
          * 
-         * Is base missing Things
+         * FIX DESTORYED BUILDINGS
          * 
          */
+
+        for (int i = 0; i < destroyedBuildings.Count; i++)
+        {
+            //Pick a random building
+            int elementToFix = Random.Range(0, destroyedBuildings.Count);
+            //Carwash
+            if (destroyedBuildings[elementToFix].isCarWash)
+            {
+                switch (destroyedBuildings[elementToFix].carWashType)
+                {
+                    case AIDroneController.DroneMode.FIGHTER:
+                        {
+                            TC.SpawnUnit(TCController.STORE.ATTACKCW, true, destroyedBuildings[elementToFix]);
+                            break;
+                        }
+                    case AIDroneController.DroneMode.MINER:
+                        {
+                            TC.SpawnUnit(TCController.STORE.MINECW, true, destroyedBuildings[elementToFix]);
+                            break;
+                        }
+                    case AIDroneController.DroneMode.BOOSTER:
+                        {
+                            TC.SpawnUnit(TCController.STORE.BOOSTCW, true, destroyedBuildings[elementToFix]);
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Cannot fix building {destroyedBuildings[elementToFix].objID} as there is logic for it");
+            }
+        }
 
         //Unlock
         AIStepLock = false;
