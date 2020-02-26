@@ -33,7 +33,26 @@ public class TCController : MonoBehaviour
         ESCAPE,
     };
 
+    public void SpawnUnit(TCController.STORE tospawn)
+    {
+        SpawnUnit(tospawn, false, null, AIDroneController.DroneMode.WORKER);
+    }
+
     public void SpawnUnit(TCController.STORE tospawn, bool amAI)
+    {
+        SpawnUnit(tospawn, amAI, null, AIDroneController.DroneMode.WORKER);
+    }
+    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
+    {
+        SpawnUnit(TCController.STORE.BASE, true, null, dronemode);
+    }
+
+    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
+    {
+        SpawnUnit(TCController.STORE.BASE, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+    }
+
+    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)
     {
         if (tospawn == STORE.BASE)
         {
@@ -43,7 +62,14 @@ public class TCController : MonoBehaviour
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
                 GameObject spawnedObj = Instantiate(unitTemplate, (transform.position + (new Vector3(Random.Range(-1.0f,1.0f),0.0f, Random.Range(-1.0f, 1.0f)) * 5.0f)), Quaternion.identity);
                 spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
-                playerunit.Add(spawnedObj);
+                if (!amAI)
+                {
+                    playerunit.Add(spawnedObj);
+                }
+                else
+                {
+                    spawnedObj.GetComponent<AIDroneController>().droneMode = droneMode;
+                }
             }
         }
         else if (tospawn == STORE.MINECW)
@@ -59,7 +85,8 @@ public class TCController : MonoBehaviour
                 }
                 else
                 {
-
+                    GM.UpdateResourceCount((int)objID.ownerPlayerID, -mineCost);
+                    Instantiate(carWashMiner, aiBuilding.lastSeenPosition, Quaternion.identity);
                 }
             }
         }
@@ -77,7 +104,8 @@ public class TCController : MonoBehaviour
                 }
                 else
                 {
-
+                    GM.UpdateResourceCount((int)objID.ownerPlayerID, -attackCost);
+                    Instantiate(carWashFighter, aiBuilding.lastSeenPosition, Quaternion.identity);
                 }
             }
         }
@@ -95,7 +123,8 @@ public class TCController : MonoBehaviour
                 }
                 else
                 {
-
+                    GM.UpdateResourceCount((int)objID.ownerPlayerID, -boostCost);
+                    Instantiate(carWashBoost, aiBuilding.lastSeenPosition, Quaternion.identity);
                 }
             }
         }
@@ -130,9 +159,6 @@ public class TCController : MonoBehaviour
             }
         }
 
-
-
-        //return (null);
     }
     void Start()
     {
@@ -166,10 +192,6 @@ public class TCController : MonoBehaviour
         {
             GM.setUnitCount((int)objID.ownerPlayerID, unitCount);
         }
-
-
-
-
     }
 
     void Update()
