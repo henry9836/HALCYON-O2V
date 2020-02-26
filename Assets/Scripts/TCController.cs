@@ -154,11 +154,16 @@ public class TCController : MonoBehaviour
         {
             if (GM.GetResouceCount((int)objID.ownerPlayerID) >= escapeCost)
             {
-                Debug.Log("escape");
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -escapeCost);
+                if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+                {
+                    gamewinUI.SetActive(true);
+                    Debug.Log("escape");
 
-                gamewinUI.SetActive(true);
 
+                }
+
+                this.gameObject.GetComponent<Rigidbody>().AddForce(-(GameObject.Find("Blackhole").gameObject.transform.position - transform.position).normalized * 10.0f, ForceMode.Impulse);
 
             }
         }
@@ -170,6 +175,22 @@ public class TCController : MonoBehaviour
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         GetComponent<Rigidbody>().Sleep();
         playerCtrl = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>();
+
+
+        if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+        {
+
+            gamewinUI = GameObject.Find("Escaped");
+            gameLossUI = GameObject.Find("GameOver");
+
+            gamewinUI.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            gameLossUI.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+
+            gamewinUI.SetActive(false);
+            gameLossUI.SetActive(false);
+        }
+
+
     }
 
     void FixedUpdate()
