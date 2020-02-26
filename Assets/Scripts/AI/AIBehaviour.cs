@@ -437,122 +437,69 @@ public class AIBehaviour : MonoBehaviour
          * 
          */
 
-        bool madeProfit = false;
-
-        Debug.Log($"{escapeCost}");
-        Debug.Log($"{blackHole.GetComponent<Blackhole>()}");
-        Debug.Log($"{GM.GetResouceCount(playerID)}");
-
-        madeProfit = ((escapeCost / (blackHole.GetComponent<Blackhole>().twomintimer / blackHole.GetComponent<Blackhole>().timer)) < GM.GetResouceCount(playerID));
-
-        //bool madeProfit = false;
-        //bool validProfitCheck = false;
-
-        //if (profitCheckTimer > profitCheckThreshold)
-        //{
-        //    //Reset timer
-        //    profitCheckThreshold = Random.Range(profitCheckRandomRange.x, profitCheckRandomRange.y);
-        //    profitCheckTimer = 0.0f;
-
-        //    //Do we have enough history to get avg?
-        //    if (balanceHistory.Count >= 5)
-        //    {
-        //        float avg = 0.0f;
-
-        //        //Get average
-        //        for (int i = 0; i < balanceHistory.Count; i++)
-        //        {
-        //            avg += balanceHistory[i];
-
-        //            yield return null;
-        //        }
-        //        avg /= balanceHistory.Count;
-
-        //        //Is the avg not higher than our last average?
-        //        if (avg < lastBalanceAvg)
-        //        {
-        //            madeProfit = false;
-        //            validProfitCheck = true;
-        //        }
-        //        else
-        //        {
-        //            madeProfit = true;
-        //            validProfitCheck = true;
-        //        }
-
-        //        //Update last balance and clear list
-        //        lastBalanceAvg = avg;
-        //        balanceHistory.Clear();
-
-        //    }
-        //    //Add onto history
-        //    else
-        //    {
-        //        balanceHistory.Add(GM.GetResouceCount(playerID));
-        //    }
-        //}
-
-
-
-
-        /*
-         * 
-         * MINERS
-         * 
-         */
-
-       
-        //If we didn't make a profit
-        if (!madeProfit)
+        if ((profitCheckTimer > profitCheckThreshold))
         {
+            profitCheckTimer = 0.0f;
+            bool madeProfit = ((escapeCost / (blackHole.GetComponent<Blackhole>().twomintimer / blackHole.GetComponent<Blackhole>().timer)) < GM.GetResouceCount(playerID));
 
-            Debug.Log($"Idle Unit Count: {idleUnits.Count}");
+            /*
+             * 
+             * MINERS
+             * 
+             */
 
-            int amountofUnitsAffected = 0;
 
-            //Do we have idle miners
-            for (int i = 0; i < idleUnits.Count; i++)
+            //If we didn't make a profit
+            if (!madeProfit)
             {
 
-                if ((idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.MINER) || (idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.WORKER))
-                {
-                    //Target resource until we have at least five
-                    idleUnits[i].aiCtrl.UpdateTargetPos(Vector3.zero, closestKnownResource);
+                Debug.Log($"Idle Unit Count: {idleUnits.Count}");
 
-                    if (hasMinerCW)
+                int amountofUnitsAffected = 0;
+
+                //Do we have idle miners
+                for (int i = 0; i < idleUnits.Count; i++)
+                {
+
+                    if ((idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.MINER) || (idleUnits[i].aiCtrl.droneMode == AIDroneController.DroneMode.WORKER))
                     {
-                        idleUnits[i].aiCtrl.droneMode = AIDroneController.DroneMode.MINER;
+                        //Target resource until we have at least five
+                        idleUnits[i].aiCtrl.UpdateTargetPos(Vector3.zero, closestKnownResource);
+
+                        if (hasMinerCW)
+                        {
+                            idleUnits[i].aiCtrl.droneMode = AIDroneController.DroneMode.MINER;
+                        }
+
+                        amountofUnitsAffected++;
+                    }
+                    if (amountofUnitsAffected >= 5)
+                    {
+                        break;
                     }
 
-                    amountofUnitsAffected++;
-                }
-                if (amountofUnitsAffected >= 5)
-                {
-                    break;
+                    yield return null;
                 }
 
-                yield return null;
+                //Make more miners if we don't have idle miners
+                if (amountofUnitsAffected < 5)
+                {
+                    //build more units
+                    for (int i = amountofUnitsAffected; i < 5; i++)
+                    {
+                        if (hasMinerCW)
+                        {
+                            TC.SpawnUnit(TCController.STORE.BASE, true, AIDroneController.DroneMode.MINER);
+                        }
+                        else
+                        {
+                            TC.SpawnUnit(TCController.STORE.BASE, true);
+                        }
+                    }
+                }
+
             }
-
-            //Make more miners if we don't have idle miners
-            if (amountofUnitsAffected < 5)
-            {
-                //build more units
-                for (int i = amountofUnitsAffected; i < 5; i++)
-                {
-                    if (hasMinerCW)
-                    {
-                        TC.SpawnUnit(TCController.STORE.BASE, true, AIDroneController.DroneMode.MINER);
-                    }
-                    else
-                    {
-                        TC.SpawnUnit(TCController.STORE.BASE, true);
-                    }
-                }
-            }
-
         }
-
         /*
          * 
          * Does anyone have bad rep (units and buildings will need a function for this)
