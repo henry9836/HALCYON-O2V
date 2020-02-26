@@ -23,13 +23,26 @@ public class GameManager : MonoBehaviour
 
     }
 
+    enum EnemyDifficulty { 
+        DUMMY,
+        EASY,
+        MED,
+        HARD
+    };
+
     int tcCount = 0;
     public GameObject TCTemplate;
+    public GameObject minerCW;
+    public GameObject fighterCW;
+    public GameObject turret;
     public float defaultResources = 50.0f;
     public List<Bank> banks = new List<Bank>();
     public List<GameObject> playerTCs = new List<GameObject>();
     public List<GameObject> aiTCs = new List<GameObject>();
 
+    private GameObject HSC;
+    private float validDistanceInsideWorld;
+    private LayerMask layerMask;
 
 
     public void regTC(bool amAI, GameObject caller)
@@ -174,6 +187,9 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        layerMask = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
+        HSC = GameObject.FindGameObjectWithTag("Henry'sStupidCube");
+        validDistanceInsideWorld = Vector3.Distance(GameObject.FindGameObjectWithTag("Ground").transform.position, HSC.transform.position);
         StartCoroutine(SpawnTCs());
     }
 
@@ -203,6 +219,48 @@ public class GameManager : MonoBehaviour
         }
 
         CheckListsForNulls();
+    }
+
+    IEnumerator SpawnOutpostBuidling(GameObject targetTC, GameObject building)
+    {
+        bool foundValidSpawnPosition = false;
+        float spawnRange = 20.0f;
+
+        while (!foundValidSpawnPosition)
+        {
+            Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(transform.position.x - spawnRange, transform.position.x + spawnRange), transform.position.y, UnityEngine.Random.Range(transform.position.z - spawnRange, transform.position.z + spawnRange));
+
+            //Get radius of object
+            float checkRadius = building.transform.localScale.x / 2;
+
+            //Check if colliding with anything and distance
+
+            //If I hit then it is not valid spawn
+            if (Physics.CheckSphere(spawnPos, checkRadius, layerMask))
+            {
+                foundValidSpawnPosition = false;
+            }
+            //Check distance
+            else
+            {
+                //True if within distance
+                foundValidSpawnPosition = (Vector3.Distance(spawnPos, GameObject.FindGameObjectWithTag("Ground").transform.position) < validDistanceInsideWorld);
+            }
+
+            if (foundValidSpawnPosition)
+            {
+                //Spawn
+                GameObject refer = Instantiate(building, spawnPos, Quaternion.identity);
+
+                //Assign ownership
+                refer.GetComponent<ObjectID>().ownerPlayerID = targetTC.GetComponent<ObjectID>().ownerPlayerID;
+            }
+
+            yield return null;
+        }
+
+
+        yield return null;
     }
 
     IEnumerator SpawnTCs()
@@ -308,10 +366,94 @@ public class GameManager : MonoBehaviour
 
             firstLoop = false;
 
+            StartCoroutine(SpawnOutposts());
+
             yield return null;
         }
 
 
+    }
+
+    IEnumerator SpawnOutposts()
+    {
+
+        //Delay for IDs and spawns to settle
+        yield return new WaitForSeconds(2.0f);
+
+        for (int i = 0; i < aiTCs.Count; i++)
+        {
+            //Pick a difficilty
+            EnemyDifficulty difficulty = (EnemyDifficulty)UnityEngine.Random.Range((int)EnemyDifficulty.EASY, (int)EnemyDifficulty.HARD+1);
+
+            Debug.Log($"Creating an outpost with difficulty set to {difficulty}");
+
+            //CWs
+            if (difficulty >= EnemyDifficulty.MED)
+            {
+                StartCoroutine(SpawnOutpostBuidling(aiTCs[i], minerCW));
+            }
+
+            if (difficulty >= EnemyDifficulty.HARD)
+            {
+                StartCoroutine(SpawnOutpostBuidling(aiTCs[i], fighterCW));
+            }
+
+            //Turrets
+            int turretSpawnAmount = 0;
+
+            switch (difficulty)
+            {
+                case EnemyDifficulty.EASY:
+                    {
+                        turretSpawnAmount = 1;
+                        break;
+                    }
+                case EnemyDifficulty.MED:
+                    {
+                        turretSpawnAmount = 2;
+                        break;
+                    }
+                case EnemyDifficulty.HARD:
+                    {
+                        turretSpawnAmount = 4;
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            for (int f = 0; f < turretSpawnAmount; f++)
+            {
+                StartCoroutine(SpawnOutpostBuidling(aiTCs[i], turret));
+            }
+
+            //Starting Resource
+
+            float multipler = 1.0f;
+
+            if (difficulty >= EnemyDifficulty.MED)
+            {
+                multipler = 1.5f;
+            }
+
+            else if (difficulty >= EnemyDifficulty.HARD)
+            {
+                multipler = 2.0f;
+            }
+
+            for (int a = 0; a < banks.Count; a++)
+            {
+                if (banks[a].ID == aiTCs[i].GetComponent<AIBehaviour>().playerID)
+                {
+                    banks[a].resourceCount *= multipler;
+                }
+            }
+
+        }
+
+        yield return null;
     }
 
 }
