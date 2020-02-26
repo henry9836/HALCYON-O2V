@@ -63,6 +63,14 @@ public class AIBehaviour : MonoBehaviour
                 carWashType = obj.GetComponentInChildren<CarWash>().carWashType;
                 isCarWash = true;
             }
+            else if (obj.tag == "Turret")
+            {
+                isTurret = true;
+            }
+            else if (obj.tag == "House")
+            {
+                isHouse = true;
+            }
 
         }
 
@@ -71,6 +79,8 @@ public class AIBehaviour : MonoBehaviour
         public AIDroneController.DroneMode carWashType = AIDroneController.DroneMode.BOMBER;
         public Vector3 lastSeenPosition;
         public bool isCarWash = false;
+        public bool isTurret = false;
+        public bool isHouse = false;
 
     };
 
@@ -582,6 +592,14 @@ public class AIBehaviour : MonoBehaviour
                             break;
                         }
                 }
+            }
+            else if (destroyedBuildings[elementToFix].isTurret)
+            {
+                TC.SpawnUnit(TCController.STORE.TURRET, true, destroyedBuildings[i]);
+            }
+            else if (destroyedBuildings[elementToFix].isHouse)
+            {
+                TC.SpawnUnit(TCController.STORE.HOUSE, true, destroyedBuildings[i]);
             }
             else
             {
