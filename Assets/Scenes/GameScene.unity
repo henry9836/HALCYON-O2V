@@ -1014,6 +1014,24 @@ PrefabInstance:
       propertyPath: defaultResources
       value: 500
       objectReference: {fileID: 0}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: fighterCW
+      value: 
+      objectReference: {fileID: 6629650748117201513, guid: 4c2401abb93fcf84790d8c2e36f0c99d,
+        type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: minerCW
+      value: 
+      objectReference: {fileID: 2023028921290819601, guid: 75a7ba3d2dc43db44a9151b906630475,
+        type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: turret
+      value: 
+      objectReference: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a,
+        type: 3}
     - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
         type: 3}
       propertyPath: m_LocalPosition.x

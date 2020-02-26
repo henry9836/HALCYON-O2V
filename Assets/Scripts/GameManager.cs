@@ -191,6 +191,7 @@ public class GameManager : MonoBehaviour
         HSC = GameObject.FindGameObjectWithTag("Henry'sStupidCube");
         validDistanceInsideWorld = Vector3.Distance(GameObject.FindGameObjectWithTag("Ground").transform.position, HSC.transform.position);
         StartCoroutine(SpawnTCs());
+        if (FindObjectOfType<GameManager>() != this) { Debug.LogWarning("duplicate GameManager", this); }
     }
 
     private void FixedUpdate()
@@ -223,15 +224,18 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnOutpostBuidling(GameObject targetTC, GameObject building)
     {
+
+        Debug.Log($"Spawning a {building.name} for {targetTC.name}");
+
         bool foundValidSpawnPosition = false;
-        float spawnRange = 20.0f;
+        float spawnRange = 40.0f;
 
         while (!foundValidSpawnPosition)
         {
-            Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(transform.position.x - spawnRange, transform.position.x + spawnRange), transform.position.y, UnityEngine.Random.Range(transform.position.z - spawnRange, transform.position.z + spawnRange));
+            Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(targetTC.transform.position.x - spawnRange, targetTC.transform.position.x + spawnRange), targetTC.transform.position.y, UnityEngine.Random.Range(targetTC.transform.position.z - spawnRange, targetTC.transform.position.z + spawnRange));
 
             //Get radius of object
-            float checkRadius = building.transform.localScale.x / 2;
+            float checkRadius = building.transform.localScale.x * 2.0f;
 
             //Check if colliding with anything and distance
 
@@ -253,8 +257,22 @@ public class GameManager : MonoBehaviour
                 GameObject refer = Instantiate(building, spawnPos, Quaternion.identity);
 
                 //Assign ownership
-                refer.GetComponent<ObjectID>().ownerPlayerID = targetTC.GetComponent<ObjectID>().ownerPlayerID;
+                if (refer.GetComponent<ObjectID>())
+                {
+                    refer.GetComponent<ObjectID>().ownerPlayerID = targetTC.GetComponent<ObjectID>().ownerPlayerID;
+                }
+                //CarWash
+                else
+                {
+                    refer.transform.GetChild(0).GetComponent<ObjectID>().ownerPlayerID = targetTC.GetComponent<ObjectID>().ownerPlayerID;
+                }
+
+                //Register Building With AI
+                targetTC.GetComponent<AIBehaviour>().assignCity(refer);
+                
             }
+
+
 
             yield return null;
         }
@@ -278,8 +296,16 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        while ((playerTCs.Count + aiTCs.Count) < MagicTraveller.TCCount)
+        while (true)
         {
+            Debug.Log($"player+ai = {(playerTCs.Count + aiTCs.Count)} target is {MagicTraveller.TCCount} || AI TARGET IS {MagicTraveller.AIEnemyCount} PLAYER TARGET IS {MagicTraveller.PlayerCounter}");
+
+            //Have we spawned enough
+            if ((playerTCs.Count + aiTCs.Count) >= MagicTraveller.TCCount)
+            {
+                break;
+            }
+
             bool spawned = false;
             //Spawn Player
             if (playerTCs.Count < MagicTraveller.PlayerCounter)
@@ -306,7 +332,9 @@ public class GameManager : MonoBehaviour
                                 elementLongest = i;
                                 longestDistance = Vector3.Distance(spawnLocations[i], aiTCs[j].transform.position);
                             }
+                            yield return null;
                         }
+                        yield return null;
                     }
                     //Update spawnPos with longest location away from AI
                     spawnPos = spawnLocations[elementLongest];
@@ -345,7 +373,9 @@ public class GameManager : MonoBehaviour
                                 elementLongest = i;
                                 longestDistance = Vector3.Distance(spawnLocations[i], playerTCs[j].transform.position);
                             }
+                            yield return null;
                         }
+                        yield return null;
                     }
                     //Update spawnPos with longest location away from AI
                     spawnPos = spawnLocations[elementLongest];
@@ -361,17 +391,19 @@ public class GameManager : MonoBehaviour
             }
             if (!spawned)
             {
+                Debug.LogWarning("Could not spawn more TCs breaking out of loop");
                 break;
             }
 
             firstLoop = false;
 
-            StartCoroutine(SpawnOutposts());
 
             yield return null;
         }
 
+        StartCoroutine(SpawnOutposts());
 
+        yield return null;
     }
 
     IEnumerator SpawnOutposts()
@@ -405,17 +437,17 @@ public class GameManager : MonoBehaviour
             {
                 case EnemyDifficulty.EASY:
                     {
-                        turretSpawnAmount = 1;
+                        turretSpawnAmount = UnityEngine.Random.Range(0, 3);
                         break;
                     }
                 case EnemyDifficulty.MED:
                     {
-                        turretSpawnAmount = 2;
+                        turretSpawnAmount = UnityEngine.Random.Range(2, 4);
                         break;
                     }
                 case EnemyDifficulty.HARD:
                     {
-                        turretSpawnAmount = 4;
+                        turretSpawnAmount = UnityEngine.Random.Range(4, 7);
                         break;
                     }
                 default:

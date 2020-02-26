@@ -234,11 +234,13 @@ public class TCController : MonoBehaviour
         {
             if (objID.ownerPlayerID != ObjectID.PlayerID.PLAYER)
             {
-                GM.regTC(true, gameObject);
+                //This make issues occur
+                //GM.regTC(true, gameObject);
             }
             else
             {
-                GM.regTC(false, gameObject);
+                //This make issues occuer
+                //GM.regTC(false, gameObject);
             }
             registered = true;
         }
