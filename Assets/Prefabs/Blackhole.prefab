@@ -110,4 +110,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 60
-  power: 10
+  power: 0.02
+  timer: 0
+  twomintimer: 420
