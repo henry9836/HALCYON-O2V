@@ -15,6 +15,9 @@ public class TCController : MonoBehaviour
     public float housecost = 20000;
     public float escapeCost = 999999;
 
+    public GameObject gamewinUI;
+    public GameObject gameLossUI;
+
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
@@ -22,6 +25,7 @@ public class TCController : MonoBehaviour
     public List<GameObject> playerunit = new List<GameObject>();
     private int unitCount = 0;
     private bool Modifylock = false;
+    private bool uionce = true;
 
     public enum STORE
     {
@@ -153,8 +157,8 @@ public class TCController : MonoBehaviour
                 Debug.Log("escape");
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -escapeCost);
 
+                gamewinUI.SetActive(true);
 
-                //victroy royale
 
             }
         }
@@ -192,6 +196,43 @@ public class TCController : MonoBehaviour
         {
             GM.setUnitCount((int)objID.ownerPlayerID, unitCount);
         }
+
+        if (uionce == true)
+        {
+            if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+            {
+                if (objID.health < (objID.maxHealth / 2))
+                {
+                    uionce = false;
+                    GameObject.Find("HPbloom").GetComponent<MakeFlash>().flashing = true;
+                    GameObject flasher = GameObject.Find("MakeFlash");
+                    flasher.transform.GetChild(0).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(1).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(2).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(3).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(4).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(5).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(6).GetComponent<MakeFlash>().flashing = true;
+
+
+                }
+                else if (GameObject.Find("Blackhole").GetComponent<Blackhole>().timer > ((GameObject.Find("Blackhole").GetComponent<Blackhole>().twomintimer / 4) * 3))
+                {
+                    uionce = false;
+                    GameObject.Find("HPbloom").GetComponent<MakeFlash>().flashing = true;
+                    GameObject flasher = GameObject.Find("MakeFlash");
+
+                    flasher.transform.GetChild(0).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(1).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(2).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(3).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(4).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(5).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(6).GetComponent<MakeFlash>().flashing = true;
+                }
+            }
+        }
+ 
     }
 
     void Update()
