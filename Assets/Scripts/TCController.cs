@@ -52,12 +52,12 @@ public class TCController : MonoBehaviour
     }
     public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
     {
-        SpawnUnit(TCController.STORE.BASE, true, null, dronemode);
+        SpawnUnit(tospawn, amAI, null, dronemode);
     }
 
     public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
     {
-        SpawnUnit(TCController.STORE.BASE, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+        SpawnUnit(tospawn, true, aiBuilding, AIDroneController.DroneMode.WORKER);
     }
 
     public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)

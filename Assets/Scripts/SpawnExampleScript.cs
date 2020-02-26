@@ -9,30 +9,30 @@ public class SpawnExampleScript : MonoBehaviour
     public void Spawnbase()
     {
         fixTC();
-        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.BASE, false, null);
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.BASE, false);
     }
 
     public void Spawnminecw()
     {
         fixTC();
-        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.MINECW, false, null);
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.MINECW, false);
     }
     public void Spawnattack()
     {
         fixTC();
-        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.ATTACKCW, false, null);
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.ATTACKCW, false);
     }
 
     public void Spawnboost()
     {
         fixTC();
-        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.BOOSTCW, false, null);
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.BOOSTCW, false);
     }
 
     public void Spawnescape()
     {
         fixTC();
-        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.ESCAPE, false, null);
+        TC.GetComponent<TCController>().SpawnUnit(TCController.STORE.ESCAPE, false);
     }
 
     public void Spawnhouse()

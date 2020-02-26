@@ -761,9 +761,9 @@ MonoBehaviour:
   attackDamage: 7
   agroRange: 10
   attackCooldown: 0.5
-  miningRate: 3
+  miningRate: 60
   mineTime: 5
-  mineMaxInv: 3
+  mineMaxInv: 120
   repairTime: 5
   repairAmount: 1
   laserSustainTime: 0.3
