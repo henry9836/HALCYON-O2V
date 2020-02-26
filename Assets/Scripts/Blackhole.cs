@@ -68,9 +68,6 @@ public class Blackhole : MonoBehaviour
                     Destroy(hit.gameObject);
                 }
             }
-
-
-
         }
     }
 }
