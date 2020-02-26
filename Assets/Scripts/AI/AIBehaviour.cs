@@ -75,6 +75,7 @@ public class AIBehaviour : MonoBehaviour
     };
 
     public int playerID = -1;
+    public float seekResourceRange = 50.0f;
     public Vector2 profitCheckRandomRange = new Vector2(5.0f, 20.0f);
 
     //Privates
@@ -113,6 +114,7 @@ public class AIBehaviour : MonoBehaviour
     public bool hasBoosterCW = false;
     public float timeOutThread = 0.0f;
     private float timeOutThreadThreshold = 6.0f;
+    private LayerMask unitLayer;
 
 
     public void assignCity(List<GameObject> _outpostBuildings)
@@ -158,6 +160,7 @@ public class AIBehaviour : MonoBehaviour
         blackHole = GameObject.FindGameObjectWithTag("Blackhole");
         ground = GameObject.FindGameObjectWithTag("Ground");
         acceptableAsteriodDistance = Vector3.Distance(ground.transform.position, GameObject.FindGameObjectWithTag("Henry'sStupidCube").transform.position);
+        unitLayer = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
 
         baseCost = TC.baseCost;
         mineCost = TC.mineCost;
@@ -222,8 +225,7 @@ public class AIBehaviour : MonoBehaviour
          * 
          */
 
-
-        GameObject[] foundResources = GameObject.FindGameObjectsWithTag("Resource");
+        Collider[] foundResources = Physics.OverlapSphere(transform.position, seekResourceRange, unitLayer);
         GameObject[] foundWorldUnits = GameObject.FindGameObjectsWithTag("Unit");
         GameObject[] foundBuildingsTCs = GameObject.FindGameObjectsWithTag("TC");
         GameObject[] foundBuildingsCWs = GameObject.FindGameObjectsWithTag("CarWash");
@@ -239,22 +241,13 @@ public class AIBehaviour : MonoBehaviour
         resources.Clear();
         enemyUnits.Clear();
         enemyBuilds.Clear();
+        units.Clear();
 
         //Attacking unit counters
         int friendlyAttackUnits = 0;
         int enemyAttackUnits = 0;
 
         float tmpDistance = Mathf.Infinity;
-
-        for (int i = 0; i < units.Count; i++)
-        {
-            //If one of our units is idle add to idle list
-            if (units[i].aiCtrl.isIdle())
-            {
-                idleUnits.Add(units[i]);
-            }
-            yield return null;
-        }
 
         tmpDistance = Mathf.Infinity;
 
@@ -333,8 +326,17 @@ public class AIBehaviour : MonoBehaviour
             }
             else
             {
-                //Counter
-                friendlyAttackUnits++;
+                if (foundWorldUnits[i] != null)
+                {
+                    units.Add(new aiObject(foundWorldUnits[i]));
+                    //Check for idling
+                    if (units[units.Count - 1].aiCtrl.isIdle())
+                    {
+                        idleUnits.Add(units[units.Count - 1]);
+                    }
+
+                    friendlyAttackUnits++;
+                }
             }
             yield return null;
         }
@@ -344,19 +346,19 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundResources.Length; i++)
         {
             //If not inside the game world enough
-            if (Vector3.Distance(foundResources[i].transform.position, transform.position) < acceptableAsteriodDistance)
+            if (Vector3.Distance(foundResources[i].transform.position, ground.transform.position) < acceptableAsteriodDistance)
             {
-                Debug.Log("I foudn one boss");
-                resources.Add(new scoutedObject(foundResources[i]));
-
-                if (resources[resources.Count - 1].obj != null)
+                if (foundResources[i].GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                 {
-                    if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
-                    {
+                    resources.Add(new scoutedObject(foundResources[i].gameObject));
 
-                        Debug.Log("I foudn a better one boss");
-                        closestKnownResource = resources[resources.Count - 1].obj;
-                        tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
+                    if (resources[resources.Count - 1].obj != null)
+                    {
+                        if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
+                        {
+                            closestKnownResource = resources[resources.Count - 1].obj;
+                            tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
+                        }
                     }
                 }
             }
@@ -453,7 +455,7 @@ public class AIBehaviour : MonoBehaviour
             if (!madeProfit)
             {
 
-                Debug.Log($"Idle Unit Count: {idleUnits.Count}");
+                Debug.Log($"Idle Unit Count: {idleUnits.Count} and total units is {units.Count}");
 
                 int amountofUnitsAffected = 0;
 
