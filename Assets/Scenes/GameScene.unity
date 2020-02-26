@@ -1375,7 +1375,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -105.1, y: -71.6}
+  m_AnchoredPosition: {x: -105.1001, y: -71.599976}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &706136740
@@ -2308,6 +2308,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template: {fileID: 6804817516206249236, guid: 6964831948c934f48bc2c64f10413610,
     type: 3}
+--- !u!20 &1575511878 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6622558173884126354, guid: 6303c39ffc3599c49954897bed4191a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 6622558173846460449}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1575511885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2388,7 +2394,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1575511878}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2770,6 +2776,11 @@ PrefabInstance:
         type: 3}
       propertyPath: orthographic size
       value: 142.19356
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934776490894046076, guid: 79f46892e8f8de147af385774121346a,
+        type: 3}
+      propertyPath: m_Depth
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2934776490894046077, guid: 79f46892e8f8de147af385774121346a,
         type: 3}
