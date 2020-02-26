@@ -8,11 +8,14 @@ public class TCController : MonoBehaviour
     public GameObject carWashMiner;
     public GameObject carWashBoost;
     public GameObject carWashFighter;
+    public GameObject turretTemplate;
+    public GameObject houseTemplate;
     public float baseCost = 100;
     public float mineCost = 5000;
     public float attackCost = 100000;
     public float boostCost = 150000;
     public float housecost = 20000;
+    public float turretCost = 50000;
     public float escapeCost = 999999;
 
     private bool registered = false;
@@ -31,6 +34,7 @@ public class TCController : MonoBehaviour
         BOOSTCW,
         HOUSE,
         ESCAPE,
+        TURRET
     };
 
     public void SpawnUnit(TCController.STORE tospawn)
@@ -138,11 +142,12 @@ public class TCController : MonoBehaviour
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -housecost);
 
                     GM.setUnitCountMax((int)objID.ownerPlayerID, GM.GetUnitCountMax((int)objID.ownerPlayerID) + 10);
-                    //playerCtrl.lastSelectedBuildingToBuild = carWashBoost;
+                    playerCtrl.lastSelectedBuildingToBuild = houseTemplate;
                 }
                 else
                 {
-
+                    GM.UpdateResourceCount((int)objID.ownerPlayerID, -housecost);
+                    Instantiate(houseTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
                 }
             }
         }
@@ -156,6 +161,20 @@ public class TCController : MonoBehaviour
 
                 //victroy royale
 
+            }
+        }
+        else if (tospawn == STORE.TURRET)
+        {
+            if (!amAI)
+            {
+                Debug.Log("spawn turret");
+                GM.UpdateResourceCount((int)objID.ownerPlayerID, -turretCost);
+                playerCtrl.lastSelectedBuildingToBuild = turretTemplate;
+            }
+            else
+            {
+                GM.UpdateResourceCount((int)objID.ownerPlayerID, -turretCost);
+                Instantiate(turretTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
             }
         }
 
