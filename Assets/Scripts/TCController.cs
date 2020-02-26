@@ -166,10 +166,6 @@ public class TCController : MonoBehaviour
         {
             GM.setUnitCount((int)objID.ownerPlayerID, unitCount);
         }
-
-
-
-
     }
 
     void Update()
