@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.684}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1, y: 0.197}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &482958782
@@ -420,8 +420,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2.0178976}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -0.0088, y: 1.5724}
+  m_SizeDelta: {x: 1.2495, y: 0.6597}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4601989889251482864
 Canvas:
@@ -530,7 +530,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.684}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1, y: 0.197}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6971577016906263599
@@ -761,9 +761,9 @@ MonoBehaviour:
   attackDamage: 7
   agroRange: 10
   attackCooldown: 0.5
-  miningRate: 3
-  mineTime: 5
-  mineMaxInv: 3
+  miningRate: 240
+  mineTime: 3
+  mineMaxInv: 480
   repairTime: 5
   repairAmount: 1
   laserSustainTime: 0.3
@@ -795,7 +795,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -806,7 +806,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 3
 --- !u!120 &4228376089277361154
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ TagManager:
   - Henry'sStupidCube
   - CarWashParent
   - Turret
+  - house
   layers:
   - Default
   - TransparentFX
@@ -35,7 +36,7 @@ TagManager:
   - camwall
   - NoCollide
   - cam
-  - 
+  - buildingCollide
   - 
   - 
   - 

@@ -18,6 +18,9 @@ public class TCController : MonoBehaviour
     public float turretCost = 50000;
     public float escapeCost = 999999;
 
+    public GameObject gamewinUI;
+    public GameObject gameLossUI;
+
     private bool registered = false;
     private ObjectID objID;
     private GameManager GM;
@@ -25,6 +28,7 @@ public class TCController : MonoBehaviour
     public List<GameObject> playerunit = new List<GameObject>();
     private int unitCount = 0;
     private bool Modifylock = false;
+    private bool uionce = true;
 
     public enum STORE
     {
@@ -37,26 +41,26 @@ public class TCController : MonoBehaviour
         TURRET
     };
 
-    public void SpawnUnit(TCController.STORE tospawn)
+    public bool SpawnUnit(TCController.STORE tospawn)
     {
-        SpawnUnit(tospawn, false, null, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, false, null, AIDroneController.DroneMode.WORKER);
     }
 
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI)
     {
-        SpawnUnit(tospawn, amAI, null, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, amAI, null, AIDroneController.DroneMode.WORKER);
     }
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
     {
-        SpawnUnit(TCController.STORE.BASE, true, null, dronemode);
-    }
-
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
-    {
-        SpawnUnit(TCController.STORE.BASE, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, amAI, null, dronemode);
     }
 
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
+    {
+        return SpawnUnit(tospawn, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+    }
+
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)
     {
         if (tospawn == STORE.BASE)
         {
@@ -74,6 +78,7 @@ public class TCController : MonoBehaviour
                 {
                     spawnedObj.GetComponent<AIDroneController>().droneMode = droneMode;
                 }
+                return true;
             }
         }
         else if (tospawn == STORE.MINECW)
@@ -90,8 +95,12 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -mineCost);
-                    Instantiate(carWashMiner, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashMiner, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.ATTACKCW)
@@ -109,8 +118,12 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -attackCost);
-                    Instantiate(carWashFighter, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashFighter, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.BOOSTCW)
@@ -128,8 +141,12 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -boostCost);
-                    Instantiate(carWashBoost, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(carWashBoost, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.HOUSE)
@@ -147,20 +164,30 @@ public class TCController : MonoBehaviour
                 else
                 {
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -housecost);
-                    Instantiate(houseTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    GameObject refer = Instantiate(houseTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                    //Assign ownership
+                    refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.ESCAPE)
         {
             if (GM.GetResouceCount((int)objID.ownerPlayerID) >= escapeCost)
             {
-                Debug.Log("escape");
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -escapeCost);
+                if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+                {
+                    gamewinUI.SetActive(true);
+                    Debug.Log("escape");
 
 
-                //victroy royale
+                }
 
+                this.gameObject.GetComponent<Rigidbody>().AddForce(-(GameObject.Find("Blackhole").gameObject.transform.position - transform.position).normalized * 10.0f, ForceMode.Impulse);
+
+                return true;
             }
         }
         else if (tospawn == STORE.TURRET)
@@ -174,10 +201,14 @@ public class TCController : MonoBehaviour
             else
             {
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -turretCost);
-                Instantiate(turretTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                GameObject refer = Instantiate(turretTemplate, aiBuilding.lastSeenPosition, Quaternion.identity);
+                //Assign ownership
+                refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
             }
-        }
 
+            return true;
+        }
+        return false;
     }
     void Start()
     {
@@ -185,6 +216,22 @@ public class TCController : MonoBehaviour
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         GetComponent<Rigidbody>().Sleep();
         playerCtrl = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>();
+
+
+        if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+        {
+
+            gamewinUI = GameObject.Find("Escaped");
+            gameLossUI = GameObject.Find("GameOver");
+
+            gamewinUI.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            gameLossUI.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+
+            gamewinUI.SetActive(false);
+            gameLossUI.SetActive(false);
+        }
+
+
     }
 
     void FixedUpdate()
@@ -199,11 +246,13 @@ public class TCController : MonoBehaviour
         {
             if (objID.ownerPlayerID != ObjectID.PlayerID.PLAYER)
             {
-                GM.regTC(true, gameObject);
+                //This make issues occur
+                //GM.regTC(true, gameObject);
             }
             else
             {
-                GM.regTC(false, gameObject);
+                //This make issues occuer
+                //GM.regTC(false, gameObject);
             }
             registered = true;
         }
@@ -211,6 +260,43 @@ public class TCController : MonoBehaviour
         {
             GM.setUnitCount((int)objID.ownerPlayerID, unitCount);
         }
+
+        if (uionce == true)
+        {
+            if (objID.ownerPlayerID == ObjectID.PlayerID.PLAYER)
+            {
+                if (objID.health < (objID.maxHealth / 2))
+                {
+                    uionce = false;
+                    GameObject.Find("HPbloom").GetComponent<MakeFlash>().flashing = true;
+                    GameObject flasher = GameObject.Find("MakeFlash");
+                    flasher.transform.GetChild(0).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(1).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(2).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(3).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(4).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(5).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(6).GetComponent<MakeFlash>().flashing = true;
+
+
+                }
+                else if (GameObject.Find("Blackhole").GetComponent<Blackhole>().timer > ((GameObject.Find("Blackhole").GetComponent<Blackhole>().twomintimer / 4) * 3))
+                {
+                    uionce = false;
+                    GameObject.Find("HPbloom").GetComponent<MakeFlash>().flashing = true;
+                    GameObject flasher = GameObject.Find("MakeFlash");
+
+                    flasher.transform.GetChild(0).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(1).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(2).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(3).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(4).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(5).GetComponent<MakeFlash>().flashing = true;
+                    flasher.transform.GetChild(6).GetComponent<MakeFlash>().flashing = true;
+                }
+            }
+        }
+ 
     }
 
     void Update()
