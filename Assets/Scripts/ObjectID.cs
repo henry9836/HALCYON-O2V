@@ -67,11 +67,11 @@ public class ObjectID : MonoBehaviour
                 //Well done player wooo
                 if (gameObject.tag == "TC")
                 {
-                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, (GM.GetResouceCount((int)ownerPlayerID)) * 10.0f);
+                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, 300000.0f);
                 }
                 else
                 {
-                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, 100000);
+                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, 100000.0f);
                 }
             }
 
