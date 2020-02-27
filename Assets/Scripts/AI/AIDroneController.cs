@@ -248,6 +248,8 @@ public class AIDroneController : MonoBehaviour
     {
         if (attackTimer > attackCooldown)
         {
+
+            animator.SetBool("Shooting", true);
             if (!bomber)
             {
                 StartCoroutine(FlashingMyLaserForThePlayerOwO());
@@ -363,6 +365,7 @@ public class AIDroneController : MonoBehaviour
     {
         if (mineTimer >= mineTime)
         {
+            animator.SetBool("Mining", true);
             StartCoroutine(FlashingMyLaserForThePlayerOwO());
             if (currentInv >= mineMaxInv)
             {
@@ -387,6 +390,7 @@ public class AIDroneController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, (target.tarObject.transform.position - transform.position), out hit, interactLayer))
         {
+            animator.SetBool("Pushing", true);
             transform.position = hit.point;
             agent.enabled = false;
             transform.parent = target.tarObject.transform;
@@ -509,6 +513,7 @@ public class AIDroneController : MonoBehaviour
         //Arrived at target object position
         if ((Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange) || HasNeighbourStopped())
         {
+            animator.SetBool("Flying", false);
             //If the target is within range
             if (Vector3.Distance(transform.position, target.tarObjectAdjustPos) <= attackRange)
             {
@@ -581,6 +586,7 @@ public class AIDroneController : MonoBehaviour
                 //We are not in range goto enemy overriding neighbour
                 if ((Vector3.Distance(transform.position, target.tarObject.transform.position) > attackRange))
                 {
+                    animator.SetBool("Flying", true);
                     target.tarObjectAdjustPos = GetAdjustedPos();
                     agent.CalculatePath(target.tarObjectAdjustPos, path);
                     agent.SetPath(path);
@@ -607,6 +613,7 @@ public class AIDroneController : MonoBehaviour
                 {
                     target.tarObjectAdjustPos = GetAdjustedPos();
                     Resume();
+                    animator.SetBool("Flying", true);
                 }
                 agent.CalculatePath(target.tarObjectAdjustPos, path);
                 agent.SetPath(path);
@@ -631,6 +638,7 @@ public class AIDroneController : MonoBehaviour
         //If we are not within range of our target pos
         if (Vector3.Distance(transform.position, target.tarPos) > attackRange)
         {
+            animator.SetBool("Flying", true);
             path = new NavMeshPath();
             //Go To Point
             agent.CalculatePath(target.tarPos, path);
@@ -640,6 +648,7 @@ public class AIDroneController : MonoBehaviour
         //Arrived
         if (Vector3.Distance(transform.position, target.tarPos) < 1.0f || HasNeighbourStopped())
         {
+            animator.SetBool("Flying", false);
             Stop();
             target.Reset();
         }
@@ -771,7 +780,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(false);
                     boostModel.SetActive(false);
                     fighterModel.SetActive(true);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = fighterModel.GetComponent<Animator>();
                     break;
                 }
             case DroneMode.MINER:
@@ -780,7 +789,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(true);
                     boostModel.SetActive(false);
                     fighterModel.SetActive(false);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = minerModel.GetComponent<Animator>();
                     break;
                 }
             case DroneMode.BOOSTER:
@@ -789,7 +798,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(false);
                     boostModel.SetActive(true);
                     fighterModel.SetActive(false);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = boostModel.GetComponent<Animator>();
                     break;
                 }
             default:
@@ -1028,7 +1037,9 @@ public class AIDroneController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(laserSustainTime);
-        
+
+        animator.SetBool("Mining", false);
+        animator.SetBool("Shooting", false);
         //Turn Laser Off
         lr.enabled = false;
     }
