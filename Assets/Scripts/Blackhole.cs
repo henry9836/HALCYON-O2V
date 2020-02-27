@@ -49,6 +49,14 @@ public class Blackhole : MonoBehaviour
 
                     if (Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
                     {
+                        if (hit.gameObject.tag == "TC")
+                        {
+                            if (hit.gameObject.GetComponent<ObjectID>().ownerPlayerID == ObjectID.PlayerID.PLAYER)
+                            {
+                                hit.gameObject.GetComponent<TCController>().gameLossUI.SetActive(true);
+                                Debug.Log("deaded");
+                            }
+                        }
                         Destroy(hit.gameObject);
                     }
                 }
@@ -65,6 +73,7 @@ public class Blackhole : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
                 {
+
                     Destroy(hit.gameObject);
                 }
             }
