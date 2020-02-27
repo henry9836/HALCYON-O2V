@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            else if (Input.GetAxis("Boost Horizontal") != 0)
+            if (Input.GetAxis("Boost Horizontal") != 0)
             {
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
@@ -250,7 +250,7 @@ public class PlayerController : MonoBehaviour
                     if (aiCtrl.asteriodOverride)
                     {
                         //Rotate
-                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * (boosterSpeed * 0.05f)) * Time.deltaTime));
                     }
                 }
             }

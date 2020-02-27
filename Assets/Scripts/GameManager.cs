@@ -301,7 +301,6 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            Debug.Log($"player+ai = {(playerTCs.Count + aiTCs.Count)} target is {MagicTraveller.TCCount} || AI TARGET IS {MagicTraveller.AIEnemyCount} PLAYER TARGET IS {MagicTraveller.PlayerCounter}");
 
             //Have we spawned enough
             if ((playerTCs.Count + aiTCs.Count) >= MagicTraveller.TCCount)
