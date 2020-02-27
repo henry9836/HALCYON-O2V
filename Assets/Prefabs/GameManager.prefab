@@ -43,12 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0befbc9b2b27e864785454e36cfeb1af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TCTemplate: {fileID: 1407690025781185845, guid: e4b1f62280728d84ebea3ffc8a0527ae,
+  TCTemplate: {fileID: 4187675867892078855, guid: 664d705c0cc2ec44fa2e1392e76f2279,
     type: 3}
   minerCW: {fileID: 2023028921290819601, guid: 75a7ba3d2dc43db44a9151b906630475, type: 3}
   fighterCW: {fileID: 6629650748117201513, guid: 4c2401abb93fcf84790d8c2e36f0c99d,
     type: 3}
   turret: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a, type: 3}
-  defaultResources: 15000000
+  defaultResources: 499999
   playerTCs: []
   aiTCs: []
+  starUI: {fileID: 7412933278879879359, guid: 9bacc3247d4a67944874d083f9989122, type: 3}

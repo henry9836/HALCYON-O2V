@@ -6,7 +6,7 @@ public class launcher : MonoBehaviour
 {
     public float Timer;
     public float rate = 5.0f;
-    public GameObject astroid;
+    public List<GameObject> astroid = new List<GameObject>();
     public Vector3 forceDirStart;
     public Vector3 forceDirEnd;
     public float range;
@@ -29,7 +29,8 @@ public class launcher : MonoBehaviour
             Vector3 range1 = new Vector3(transform.position.x + Random.Range(range, -range), transform.position.y, transform.position.z + Random.Range(range, -range));
 
             Timer = 0.0f;
-            GameObject temp = Instantiate(astroid, new Vector3(range1.x, range1.y, range1.z), Quaternion.identity);
+            GameObject temp = Instantiate(astroid[Random.Range(0, astroid.Count)], new Vector3(range1.x, range1.y, range1.z), Quaternion.identity);
+            temp.transform.rotation = Quaternion.Euler(Random.Range(-360, 360), Random.Range(-360, 360), Random.Range(-360, 360));
             float t = (blackHole.timer / (blackHole.twomintimer * 0.5f));
             //temp.GetComponent<Rigidbody>().AddForce(Vector3.Lerp(forceDirStart.normalized, forceDirEnd.normalized, (blackHole.timer / (blackHole.twomintimer * 0.5f))) * force, ForceMode.Impulse);
             temp.GetComponent<Rigidbody>().AddForce(new Vector3(Mathf.Lerp(forceDirStart.normalized.x, forceDirEnd.normalized.x, t) , Mathf.Lerp(forceDirStart.normalized.y, forceDirEnd.normalized.y, t), Mathf.Lerp(forceDirStart.normalized.z, forceDirEnd.normalized.z, t)) * force, ForceMode.Impulse);
