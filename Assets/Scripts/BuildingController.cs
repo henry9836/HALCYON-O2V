@@ -26,8 +26,28 @@ public class BuildingController : MonoBehaviour
         {
             GetComponent<MeshRenderer>().material = defaultMaterial;
         }
+        else
+        {
+            if (GetComponentInChildren<MeshRenderer>())
+            {
+                MeshRenderer[] mrs = GetComponentsInChildren<MeshRenderer>();
 
-        GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
+                for (int i = 0; i < mrs.Length; i++)
+                {
+                    mrs[i].material = defaultMaterial;
+                }
+
+            }
+            else if (transform.parent.GetComponentInChildren<MeshRenderer>())
+            {
+                MeshRenderer[] mrs = transform.parent.GetComponentsInChildren<MeshRenderer>();
+
+                for (int i = 0; i < mrs.Length; i++)
+                {
+                    mrs[i].material = defaultMaterial;
+                }
+            }
+        }
     }
 
     private void Start()

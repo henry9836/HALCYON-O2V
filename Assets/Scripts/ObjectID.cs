@@ -33,6 +33,7 @@ public class ObjectID : MonoBehaviour
     public float maxHealth = 100.0f;
     public float velo = 0.0f;
 
+    private GameManager GM;
     private float startMaxHealth = 100.0f;
 
     public void ModifyMaxHealth(float newMax)
@@ -50,6 +51,7 @@ public class ObjectID : MonoBehaviour
     private void Start()
     {
         startMaxHealth = maxHealth;
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     void Update()
@@ -60,6 +62,19 @@ public class ObjectID : MonoBehaviour
 
         if (health <= 0)
         {
+            if (objID == OBJECTID.BUILDING)
+            {
+                //Well done player wooo
+                if (gameObject.tag == "TC")
+                {
+                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, (GM.GetResouceCount((int)ownerPlayerID)) * 10.0f);
+                }
+                else
+                {
+                    GM.UpdateResourceCount((int)ObjectID.PlayerID.PLAYER, 100000);
+                }
+            }
+
             if (GetComponent<sparks>())
             {
                 GetComponent<sparks>().particleKill();

@@ -116,11 +116,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitTemplate: {fileID: 7236769104955452519, guid: e518305763692a742b1fa1044dc4ca49,
     type: 3}
-  carWashMiner: {fileID: 2023028921290819601, guid: 75a7ba3d2dc43db44a9151b906630475,
+  carWashMiner: {fileID: 8291038504020237534, guid: dbd66b813834a98408338c0db1107ea3,
     type: 3}
-  carWashBoost: {fileID: 6666386301793371771, guid: 4790ba9f68238dc44bdcc75fa61eda74,
+  carWashBoost: {fileID: 4242532591243431188, guid: 8067e46f38a3bc54ca2b52aaba986e8c,
     type: 3}
-  carWashFighter: {fileID: 6629650748117201513, guid: 4c2401abb93fcf84790d8c2e36f0c99d,
+  carWashFighter: {fileID: 5897907174060025635, guid: 5cd309445bf5c2b4c952ae129e23a70d,
     type: 3}
   turretTemplate: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a,
     type: 3}
