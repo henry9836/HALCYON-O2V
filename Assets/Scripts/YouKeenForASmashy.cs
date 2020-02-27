@@ -11,14 +11,21 @@ public class YouKeenForASmashy : MonoBehaviour
 
     private void Start()
     {
-        rb.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         mass = rb.mass;
         velo = rb.velocity.magnitude;
     }
 
     public void FixedUpdate()
     {
-        velo = rb.velocity.magnitude;
+        if (rb == null)
+        {
+            Debug.LogWarning($"Rigidbody Missing From {gameObject.name}");
+        }
+        else
+        {
+            velo = rb.velocity.magnitude;
+        }
     }
 
     //Use for Collison only requirements are rb/trigger on source and normal collider on other
