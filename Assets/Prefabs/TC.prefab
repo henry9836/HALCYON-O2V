@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2313573671899036461}
   - component: {fileID: -1116515097580439637}
   - component: {fileID: -3996597903743208696}
+  - component: {fileID: 5870517938942794907}
   m_Layer: 12
   m_Name: TC
   m_TagString: TC
@@ -197,3 +198,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
+--- !u!114 &5870517938942794907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407690025781185845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49056bb6de5b0045acaf55b3b27b58d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabledparticle: {fileID: 0}
+  persent75: {fileID: 7287155152912559407, guid: 6863042df794b874ab9c03d4a692d9e3,
+    type: 3}
+  persent50: {fileID: 9021284754803672801, guid: cc0568e5c5d987248ac25c0ab236a500,
+    type: 3}
+  persent25: {fileID: 3953151989801099608, guid: 03c7c3443af845249ae3c453c1ef5067,
+    type: 3}
+  persent0: {fileID: 1755225108924841049, guid: 7cc6f9005123d7f43978b543ef8b3fd7,
+    type: 3}
+  once75: 0
+  once50: 0
+  once25: 0
+  once0: 0
