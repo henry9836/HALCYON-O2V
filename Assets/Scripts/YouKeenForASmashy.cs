@@ -5,6 +5,8 @@ using UnityEngine;
 public class YouKeenForASmashy : MonoBehaviour
 {
 
+    public float damageVeloThreshold = 5.0f;
+
     private float mass = 1.0f;
     private float velo = 0.0f;
     private Rigidbody rb;
@@ -31,11 +33,14 @@ public class YouKeenForASmashy : MonoBehaviour
     //Use for Collison only requirements are rb/trigger on source and normal collider on other
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"{gameObject.name} is keen for a smashy with {other.name}");
-        if (other.GetComponent<ObjectID>())
+        if (velo > damageVeloThreshold)
         {
-            other.GetComponent<ObjectID>().health -= mass * velo;
-            GetComponent<ObjectID>().health -= mass * velo;
+            Debug.Log($"{gameObject.name} is keen for a smashy with {other.name}");
+            if (other.GetComponent<ObjectID>())
+            {
+                other.GetComponent<ObjectID>().health -= (mass * 0.5f) * (velo * 0.5f);
+                GetComponent<ObjectID>().health -= (mass * 0.5f) * (velo * 0.5f);
+            }
         }
     }
 }

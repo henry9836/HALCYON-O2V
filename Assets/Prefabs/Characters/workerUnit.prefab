@@ -752,7 +752,7 @@ MonoBehaviour:
   - {fileID: 8402957913403137446}
   attackState: 0
   droneMode: 0
-  DebugMode: 1
+  DebugMode: 0
   canMine: 1
   canRepair: 1
   canFight: 0
