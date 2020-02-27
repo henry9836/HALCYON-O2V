@@ -65,7 +65,6 @@ public class sparks : MonoBehaviour
         enabledparticle = persent0;
         prefab0 = Instantiate(enabledparticle, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
         prefab0.transform.parent = null;
-        Debug.Log("1");
         prefab0.GetComponent<sparks2>().call();
     }
 
