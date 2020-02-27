@@ -273,7 +273,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 14336
   checkRadius: 0.1
-  boosterSpeed: 500
+  boosterSpeed: 5000
   playerID: -1
   buildAvailable: {fileID: 2100000, guid: 1b420e8f9885ac348ba99a022c314eff, type: 2}
   buildNotAvailable: {fileID: 2100000, guid: 27e4ac806020a3b4380471a632e12e11, type: 2}
