@@ -883,16 +883,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1575511885}
-    - target: {fileID: 2673427331527224363, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -3.8007812
-      objectReference: {fileID: 0}
-    - target: {fileID: 2673427331527224363, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 1.4003906
-      objectReference: {fileID: 0}
     - target: {fileID: 2766115095143975485, guid: 8b58d59420a1ac84b9b4cd3db7c56246,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1134,6 +1124,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5897907174060025635, guid: 5cd309445bf5c2b4c952ae129e23a70d,
         type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: defaultResources
+      value: 4000
+      objectReference: {fileID: 0}
     - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
         type: 3}
       propertyPath: m_LocalPosition.x

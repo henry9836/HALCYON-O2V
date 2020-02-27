@@ -4549,7 +4549,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: $100,000M
+  m_Text: $15,000M
 --- !u!1 &2515538722361188463
 GameObject:
   m_ObjectHideFlags: 0
@@ -9946,7 +9946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.7999878, y: 1.4000244}
+  m_AnchoredPosition: {x: -3.8007812, y: 1.4003906}
   m_SizeDelta: {x: -136.5, y: -73.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2673427331527224358
@@ -18014,7 +18014,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: $150,000M
+  m_Text: $100,000M
 --- !u!1 &8231597440469553825
 GameObject:
   m_ObjectHideFlags: 0

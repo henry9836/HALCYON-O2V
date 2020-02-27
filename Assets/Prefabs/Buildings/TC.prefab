@@ -128,8 +128,8 @@ MonoBehaviour:
     type: 3}
   baseCost: 100
   mineCost: 5000
-  attackCost: 100000
-  boostCost: 150000
+  attackCost: 15000
+  boostCost: 100000
   housecost: 1000
   turretCost: 50000
   escapeCost: 999999
@@ -205,6 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63e1a6d42ed27f4ca3e16e907085c38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageVeloThreshold: 5
 --- !u!114 &3196847420195252450
 MonoBehaviour:
   m_ObjectHideFlags: 0
