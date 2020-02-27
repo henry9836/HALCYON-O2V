@@ -196,6 +196,8 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);

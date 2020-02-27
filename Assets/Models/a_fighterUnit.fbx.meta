@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2d0866073622fde4fb9fb5b2aaea3712
+guid: 86f1c0929fd450e47b85b6d7e4172b0c
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
@@ -13,17 +13,17 @@ ModelImporter:
       74: 1420770986316445164
     second: landing
   - first:
-      74: -5252816984213320552
+      74: -4136144731590540357
     second: idle
   - first:
-      74: 2811528573259322595
-    second: idleToMine
+      74: -5793680296131271029
+    second: idleToShoot
   - first:
-      74: 2796475634662581855
-    second: mining
+      74: 2451273066817259898
+    second: shooting
   - first:
-      74: 968320198250388703
-    second: miningToIdle
+      74: 4083332452165021885
+    second: shootToIdle
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -169,7 +169,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: idleToMine
+      name: idleToShoot
       takeName: Take 001
       internalID: 0
       firstFrame: 80
@@ -198,7 +198,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: mining
+      name: shooting
       takeName: Take 001
       internalID: 0
       firstFrame: 93
@@ -227,11 +227,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: miningToIdle
+      name: shootToIdle
       takeName: Take 001
       internalID: 0
       firstFrame: 98
-      lastFrame: 103
+      lastFrame: 111
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
