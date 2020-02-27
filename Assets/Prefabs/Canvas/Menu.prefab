@@ -940,7 +940,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3541227231210381100}
-        m_MethodName: Begone
+        m_MethodName: begone
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

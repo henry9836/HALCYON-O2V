@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -481.56006
       objectReference: {fileID: 0}
+    - target: {fileID: 5641296102135025042, guid: 78ccf1c01e4a3af4299a07cf171720ba,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: begone
+      objectReference: {fileID: 0}
     - target: {fileID: 7577225465951619735, guid: 78ccf1c01e4a3af4299a07cf171720ba,
         type: 3}
       propertyPath: m_LocalPosition.x
