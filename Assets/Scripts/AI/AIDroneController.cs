@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,7 +43,7 @@ public class AIDroneController : MonoBehaviour
         {
             if (tarObject == null)
             {
-                Reset();
+                tarObjectAdjustPos = Vector3.zero;
             }
         }
 
