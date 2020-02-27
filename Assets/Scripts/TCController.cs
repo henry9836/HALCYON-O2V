@@ -41,26 +41,26 @@ public class TCController : MonoBehaviour
         TURRET
     };
 
-    public void SpawnUnit(TCController.STORE tospawn)
+    public bool SpawnUnit(TCController.STORE tospawn)
     {
-        SpawnUnit(tospawn, false, null, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, false, null, AIDroneController.DroneMode.WORKER);
     }
 
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI)
     {
-        SpawnUnit(tospawn, amAI, null, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, amAI, null, AIDroneController.DroneMode.WORKER);
     }
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIDroneController.DroneMode dronemode)
     {
-        SpawnUnit(tospawn, amAI, null, dronemode);
-    }
-
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
-    {
-        SpawnUnit(tospawn, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+        return SpawnUnit(tospawn, amAI, null, dronemode);
     }
 
-    public void SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding)
+    {
+        return SpawnUnit(tospawn, true, aiBuilding, AIDroneController.DroneMode.WORKER);
+    }
+
+    public bool SpawnUnit(TCController.STORE tospawn, bool amAI, AIBehaviour.outpostBuilding aiBuilding, AIDroneController.DroneMode droneMode)
     {
         if (tospawn == STORE.BASE)
         {
@@ -78,6 +78,7 @@ public class TCController : MonoBehaviour
                 {
                     spawnedObj.GetComponent<AIDroneController>().droneMode = droneMode;
                 }
+                return true;
             }
         }
         else if (tospawn == STORE.MINECW)
@@ -98,6 +99,8 @@ public class TCController : MonoBehaviour
                     //Assign ownership
                     refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.ATTACKCW)
@@ -119,6 +122,8 @@ public class TCController : MonoBehaviour
                     //Assign ownership
                     refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.BOOSTCW)
@@ -140,6 +145,8 @@ public class TCController : MonoBehaviour
                     //Assign ownership
                     refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.HOUSE)
@@ -161,6 +168,8 @@ public class TCController : MonoBehaviour
                     //Assign ownership
                     refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
                 }
+
+                return true;
             }
         }
         else if (tospawn == STORE.ESCAPE)
@@ -178,6 +187,7 @@ public class TCController : MonoBehaviour
 
                 this.gameObject.GetComponent<Rigidbody>().AddForce(-(GameObject.Find("Blackhole").gameObject.transform.position - transform.position).normalized * 10.0f, ForceMode.Impulse);
 
+                return true;
             }
         }
         else if (tospawn == STORE.TURRET)
@@ -195,8 +205,10 @@ public class TCController : MonoBehaviour
                 //Assign ownership
                 refer.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
             }
-        }
 
+            return true;
+        }
+        return false;
     }
     void Start()
     {
