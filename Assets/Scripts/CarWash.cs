@@ -11,6 +11,7 @@ public class CarWash : MonoBehaviour
         if (other.gameObject.GetComponent<AIDroneController>() != null)
         {
             other.GetComponent<AIDroneController>().droneMode = carWashType;
+            
         }
     }
 

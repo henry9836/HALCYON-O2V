@@ -108,6 +108,10 @@ public class AIDroneController : MonoBehaviour
     public float repairAmount = 1.0f;
     public float laserSustainTime = 0.3f;
     public Rigidbody asteriodBody;
+    public GameObject baseModel;
+    public GameObject minerModel;
+    public GameObject boostModel;
+    public GameObject fighterModel;
 
     //Privates
     private GameManager GM;
@@ -118,6 +122,8 @@ public class AIDroneController : MonoBehaviour
     private GameObject TC;
     private LayerMask interactLayer;
     private Vector3 TCdropOff;
+    private DroneMode previousDroneMode = DroneMode.WORKER;
+    private Animator animator;
     private bool idle;
     private bool stuck = false;
     private bool TCRetOverride = false;
@@ -138,7 +144,7 @@ public class AIDroneController : MonoBehaviour
     private float orignialRepairTime = 5.0f;
     private float orignialRepairAmount = 1.0f;
 
-
+    
     public void iWasHit(GameObject attacker)
     {
         //If I was hit then target agressor and we are on attack stance
@@ -746,8 +752,63 @@ public class AIDroneController : MonoBehaviour
         }
     }
 
+    void UpdateModels()
+    {
+        switch (droneMode)
+        {
+            case DroneMode.WORKER:
+                {
+                    baseModel.SetActive(true);
+                    minerModel.SetActive(false);
+                    boostModel.SetActive(false);
+                    fighterModel.SetActive(false);
+                    animator = baseModel.GetComponent<Animator>();
+                    break;
+                }
+            case DroneMode.FIGHTER:
+                {
+                    baseModel.SetActive(false);
+                    minerModel.SetActive(false);
+                    boostModel.SetActive(false);
+                    fighterModel.SetActive(true);
+                    animator = baseModel.GetComponent<Animator>();
+                    break;
+                }
+            case DroneMode.MINER:
+                {
+                    baseModel.SetActive(false);
+                    minerModel.SetActive(true);
+                    boostModel.SetActive(false);
+                    fighterModel.SetActive(false);
+                    animator = baseModel.GetComponent<Animator>();
+                    break;
+                }
+            case DroneMode.BOOSTER:
+                {
+                    baseModel.SetActive(false);
+                    minerModel.SetActive(false);
+                    boostModel.SetActive(true);
+                    fighterModel.SetActive(false);
+                    animator = baseModel.GetComponent<Animator>();
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+
+        previousDroneMode = droneMode;
+    }
+
     void UpdateType()
     {
+        //Update Animators if different
+        if (previousDroneMode != droneMode)
+        {
+            UpdateModels();
+        }
+
         //Reset All Values
         attackRange = orignialAttackRange;
         attackDamage = orignialAttackDamage;
@@ -833,6 +894,12 @@ public class AIDroneController : MonoBehaviour
         orignialMineMaxInv = mineMaxInv;
         orignialRepairTime = repairTime;
         orignialRepairAmount = repairAmount;
+
+        baseModel.SetActive(true);
+        minerModel.SetActive(false);
+        boostModel.SetActive(false);
+        fighterModel.SetActive(false);
+        animator = baseModel.GetComponent<Animator>();
 
         //Setup Components
         agent = GetComponent<NavMeshAgent>();
