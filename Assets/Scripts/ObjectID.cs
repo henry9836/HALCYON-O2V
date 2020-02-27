@@ -60,6 +60,10 @@ public class ObjectID : MonoBehaviour
 
         if (health <= 0)
         {
+            if (GetComponent<sparks>())
+            {
+                GetComponent<sparks>().particleKill();
+            }
             Destroy(gameObject);
         }
 
