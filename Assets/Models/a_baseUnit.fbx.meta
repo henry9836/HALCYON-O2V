@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2d0866073622fde4fb9fb5b2aaea3712
+guid: 8a463f91d6503504bb4e4c7dbb1dd381
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
@@ -7,7 +7,7 @@ ModelImporter:
       74: 1827226128182048838
     second: takeOff
   - first:
-      74: -998496362607748373
+      74: 3387807953527668366
     second: flying
   - first:
       74: 1420770986316445164
@@ -15,15 +15,6 @@ ModelImporter:
   - first:
       74: -5252816984213320552
     second: idle
-  - first:
-      74: -4136144731590540357
-    second: idleToShoot
-  - first:
-      74: 2451273066817259898
-    second: shooting
-  - first:
-      74: 4083332452165021885
-    second: shootToIdle
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -93,7 +84,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -145,93 +136,6 @@ ModelImporter:
       internalID: 0
       firstFrame: 61
       lastFrame: 80
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: idleToShoot
-      takeName: Take 001
-      internalID: 0
-      firstFrame: 80
-      lastFrame: 93
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: shooting
-      takeName: Take 001
-      internalID: 0
-      firstFrame: 93
-      lastFrame: 98
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: shootToIdle
-      takeName: Take 001
-      internalID: 0
-      firstFrame: 98
-      lastFrame: 111
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
