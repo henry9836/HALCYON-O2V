@@ -780,7 +780,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(false);
                     boostModel.SetActive(false);
                     fighterModel.SetActive(true);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = fighterModel.GetComponent<Animator>();
                     break;
                 }
             case DroneMode.MINER:
@@ -789,7 +789,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(true);
                     boostModel.SetActive(false);
                     fighterModel.SetActive(false);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = minerModel.GetComponent<Animator>();
                     break;
                 }
             case DroneMode.BOOSTER:
@@ -798,7 +798,7 @@ public class AIDroneController : MonoBehaviour
                     minerModel.SetActive(false);
                     boostModel.SetActive(true);
                     fighterModel.SetActive(false);
-                    animator = baseModel.GetComponent<Animator>();
+                    animator = boostModel.GetComponent<Animator>();
                     break;
                 }
             default:
