@@ -628,7 +628,7 @@ public class AIBehaviour : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"Cannot fix building {destroyedBuildings[elementToFix].objID} as there is logic for it");
+                Debug.LogWarning($"Cannot fix building {destroyedBuildings[elementToFix]} as there is no logic for it");
             }
         }
 
