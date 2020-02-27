@@ -530,7 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7b01e617d3511488318953c3534e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  costToBuild: 25
+  costToBuild: 0
   built: 0
   placed: 0
   defaultMaterial: {fileID: 0}
