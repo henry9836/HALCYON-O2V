@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public List<Bank> banks = new List<Bank>();
     public List<GameObject> playerTCs = new List<GameObject>();
     public List<GameObject> aiTCs = new List<GameObject>();
+    public GameObject starUI;
 
     private GameObject HSC;
     private float validDistanceInsideWorld;
@@ -345,6 +346,9 @@ public class GameManager : MonoBehaviour
 
                 //Spawn TC
                 GameObject TCref = Instantiate(TCTemplate, spawnPos, Quaternion.identity);
+                GameObject TCui = Instantiate(starUI, new Vector3(TCref.transform.position.x, TCref.transform.position.y + 300.0f, TCref.transform.position.z), Quaternion.identity);
+                TCui.gameObject.transform.Rotate(90, 0, 0);
+                TCui.transform.SetParent(TCref.transform);
                 TCref.GetComponent<ObjectID>().ownerPlayerID = ObjectID.PlayerID.PLAYER;
                 playerTCs.Add(TCref);
                 firstLoop = false;
