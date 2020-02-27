@@ -1127,6 +1127,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7412933278879879359, guid: 9bacc3247d4a67944874d083f9989122,
         type: 3}
+    - target: {fileID: 4026603721715829396, guid: 0fda8ea04f765084d911d9bdd3c912ed,
+        type: 3}
+      propertyPath: TCTemplate
+      value: 
+      objectReference: {fileID: 4187675867892078855, guid: 664d705c0cc2ec44fa2e1392e76f2279,
+        type: 3}
     - target: {fileID: 4612000147356593431, guid: 0fda8ea04f765084d911d9bdd3c912ed,
         type: 3}
       propertyPath: m_LocalPosition.x

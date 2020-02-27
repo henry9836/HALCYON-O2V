@@ -22,7 +22,12 @@ public class BuildingController : MonoBehaviour
         {
             GetComponent<NavMeshObstacle>().enabled = true;
         }
-        GetComponent<MeshRenderer>().material = defaultMaterial;
+        if (GetComponent<MeshRenderer>())
+        {
+            GetComponent<MeshRenderer>().material = defaultMaterial;
+        }
+
+        GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
     }
 
     private void Start()
