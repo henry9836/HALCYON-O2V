@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetAxis("Boost Horizontal") != 0)
+            else if (Input.GetAxis("Boost Horizontal") != 0)
             {
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
