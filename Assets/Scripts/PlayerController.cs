@@ -116,15 +116,39 @@ public class PlayerController : MonoBehaviour
                 {
                     objMeshRenderer = spawnedObj.transform.GetChild(0).GetComponent<MeshRenderer>();
                 }
-                objMeshRenderer.material = buildNotAvailable;
+
+
                 spawnedObj.layer = LayerMask.NameToLayer("NoCollide");
-                if (spawnedObj.GetComponent<NavMeshObstacle>() != null)
-                {
-                    spawnedObj.GetComponent<NavMeshObstacle>().enabled = false;
+
+                if (objMeshRenderer != null) {
+
+                    objMeshRenderer.material = buildNotAvailable;
+                    if (spawnedObj.GetComponent<NavMeshObstacle>() != null)
+                    {
+                        spawnedObj.GetComponent<NavMeshObstacle>().enabled = false;
+                    }
+                    else if (spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>() != null)
+                    {
+                        spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>().enabled = false;
+                    }
                 }
-                else if (spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>() != null)
+                else
                 {
-                    spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>().enabled = false;
+                    MeshRenderer[] mrs = spawnedObj.GetComponentsInChildren<MeshRenderer>();
+
+                    for (int i = 0; i < mrs.Length; i++)
+                    {
+                        objMeshRenderer = mrs[i];
+                        objMeshRenderer.material = buildNotAvailable;
+                        if (spawnedObj.GetComponent<NavMeshObstacle>() != null)
+                        {
+                            spawnedObj.GetComponent<NavMeshObstacle>().enabled = false;
+                        }
+                        else if (spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>() != null)
+                        {
+                            spawnedObj.transform.GetChild(0).GetComponent<NavMeshObstacle>().enabled = false;
+                        }
+                    }
                 }
             }
             //Show in world and place if valid
@@ -133,32 +157,82 @@ public class PlayerController : MonoBehaviour
                 spawnedObj.transform.position = mouseInWorldPos;
                 if (isBuildSpot(mouseInWorldPos))
                 {
-                    objMeshRenderer.material = buildAvailable;
 
-                    //Build
-                    if (Input.GetMouseButtonDown(0))
+                    if (objMeshRenderer != null)
                     {
-                        if (spawnedObj.GetComponent<ObjectID>() != null)
-                        {
-                            spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
-                            GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
-                            spawnedObj.GetComponent<BuildingController>().Placed();
-                        }
-                        else if (spawnedObj.transform.GetChild(0).GetComponent<ObjectID>() != null)
-                        {
-                            spawnedObj.transform.GetChild(0).GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
-                            GM.UpdateResourceCount(playerID, -(spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().costToBuild));
-                            spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().Placed();
-                        }
-                        
 
-                        lastSelectedBuildingToBuild = null;
-                        spawnedObj = null;
+                        objMeshRenderer.material = buildAvailable;
+
+                        //Build
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            if (spawnedObj.GetComponent<ObjectID>() != null)
+                            {
+                                spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                                GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
+                                spawnedObj.GetComponent<BuildingController>().Placed();
+                            }
+                            else if (spawnedObj.transform.GetChild(0).GetComponent<ObjectID>() != null)
+                            {
+                                spawnedObj.transform.GetChild(0).GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                                GM.UpdateResourceCount(playerID, -(spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().costToBuild));
+                                spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().Placed();
+                            }
+
+
+                            lastSelectedBuildingToBuild = null;
+                            spawnedObj = null;
+                        }
+                    }
+                    else
+                    {
+                        MeshRenderer[] mrs = spawnedObj.GetComponentsInChildren<MeshRenderer>();
+
+                        for (int i = 0; i < mrs.Length; i++)
+                        {
+                            objMeshRenderer = mrs[i];
+
+                            objMeshRenderer.material = buildAvailable;
+
+                            //Build
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                if (spawnedObj.GetComponent<ObjectID>() != null)
+                                {
+                                    spawnedObj.GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                                    GM.UpdateResourceCount(playerID, -(spawnedObj.GetComponent<BuildingController>().costToBuild));
+                                    spawnedObj.GetComponent<BuildingController>().Placed();
+                                }
+                                else if (spawnedObj.transform.GetChild(0).GetComponent<ObjectID>() != null)
+                                {
+                                    spawnedObj.transform.GetChild(0).GetComponent<ObjectID>().ownerPlayerID = (ObjectID.PlayerID)playerID;
+                                    GM.UpdateResourceCount(playerID, -(spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().costToBuild));
+                                    spawnedObj.transform.GetChild(0).GetComponent<BuildingController>().Placed();
+                                }
+
+
+                                lastSelectedBuildingToBuild = null;
+                                spawnedObj = null;
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    objMeshRenderer.material = buildNotAvailable;
+                    if (objMeshRenderer != null)
+                    {
+                        objMeshRenderer.material = buildNotAvailable;
+                    }
+                    else
+                    {
+                        MeshRenderer[] mrs = spawnedObj.GetComponentsInChildren<MeshRenderer>();
+
+                        for (int i = 0; i < mrs.Length; i++)
+                        {
+                            objMeshRenderer = mrs[i];
+                            objMeshRenderer.material = buildNotAvailable;
+                        }
+                    }
                 }
             }
 
@@ -241,7 +315,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            else if (Input.GetAxis("Boost Horizontal") != 0)
+            if (Input.GetAxis("Boost Horizontal") != 0)
             {
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
@@ -250,7 +324,7 @@ public class PlayerController : MonoBehaviour
                     if (aiCtrl.asteriodOverride)
                     {
                         //Rotate
-                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * boosterSpeed) * Time.deltaTime));
+                        aiCtrl.asteriodBody.transform.rotation = Quaternion.Euler(aiCtrl.asteriodBody.transform.rotation.eulerAngles + (Vector3.up * (Input.GetAxis("Boost Horizontal") * (boosterSpeed * 0.05f)) * Time.deltaTime));
                     }
                 }
             }
