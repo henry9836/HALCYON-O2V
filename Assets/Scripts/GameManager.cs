@@ -47,7 +47,10 @@ public class GameManager : MonoBehaviour
 
     public void gameoverOverride()
     {
-
+        if (!GameObject.Find("Escaped"))
+        {
+            GameObject.Find("GameOver").SetActive(true);
+        }
     }
 
     public void regTC(bool amAI, GameObject caller)

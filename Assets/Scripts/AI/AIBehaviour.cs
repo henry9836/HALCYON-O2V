@@ -273,14 +273,17 @@ public class AIBehaviour : MonoBehaviour
 
         for (int i = 0; i < foundBuildingsTCs.Length; i++)
         {
-            //Filter out friendlies
-            if (foundBuildingsTCs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
+            if (foundBuildingsTCs[i] != null)
             {
-                enemyBuilds.Add(new scoutedObject(foundBuildingsTCs[i]));
-                if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
+                //Filter out friendlies
+                if (foundBuildingsTCs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
                 {
-                    closestKnownEnemyTC = enemyBuilds[enemyBuilds.Count - 1].obj;
-                    tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
+                    enemyBuilds.Add(new scoutedObject(foundBuildingsTCs[i]));
+                    if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
+                    {
+                        closestKnownEnemyTC = enemyBuilds[enemyBuilds.Count - 1].obj;
+                        tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
+                    }
                 }
             }
             yield return null;
@@ -291,35 +294,38 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundBuildingsCWs.Length; i++)
         {
             //Filter out fakes
-            if (foundBuildingsCWs[i].GetComponent<ObjectID>() != null)
+            if (foundBuildingsCWs[i] != null)
             {
-                //Filter out friendlies
-                if (foundBuildingsCWs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
+                if (foundBuildingsCWs[i].GetComponent<ObjectID>() != null)
                 {
-                    enemyBuilds.Add(new scoutedObject(foundBuildingsCWs[i]));
-                    if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
+                    //Filter out friendlies
+                    if (foundBuildingsCWs[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
                     {
-                        closestKnownEnemyBuilding = enemyBuilds[enemyBuilds.Count - 1].obj;
-                        tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
-                    }
-                }
-                //If it ours check if we own it as it may of been repaired
-                else
-                {
-                    bool knowOfCW = false;
-                    for (int j = 0; j < outpostBuildings.Count; j++)
-                    {
-                        if (outpostBuildings[j].obj == foundBuildingsCWs[i])
+                        enemyBuilds.Add(new scoutedObject(foundBuildingsCWs[i]));
+                        if (Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position) < tmpDistance)
                         {
-                            knowOfCW = true;
+                            closestKnownEnemyBuilding = enemyBuilds[enemyBuilds.Count - 1].obj;
+                            tmpDistance = Vector3.Distance(transform.position, enemyBuilds[enemyBuilds.Count - 1].obj.transform.position);
                         }
                     }
-
-                    if (!knowOfCW)
+                    //If it ours check if we own it as it may of been repaired
+                    else
                     {
-                        outpostBuildings.Add(new outpostBuilding(foundBuildingsCWs[i]));
-                    }
+                        bool knowOfCW = false;
+                        for (int j = 0; j < outpostBuildings.Count; j++)
+                        {
+                            if (outpostBuildings[j].obj == foundBuildingsCWs[i])
+                            {
+                                knowOfCW = true;
+                            }
+                        }
 
+                        if (!knowOfCW)
+                        {
+                            outpostBuildings.Add(new outpostBuilding(foundBuildingsCWs[i]));
+                        }
+
+                    }
                 }
             }
             yield return null;
@@ -329,33 +335,36 @@ public class AIBehaviour : MonoBehaviour
 
         for (int i = 0; i < foundWorldUnits.Length; i++)
         {
-            //Filter out friendlies
-            if (foundWorldUnits[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
+            if (foundWorldUnits[i] != null)
             {
-                //Counter
-                if (foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.FIGHTER || foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.BOOSTER)
+                //Filter out friendlies
+                if (foundWorldUnits[i].GetComponent<ObjectID>().ownerPlayerID != (ObjectID.PlayerID)playerID)
                 {
-                    enemyAttackUnits++;
-                }
-                enemyUnits.Add(new aiObject(foundWorldUnits[i]));
-                if (Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position) < tmpDistance)
-                {
-                    closestKnownEnemyUnit = enemyUnits[enemyUnits.Count - 1];
-                    tmpDistance = Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position);
-                }
-            }
-            else
-            {
-                if (foundWorldUnits[i] != null)
-                {
-                    units.Add(new aiObject(foundWorldUnits[i]));
-                    //Check for idling
-                    if (units[units.Count - 1].aiCtrl.isIdle())
+                    //Counter
+                    if (foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.FIGHTER || foundWorldUnits[i].GetComponent<AIDroneController>().droneMode == AIDroneController.DroneMode.BOOSTER)
                     {
-                        idleUnits.Add(units[units.Count - 1]);
+                        enemyAttackUnits++;
                     }
+                    enemyUnits.Add(new aiObject(foundWorldUnits[i]));
+                    if (Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position) < tmpDistance)
+                    {
+                        closestKnownEnemyUnit = enemyUnits[enemyUnits.Count - 1];
+                        tmpDistance = Vector3.Distance(transform.position, enemyUnits[enemyUnits.Count - 1].obj.transform.position);
+                    }
+                }
+                else
+                {
+                    if (foundWorldUnits[i] != null)
+                    {
+                        units.Add(new aiObject(foundWorldUnits[i]));
+                        //Check for idling
+                        if (units[units.Count - 1].aiCtrl.isIdle())
+                        {
+                            idleUnits.Add(units[units.Count - 1]);
+                        }
 
-                    friendlyAttackUnits++;
+                        friendlyAttackUnits++;
+                    }
                 }
             }
             yield return null;
@@ -366,18 +375,20 @@ public class AIBehaviour : MonoBehaviour
         for (int i = 0; i < foundResources.Length; i++)
         {
             //If not inside the game world enough
-            if (Vector3.Distance(foundResources[i].transform.position, ground.transform.position) < acceptableAsteriodDistance)
-            {
-                if (foundResources[i].GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
+            if (foundResources[i] != null) {
+                if (Vector3.Distance(foundResources[i].transform.position, ground.transform.position) < acceptableAsteriodDistance)
                 {
-                    resources.Add(new scoutedObject(foundResources[i].gameObject));
-
-                    if (resources[resources.Count - 1].obj != null)
+                    if (foundResources[i].GetComponent<ObjectID>().objID == ObjectID.OBJECTID.RESOURCE)
                     {
-                        if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
+                        resources.Add(new scoutedObject(foundResources[i].gameObject));
+
+                        if (resources[resources.Count - 1].obj != null)
                         {
-                            closestKnownResource = resources[resources.Count - 1].obj;
-                            tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
+                            if (Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position) < tmpDistance)
+                            {
+                                closestKnownResource = resources[resources.Count - 1].obj;
+                                tmpDistance = Vector3.Distance(transform.position, resources[resources.Count - 1].obj.transform.position);
+                            }
                         }
                     }
                 }

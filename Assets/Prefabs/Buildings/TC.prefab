@@ -54,7 +54,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 573494644929565393, guid: 2828440cf3927eb4297c4ce21a2be575, type: 3}
 --- !u!64 &2363815322188218943
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -68,7 +68,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 573494644929565393, guid: 2828440cf3927eb4297c4ce21a2be575, type: 3}
 --- !u!114 &7118189937930137863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,7 +122,7 @@ MonoBehaviour:
     type: 3}
   carWashFighter: {fileID: 5897907174060025635, guid: 5cd309445bf5c2b4c952ae129e23a70d,
     type: 3}
-  turretTemplate: {fileID: 4319123732800075519, guid: cf0b06c076b73f2488edf91263207d1a,
+  turretTemplate: {fileID: 6153818132032477509, guid: 7f99f63b5fa362848a3bed00a20369c3,
     type: 3}
   houseTemplate: {fileID: 2531690608690252967, guid: ac8b8228e0979924aa062ca60fdc60e1,
     type: 3}
