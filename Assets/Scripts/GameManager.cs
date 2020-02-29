@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour
     private float validDistanceInsideWorld;
     private LayerMask layerMask;
 
+    public void gameoverOverride()
+    {
+
+    }
 
     public void regTC(bool amAI, GameObject caller)
     {
@@ -206,21 +210,21 @@ public class GameManager : MonoBehaviour
 
             //Once tcs are registered
             if (tcCount >= 2)
-        {
-            //Check who is alive
-            //Player lost
-            if (playerTCs.Count <= 0)
             {
-                Debug.Log("AI WINS");
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //Check who is alive
+                //Player lost
+                if (playerTCs.Count <= 0)
+                {
+                    Debug.Log("AI WINS");
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
+                //AI lost
+                else if (aiTCs.Count <= 0)
+                {
+                    Debug.Log("PLAYER WINS");
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
             }
-            //AI lost
-            else if (aiTCs.Count <= 0)
-            {
-                Debug.Log("PLAYER WINS");
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
-        }
 
         CheckListsForNulls();
     }

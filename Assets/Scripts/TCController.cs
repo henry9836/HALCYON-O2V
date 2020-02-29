@@ -66,7 +66,6 @@ public class TCController : MonoBehaviour
         {
             if (!Modifylock && (GM.GetResouceCount((int)objID.ownerPlayerID) >= baseCost) && (GM.GetUnitCount((int)objID.ownerPlayerID) < GM.GetUnitCountMax((int)objID.ownerPlayerID)))
             {
-                Debug.Log("spawn base");
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -baseCost);
                 GameObject spawnedObj = Instantiate(unitTemplate, (transform.position + (new Vector3(Random.Range(-1.0f,1.0f),0.0f, Random.Range(-1.0f, 1.0f)) * 5.0f)), Quaternion.identity);
                 spawnedObj.GetComponent<ObjectID>().ownerPlayerID = objID.ownerPlayerID;
@@ -87,7 +86,6 @@ public class TCController : MonoBehaviour
             { 
                 if (!amAI)
                 {
-                    Debug.Log("spawn mine");
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -mineCost);
 
                     playerCtrl.lastSelectedBuildingToBuild = carWashMiner;
@@ -109,7 +107,6 @@ public class TCController : MonoBehaviour
             {
                 if (!amAI)
                 {
-                    Debug.Log("spawn attack");
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -attackCost);
 
 
@@ -132,7 +129,6 @@ public class TCController : MonoBehaviour
             {
                 if (!amAI)
                 {
-                    Debug.Log("spawn boost");
                     GM.UpdateResourceCount((int)objID.ownerPlayerID, -boostCost);
 
 
@@ -194,7 +190,6 @@ public class TCController : MonoBehaviour
         {
             if (!amAI)
             {
-                Debug.Log("spawn turret");
                 GM.UpdateResourceCount((int)objID.ownerPlayerID, -turretCost);
                 playerCtrl.lastSelectedBuildingToBuild = turretTemplate;
             }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Blackhole : MonoBehaviour
 {
@@ -11,6 +12,15 @@ public class Blackhole : MonoBehaviour
     private float maxscale = 300.0f;
     public float timer = 0.0f;
     public float twomintimer = 420.0f;
+    public GameObject GM;
+
+    private LayerMask layerMask;
+
+    private void Start()
+    {
+        GM = GameObject.FindGameObjectWithTag("GameManager");
+        layerMask = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PlayerController>().unitInteractLayers;
+    }
 
     public void Update()
     {
@@ -23,20 +33,20 @@ public class Blackhole : MonoBehaviour
 
     public void FixedUpdate()
     {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, Mathf.Infinity);
+        Collider[] colliders = Physics.OverlapSphere(this.transform.position, gameObject.transform.localScale.x, layerMask);
         foreach (Collider hit in colliders)
         {
-
+            Debug.Log($"blackhole object: {hit.gameObject.name}");
             if (hit.gameObject.layer == LayerMask.NameToLayer("Unit"))
             {
-                if (Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
+                if (true || Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
                 {
                     Destroy(hit.gameObject);
                 }
             }
             else if (hit.gameObject.layer == LayerMask.NameToLayer("Building"))
             {
-                if ((Vector3.Distance(hit.transform.position, transform.position) - (gameObject.transform.localScale.x / 2.0f)) < 20.0f)
+                if ((true || Vector3.Distance(hit.transform.position, transform.position) < (gameObject.transform.localScale.x / 2.0f)))
                 {
                     Rigidbody rb = hit.GetComponent<Rigidbody>();
 
@@ -47,7 +57,7 @@ public class Blackhole : MonoBehaviour
 
                     }
 
-                    if (Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
+                    if (true || Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
                     {
                         if (hit.gameObject.tag == "TC")
                         {
@@ -71,12 +81,26 @@ public class Blackhole : MonoBehaviour
                 hit.attachedRigidbody.AddForce((transform.position - hit.transform.position).normalized * gravityIntensity * hit.attachedRigidbody.mass * power * Time.deltaTime, ForceMode.Acceleration);
 
 
-                if (Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
+                if (true || Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
                 {
 
                     Destroy(hit.gameObject);
                 }
             }
+            else
+            {
+                if (true || Vector3.Distance(transform.position, hit.transform.position) < gameObject.transform.localScale.x / 2.0f)
+                {
+                    Destroy(hit.gameObject);
+                }
+            }
         }
+
+        //Game Restart Fallback
+        if (timer > twomintimer)
+        {
+            GM.GetComponent<GameManager>().gameoverOverride();
+        }
+
     }
 }
