@@ -1485,7 +1485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223479490, guid: 64ba65c7d67977641af093737e1a24ba, type: 3}
       propertyPath: twomintimer
-      value: 30
+      value: 420
       objectReference: {fileID: 0}
     - target: {fileID: 2841158257121677542, guid: 64ba65c7d67977641af093737e1a24ba,
         type: 3}
