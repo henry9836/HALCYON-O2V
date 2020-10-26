@@ -1,4 +1,3 @@
-# HALCYON-O2V
 ![gif](https://raw.githubusercontent.com/henry9836/HALCYON-O2V/master/docs/title.PNG)
 ##### Built by Vaughan Webb, Henry Oliver, Lucille Liu and Xin Yin Lee
 
